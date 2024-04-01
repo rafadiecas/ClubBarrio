@@ -4,7 +4,7 @@ from django.db import models
 
 # Create your models here.
 
-def Usuario():
+class Usuario(models.Model):
     nombre = models.CharField(max_length=250)
     apellidos = models.CharField(max_length=250)
     password = models.CharField(max_length=250)
