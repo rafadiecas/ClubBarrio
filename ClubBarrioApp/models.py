@@ -78,7 +78,7 @@ class Entrenamiento(models.Model):
     entrenador = models.ForeignKey(Entrenador, on_delete=models.DO_NOTHING)
     lugarEntrenamiento = models.ForeignKey(LugarEntrenamiento, on_delete=models.DO_NOTHING, null=True)
     def __str__(self):
-        return str(self.fecha) + " " + str(self.hora) + " " + self.lugar
+        return str(self.fecha) + " " + str(self.hora) + " " + self.lugarEntrenamiento.nombre
 
 class Equipo(models.Model):
     nombre = models.CharField(max_length=250)
