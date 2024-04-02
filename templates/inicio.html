@@ -3,9 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        /* Estilos para el popover */
+        .popover {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
 </head>
 <body>
     <h1>My First Heading</h1>
 
+    <!-- Botón que activa el popover -->
+    <button id="popoverButton" type="button" class="btn btn-secondary" data-toggle="popover" title="TOCAME UN COJON" data-content="()():::::::D">
+        Pulsa el botón
+    </button>
+
+    <!-- Popover -->
+    <div id="popoverContent" style="display: none;">
+        <p>()():::::::D</p>
+    </div>
+
+    <!-- Bootstrap JS (jQuery and Popper.js required) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Inicializar el popover
+        $(document).ready(function(){
+            $('#popoverButton').popover({
+                content: $('#popoverContent').html(),
+                html: true
+            });
+        });
+    </script>
 </body>
 </html>
