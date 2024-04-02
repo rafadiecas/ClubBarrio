@@ -22,18 +22,26 @@ class Pedido(models.Model):
     numPedido = models.IntegerField()
     usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True)
     fecha = models.DateField(default='1900-01-01')
-
-
+    direccion = models.CharField(max_length=500, default= 'sin dirección')
     def __str__(self):
         return str(self.numPedido) + " " + self.usuario.nombre + " " + self.usuario.apellidos
 
-class Productos(models.Model):
-    tipo = models.IntegerField(default=0)
+class Talla(models.Model):
+    nombre = models.CharField(max_length=250)
+    def __str__(self):
+        return self.nombre
+class Tipo(models.Model):
+    nombre = models.CharField(max_length=250)
+    def __str__(self):
+        return self.nombre
+
+class Producto(models.Model):
     nombre = models.CharField(max_length=250)
     precio = models.FloatField()
     stock = models.IntegerField(default=0)
     pedidos = models.ManyToManyField(Pedido)
-
+    tipo = models.ForeignKey(Tipo, on_delete=models.DO_NOTHING, null=True)
+    talla = models.ForeignKey(Talla, on_delete=models.DO_NOTHING, null=True)
     def __str__(self):
         return self.nombre
 
@@ -61,12 +69,14 @@ class Noticias(models.Model):
     def __str__(self):
         return self.titulo
 
+class LugarEntrenamiento(models.Model):
+    nombre = models.CharField(max_length=250)
+    direccion = models.CharField(max_length=500, default= 'sin dirección')
 class Entrenamiento(models.Model):
     fecha = models.DateField()
     hora = models.TimeField()
-    lugar = models.CharField(max_length=250)
     entrenador = models.ForeignKey(Entrenador, on_delete=models.DO_NOTHING)
-
+    lugarEntrenamiento = models.ForeignKey(LugarEntrenamiento, on_delete=models.DO_NOTHING, null=True)
     def __str__(self):
         return str(self.fecha) + " " + str(self.hora) + " " + self.lugar
 
