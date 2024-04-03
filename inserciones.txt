@@ -1,0 +1,10 @@
+INSERT INTO ClubBarrioApp_noticias (id, titulo, articulo, url_imagen, administrador_id) VALUES (3, 'Resultados Deportivos del Club SAFA', 'El Club de Barrio SAFA vivió otra jornada emocionante llena de acción y competición en los campos de juego este fin de semana. Los equipos de fútbol, baloncesto y voleibol de todas las categorías se enfrentaron en apasionantes encuentros que mantuvieron a los espectadores al borde de sus asientos.
+
+En el mundo del baloncesto, el equipo senior masculino se impuso con autoridad a su oponente, ganando con una ventaja cómoda de 20 puntos. Por otro lado, el equipo juvenil femenino protagonizó un emocionante encuentro que mantuvo a los espectadores al borde de sus asientos hasta el último segundo, logrando una victoria ajustada por 5 puntos.
+
+', 'static/_837bdc16-6156-46f5-9e63-171fe4258770.jpg', 1);
+INSERT INTO ClubBarrioApp_noticias (id, titulo, articulo, url_imagen, administrador_id) VALUES (4, 'Resultados Deportivos', 'El Club de Barrio SAFA vivió otra jornada emocionante llena de acción y competición en los campos de juego este fin de semana. Los equipos de fútbol, baloncesto y voleibol de todas las categorías se enfrentaron en apasionantes encuentros que mantuvieron a los espectadores al borde de sus asientos.
+
+En el mundo del baloncesto, el equipo senior masculino se impuso con autoridad a su oponente, ganando con una ventaja cómoda de 20 puntos. Por otro lado, el equipo juvenil femenino protagonizó un emocionante encuentro que mantuvo a los espectadores al borde de sus asientos hasta el último segundo, logrando una victoria ajustada por 5 puntos.
+
+', 'static/_837bdc16-6156-46f5-9e63-171fe4258770.jpg', 1);

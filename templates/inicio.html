@@ -1,47 +1,97 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>Pagina de Inicio</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <style>
-        /* Estilos para el popover */
-        .popover {
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        .carousel-inner {
+            width: 100%;
+            height: 100%;
         }
+        .carousel-item {
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+        }
+
+
+        #derecha {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #contenedor {
+            margin-top: 30px;
+        }
+
+        #foto_carrusel {
+            padding: 10px;
+        }
+
+
     </style>
 </head>
+
+{% include "barra_navegacion.html" %}
+
 <body>
-    {% include "prueba_barra_navegacion.html" %}
-    <h1>My First Heading</h1>
+    <h1 class="text-center">QUIENES SOMOS</h1>
+    <div class="container-fluid" id="contenedor">
+        <div class="row row-cols-md-2 row-cols-lg-2 row-cols-sm-1">
+            <div class="col">
+                <p>¡Bienvenidos al Club de Barrio SAFA!</p><br>
+                <p>
+                    Sumérgete en el corazón vibrante de nuestra comunidad en SAFA, un oasis de diversión, deporte y camaradería en el corazón de nuestro barrio. Desde su establecimiento, SAFA se ha convertido en mucho más que un simple club; es un punto de encuentro para personas de todas las edades y pasiones.
+                </p> <br>
+                <p>
+                    En SAFA, celebramos la pasión por el deporte, la amistad y el crecimiento personal. Ya sea que estés buscando mejorar tus habilidades en el campo, compartir momentos de alegría con amigos y familiares, o simplemente desconectar del ajetreo diario, nuestro club ofrece un espacio acogedor y lleno de energía positiva.
+                </p> <br>
+                <p>
+                    Únete a nosotros mientras exploramos todo lo que SAFA tiene para ofrecer: desde competiciones emocionantes hasta actividades recreativas, eventos comunitarios y mucho más. En SAFA, todos son bienvenidos a formar parte de nuestra familia deportiva y a crear recuerdos que durarán toda la vida.
+                </p>
+            </div>
+            <div class="col" id="derecha">
+                <img src="{% static 'prueba_logo3.png' %}" alt="imagen" class="img-fluid">
+            </div>
+        </div>
+    </div>
+    <div id="carrusel" class="carousel slide">
+      <div class="carousel-inner">
 
-    <!-- Botón que activa el popover -->
-    <button id="popoverButton" type="button" class="btn btn-secondary" data-toggle="popover" title="TOCAME UN COJON" data-content="()():::::::D">
-        Pulsa el botón
-    </button>
 
-    <!-- Popover -->
-    <div id="popoverContent" style="display: none;">
-        <p>()():::::::D</p>
+        {% for n in noticias %}
+
+          <div class="carousel-item {% if forloop.first%} active {% endif %}">
+             <div class="row justify-content-center align-items-center row-cols-1 row-cols-md-2 row-cols-sm-1">
+                <img src="{{ n.url_imagen }}" class="d-block w-50" alt="foto_carrusel" id="foto_carrusel">
+                <div class="row justify-content-around align-items-center row-cols-1 row-cols-md-2 row-cols-sm-1">
+                    <div class="col">
+                        <h2>{{ n.titulo }}</h2>
+                        <br>
+                        <p>{{ n.articulo }}</p>
+                    </div>
+                </div>
+             </div>
+          </div>
+
+        {% endfor %}
+          <button class="carousel-control-prev" type="button" data-bs-target="#carrusel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carrusel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+      </div>
     </div>
 
-    <!-- Bootstrap JS (jQuery and Popper.js required) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <script>
-        // Inicializar el popover
-        $(document).ready(function(){
-    $('#popoverButton').on('click', function(){
-        window.location.href = '/admin';
-    });
-    });
-    </script>
 </body>
 </html>
