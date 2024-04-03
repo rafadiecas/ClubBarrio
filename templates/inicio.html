@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Pagina de Inicio</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <style>
@@ -17,6 +17,7 @@
     </style>
 </head>
 <body>
+    {% include "prueba_barra_navegacion.html" %}
     <h1>My First Heading</h1>
 
     <!-- Botón que activa el popover -->
@@ -37,11 +38,10 @@
     <script>
         // Inicializar el popover
         $(document).ready(function(){
-            $('#popoverButton').popover({
-                content: $('#popoverContent').html(),
-                html: true
-            });
-        });
+    $('#popoverButton').on('click', function(){
+        window.location.href = '/admin';
+    });
+    });
     </script>
 </body>
 </html>

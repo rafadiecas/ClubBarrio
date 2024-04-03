@@ -17,7 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from ClubBarrioApp.views import pagina_inicio
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('ClubBarrioApp/', include('ClubBarrioApp.urls')),
+    path('', pagina_inicio, name='inicio'),
 ]
