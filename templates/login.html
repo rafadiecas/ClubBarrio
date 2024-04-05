@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+          .gradient-custom-2 {
+    /* fallback for old browsers */
+    background: #172c3f;
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, #003b20, #00a256, #00f984, #65ffc3);
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, #003b20, #00a256, #00f984, #65ffc3);
+    }
+
+    @media (min-width: 768px) {
+    .gradient-form {
+    height: 100vh !important;
+    }
+    }
+    @media (min-width: 769px) {
+    .gradient-custom-2 {
+    border-top-right-radius: .3rem;
+    border-bottom-right-radius: .3rem;
+    }
+    }
+    </style>
+</head>
+<body>
+{% include "barra_navegacion.html" %}
+    <script>
+      function mostrarMensajeBienvenida() {
+        var nombreUsuario = document.getElementById('form2Example11').value;
+        alert('Bienvenido, ' + nombreUsuario + '!');
+        window.location.href = 'consumo.html';
+      }
+    </script>
+
+<main>
+    <section class="h-100 gradient-form" style="background-color: #eee;">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-xl-10">
+            <div class="card rounded-3 text-black">
+              <div class="row g-0">
+                <div class="col-lg-6">
+                  <div class="card-body p-md-5 mx-md-4">
+
+                    <div class="text-center">
+                      <img src="{% static 'prueba_logo3.png' %}"
+                        style="width: 185px;" alt="logo">
+                      <h4 class="mt-1 mb-5 pb-1">SAFA CLUB</h4>
+                    </div>
+
+                    <form>
+                      <p>Conéctate a tu cuenta</p>
+
+                      <div class="form-outline mb-4">
+                        <input type="email" id="form2Example11" class="form-control" placeholder="DNI o email" />
+                        <label class="form-label" for="form2Example11">Nombre de Usuario</label>
+                      </div>
+
+                      <div class="form-outline mb-4">
+                        <input type="password" id="form2Example22" class="form-control" />
+                        <label class="form-label" for="form2Example22">Contraseña</label>
+                      </div>
+
+                      <div class="text-center pt-1 mb-5 pb-1">
+                        <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="button" onclick="mostrarMensajeBienvenida()">
+                          Inicia Sesión
+                        </button>
+                        <a class="text-muted" href="#!">¿Olvidaste la contraseña?</a>
+                      </div>
+
+                      <div class="d-flex align-items-center justify-content-center pb-4">
+                        <p class="mb-0 me-2">¿No tienes cuenta?</p>
+                        <button type="button" class="btn btn-outline-danger">Crea una nueva</button>
+                      </div>
+
+                    </form>
+
+                  </div>
+                </div>
+                <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+                  <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                    <h4 class="mb-4">Esto es un CLUB</h4>
+                    <p class="small mb-0">¡Únete a nuestro club de baloncesto del barrio y forma parte de algo extraordinario! En nuestra comunidad, destacamos por nuestro compromiso con la pasión, la camaradería y el desarrollo personal a través del deporte. Ofrecemos un espacio donde cada canasta es un logro, cada juego es una oportunidad de crecimiento y cada miembro es parte de una familia unida por el amor al baloncesto. Únete a nosotros y sé parte de una experiencia única donde el trabajo en equipo, la superación personal y la diversión se fusionan para crear momentos inolvidables en la cancha. ¡Inscríbete hoy y embárcate en un viaje hacia el éxito y la satisfacción!</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>
