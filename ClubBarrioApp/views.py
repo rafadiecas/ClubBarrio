@@ -11,3 +11,21 @@ def pagina_inicio(request):
 def login(request):
     return render(request, 'login.html')
 
+
+
+def pagina_noticias(request):
+    list_noticias = Noticias.objects.all().order_by('-id')
+    page = request.GET.get('page', 1)
+
+    try:
+        paginator = Paginator(list_noticias, 3)
+        list_noticias = paginator.page(page)
+    except:
+        raise Http404
+
+    data = {
+        'entity': list_noticias,
+        'paginator': paginator
+    }
+
+    return render(request, 'Noticias.html', data)
