@@ -41,8 +41,8 @@
 <body>
 <nav class="navbar navbar-expand-md navbar-dark">
   <div class="container-fluid">
-    <a class="navbar-brand d-md-none" href="#">
-      <img src="{% static 'prueba_logo3.png' %}" alt="">
+    <a class="navbar-brand d-md-none" href="">
+  <img src="{% static 'prueba_logo3.png' %}" alt="" >
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -55,14 +55,14 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Tarifas</a>
         </li>
-        <a class="navbar-brand d-none d-md-block" href="#">
+        <a class="navbar-brand d-none d-md-block" href="{% url 'inicio' %}">
           <img src="{% static 'prueba_logo3.png' %}" alt="">
         </a>
         <li class="nav-item">
           <a class="nav-link" href="#">Tienda</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" >Login</a>
+          <a class="nav-link" href="{% url 'login' %}" >Login</a>
         </li>
       </ul>
     </div>
