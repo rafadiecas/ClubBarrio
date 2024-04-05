@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Noticias</title>
+</head>
+{% include "barra_navegacion.html" %}
+<body>
+    <div class="container">
+        {% for n in noticias %}
+            <div class="card">
+                <div class="card-header">
+                    <h2>{{ n.titulo }}</h2>
+                </div>
+                <div class="card-body">
+                    <p>{{ n.articulo }}</p>
+                    <img src="{{ n.url_imagen }}" class="img-fluid" alt="imagen" >
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>
