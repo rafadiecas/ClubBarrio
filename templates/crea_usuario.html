@@ -14,6 +14,15 @@
     <form action="" method="post">
 
          {% csrf_token %}
+    
+        <label for="rol">Rol:</label>
+        <select name="rol" id="rol">
+            <option value="padre">Usuario</option>
+            <option value="padre">Padre</option>
+            <option value="jugador">Jugador</option>
+            <option value="entrenador">Entrenador</option>
+        </select>
+        <br>
 
         <label for="nombre">Nombre:</label>
         <input type="text" name="nombre" id="nombre" required>
@@ -32,14 +41,24 @@
         <br>
         <label for="fecha_nacimiento">Fecha de nacimiento:</label>
         <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
-
-        <label for="rol">Rol:</label>
-        <select name="rol" id="rol">
-            <option value="admin">Padre</option>
-            <option value="usuario">Jugador</option>
-            <option value="usuario">Entrenador</option>
-        </select>
         <br>
+        <div class="select">
+            <label for="equipo">Equipo:</label>
+            <select id="equipo" name="equipo">
+                {% for e in Equipos %}
+                    <option value="{{ e.id }}">{{ e.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <div class="select">
+            <label for="tutor">Tutor:</label>
+            <select id="tutores" name="tutor">
+                {% for t in Tutores %}
+                    <option value="{{ t.id }}">{{ t.usuario.nombre }} {{ t.usuario.apellidos }}</option>
+                {% endfor %}
+            </select>
+        </div>
         <input class="btn btn-primary" type="submit">
     </form>
 

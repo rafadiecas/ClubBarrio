@@ -42,7 +42,9 @@ def usuarios(request):
 def new_user(request):
     if request.method == 'GET':
         Users = Usuario.objects.all()
-        return render(request, "crea_usuario.html", {'Users': Users})
+        Equipos = Equipo.objects.all()
+        Tutores = TutorLegal.objects.all()
+        return render(request, "crea_usuario.html", {'Users': Users, 'Equipos': Equipos, 'Tutores': Tutores})
     else:
         new = Usuario()
         new.nombre = request.POST.get('nombre')
@@ -52,9 +54,22 @@ def new_user(request):
         new.fecha_nacimiento = request.POST.get('fecha_nacimiento')
         new.save()
 
-    if request.POST.get('rol') == 'Padre':
+    if request.POST.get('rol') == 'padre':
         new_padre = TutorLegal()
         new_padre.usuario_id = new.id
         new_padre.save()
 
-        return redirect('/ClubBarrioApp/administrador/usuarios/')
+    if request.POST.get('rol') == 'entrenador':
+        new_entrenador = Entrenador()
+        new_entrenador.usuario_id = new.id
+        new_entrenador.save()
+
+    if request.POST.get('rol') == 'jugador':
+        new_jugador = Jugador()
+        new_jugador.usuario_id = new.id
+        new_jugador.equipo_id = request.POST.get('equipo')
+        new_jugador.tutorLegal_id = request.POST.get('tutor')
+        new_jugador.save()
+
+
+    return redirect('/ClubBarrioApp/administrador/usuarios/')
