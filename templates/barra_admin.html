@@ -1,0 +1,69 @@
+{% load static %}
+{% load bootstrap5 %}
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>prueba</title>
+    {% bootstrap_css %}
+    {% if 'javascript_in_head'|bootstrap_setting %}
+        {% bootstrap_javascript %}
+    {% endif %}
+    {% block bootstrap5_extra_head %}{% endblock %}
+
+    <style>
+        .bg-body-tertiary {
+            background-color: #00653D !important;
+        }
+
+        .btn{
+            color: white;
+         ;
+        }
+
+        @media screen and (min-width: 768px) {
+          .navbar-brand img {
+            width: 120px;
+          }
+          .navbar-brand {
+            margin-right: 0;
+            padding: 0 1em;
+          }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar bg-body-tertiary">
+  <div class="container" style="justify-content: center">
+    <a class="navbar-brand " href="#">
+      <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="Bootstrap" width="90">
+    </a>
+  </div>
+  <div class="container" style="margin-left: 0">
+      <div class="btn-group">
+          <button type="button" class="btn">Administrador</button>
+          <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Jugadores</a></li>
+              <li><a class="dropdown-item" href="#">Equipos</a></li>
+              <li><a class="dropdown-item" href="#">Entrenadores</a></li>
+              <li><a class="dropdown-item" href="#">Entrenamiento</a></li>
+              <li><a class="dropdown-item" href="#">Tienda</a></li>
+          </ul>
+      </div>
+  </div>
+</nav>
+
+{% if not 'javascript_in_head'|bootstrap_setting %}
+    {% bootstrap_javascript %}
+{% endif %}
+
+
+{% block bootstrap5_extra_script %}{% endblock %}
+
+</body>
+</html>
