@@ -36,31 +36,36 @@ def administrador(request):
     return render(request, 'administrador.html')
 
 def usuarios(request):
-    lista_usuarios = Usuario.objects.all()
+    lista_usuarios = User.objects.all()
     return render(request, 'usuarios.html', {'usuarios': lista_usuarios})
 
 def new_user(request):
     if request.method == 'GET':
-        Users = Usuario.objects.all()
+        Users = User.objects.all()
         Equipos = Equipo.objects.all()
         Tutores = TutorLegal.objects.all()
-        return render(request, "crea_usuario.html", {'Users': Users, 'Equipos': Equipos, 'Tutores': Tutores})
+        roles = Role.labels[:-1]
+        return render(request, "crea_usuario.html", {'Users': Users, 'Equipos': Equipos, 'Tutores': Tutores, 'roles': roles})
     else:
-        new = Usuario()
-        new.nombre = request.POST.get('nombre')
-        new.apellidos = request.POST.get('apellidos')
+        new = User()
+        new.username = request.POST.get('username')
+        new.rol =Role.value_for_label(request.POST.get('rol'))
         new.email = request.POST.get('email')
         new.password = request.POST.get('password')
         new.fecha_nacimiento = request.POST.get('fecha_nacimiento')
         new.save()
 
-    if request.POST.get('rol') == 'padre':
+    if request.POST.get('rol') == 'Tutor':
         new_padre = TutorLegal()
+        new_padre.nombre = request.POST.get('nombre')
+        new_padre.apellidos = request.POST.get('apellidos')
         new_padre.usuario_id = new.id
         new_padre.save()
 
-    if request.POST.get('rol') == 'entrenador':
+    if request.POST.get('rol') == 'Entrenador':
         new_entrenador = Entrenador()
+        new_entrenador.nombre = request.POST.get('nombre')
+        new_entrenador.apellidos = request.POST.get('apellidos')
         new_entrenador.usuario_id = new.id
         new_entrenador.save()
 
@@ -70,8 +75,10 @@ def new_user(request):
             equipo = Equipo.objects.get(id=e)
             equipo.entrenadores.add(new_entrenador)
 
-    if request.POST.get('rol') == 'jugador':
+    if request.POST.get('rol') == 'Jugador':
         new_jugador = Jugador()
+        new_jugador.nombre = request.POST.get('nombre')
+        new_jugador.apellidos = request.POST.get('apellidos')
         new_jugador.usuario_id = new.id
         new_jugador.equipo_id = request.POST.get('equipo')
         new_jugador.tutorLegal_id = request.POST.get('tutor')

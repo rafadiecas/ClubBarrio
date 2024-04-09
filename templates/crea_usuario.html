@@ -26,13 +26,14 @@
     
         <label for="rol">Rol:</label>
         <select name="rol" id="rol">
-            <option value="padre">Usuario</option>
-            <option value="padre">Padre</option>
-            <option value="jugador">Jugador</option>
-            <option value="entrenador">Entrenador</option>
+            {% for r in roles %}
+                    <option value="{{ r }}">{{ r }}</option>
+            {% endfor %}
         </select>
         <br>
-
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required>
+        <br>
         <label for="nombre">Nombre:</label>
         <input type="text" name="nombre" id="nombre" required>
         <br>
@@ -87,15 +88,15 @@
         $(document).ready(function() {
             $('#rol').change(function() {
                 var selectedRol = $(this).val();
-                if (selectedRol === 'usuario' || selectedRol === 'padre') {
+                if (selectedRol === 'Usuario' || selectedRol === 'Tutor') {
                     $('#equipoSelect').hide();
                     $('#tutorSelect').hide();
                      $('#entrenadorSelect').hide();
-                } else if (selectedRol === 'entrenador') {
+                } else if (selectedRol === 'Entrenador') {
                     $('#entrenadorSelect').show();
                     $('#tutorSelect').hide();
                      $('#equipoSelect').hide();
-                } else if (selectedRol === 'jugador') {
+                } else if (selectedRol === 'Jugador') {
                     $('#equipoSelect').show();
                     $('#tutorSelect').show();
                     $('#entrenadorSelect').hide();
