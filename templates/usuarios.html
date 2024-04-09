@@ -1,0 +1,31 @@
+{% load static %}
+{% include 'barra_navegacion.html' %}
+<table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Apellidos</th>
+      <th scope="col">Contraseña</th>
+      <th scope="col">Email</th>
+      <th scope="col">Fecha de nacimiento</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for u in usuarios %}
+    <tr>
+      <th scope="row">{{ u.id }}</th>
+      <td>{{ u.nombre }}</td>
+      <td>{{ u.apellidos }}</td>
+      <td>{{ u.password }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ u.fecha_nacimiento }}</td>
+        <td>
+            <img src="{% static 'icons8-edit-30.png' %}">
+            <img src="{% static 'icons8-basura-30.png' %}">
+        </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>

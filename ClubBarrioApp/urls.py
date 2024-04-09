@@ -21,4 +21,7 @@ urlpatterns = [
     path('inicio/', pagina_inicio, name='inicio'),
     path('noticias/', pagina_noticias, name='noticias'),
     path('login/', login, name='login'),
+    path('administrador/', administrador, name='admin'),
+    path('administrador/usuarios/', usuarios, name='usuarios'),
+
 ]
