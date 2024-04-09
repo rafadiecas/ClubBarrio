@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Noticias</title>
+
+    <style>
+        #card-text{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        #foto_noticia{
+            max-width: 300px;
+            max-height: 300px;
+        }
+    </style>
+</head>
+{% include "barra_navegacion.html" %}
+<body>
+    <div class="container">
+        {% for n in entity %}
+            <div class="card" style="margin-block:20px">
+                <div class="card-header">
+                    <h2>{{ n.titulo }}</h2>
+                </div>
+                <div class="card-body" id="carta">
+                    <div class="row row-cols-md-2 row-cols-sm-1" id="card-text">
+                    <p>{{ n.articulo }}</p>
+                    <img src="{{ n.url_imagen }}" class="img-fluid" alt="imagen" id="foto_noticia">
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% include 'paginator.html' %}
+
+</body>
+</html>
