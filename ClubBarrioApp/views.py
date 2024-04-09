@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from .models import *
 from django.core.paginator import Paginator
 from django.http import Http404
@@ -38,6 +38,48 @@ def administrador(request):
 def usuarios(request):
     lista_usuarios = Usuario.objects.all()
     return render(request, 'usuarios.html', {'usuarios': lista_usuarios})
+
+def new_user(request):
+    if request.method == 'GET':
+        Users = Usuario.objects.all()
+        Equipos = Equipo.objects.all()
+        Tutores = TutorLegal.objects.all()
+        return render(request, "crea_usuario.html", {'Users': Users, 'Equipos': Equipos, 'Tutores': Tutores})
+    else:
+        new = Usuario()
+        new.nombre = request.POST.get('nombre')
+        new.apellidos = request.POST.get('apellidos')
+        new.email = request.POST.get('email')
+        new.password = request.POST.get('password')
+        new.fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        new.save()
+
+    if request.POST.get('rol') == 'padre':
+        new_padre = TutorLegal()
+        new_padre.usuario_id = new.id
+        new_padre.save()
+
+    if request.POST.get('rol') == 'entrenador':
+        new_entrenador = Entrenador()
+        new_entrenador.usuario_id = new.id
+        new_entrenador.save()
+
+        list_equipos = request.POST.getlist('equipos')
+
+        for e in list_equipos:
+            equipo = Equipo.objects.get(id=e)
+            equipo.entrenadores.add(new_entrenador)
+
+    if request.POST.get('rol') == 'jugador':
+        new_jugador = Jugador()
+        new_jugador.usuario_id = new.id
+        new_jugador.equipo_id = request.POST.get('equipo')
+        new_jugador.tutorLegal_id = request.POST.get('tutor')
+        new_jugador.save()
+
+
+    return redirect('/ClubBarrioApp/administrador/usuarios/')
+
 
 def elimina_usuario(request, id):
     usuario = Usuario.objects.get(id=id)

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Crea usuario</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <style>
+        #equipoSelect, #tutorSelect, #entrenadorSelect {
+            display: none;
+        }
+    </style>
+    
+</head>
+
+
+{% include "barra_admin.html" %}
+
+<body>
+
+    <h1>Crear usuario</h1>
+
+    <form action="" method="post">
+
+         {% csrf_token %}
+    
+        <label for="rol">Rol:</label>
+        <select name="rol" id="rol">
+            <option value="padre">Usuario</option>
+            <option value="padre">Padre</option>
+            <option value="jugador">Jugador</option>
+            <option value="entrenador">Entrenador</option>
+        </select>
+        <br>
+
+        <label for="nombre">Nombre:</label>
+        <input type="text" name="nombre" id="nombre" required>
+        <br>
+        <label for="apellidos">Apellidos:</label>
+        <input type="text" name="apellidos" id="apellidos" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required>
+        <br>
+        <label for="password">Contraseña:</label>
+        <input type="password" name="password" id="password" required>
+        <br>
+        <label for="password2">Repite contraseña:</label>
+        <input type="password" name="password2" id="password2" required>
+        <br>
+        <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+        <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
+        <br>
+        <div class="select" id="equipoSelect">
+            <label for="equipo">Equipo:</label>
+            <select id="equipo" name="equipo">
+                {% for e in Equipos %}
+                    <option value="{{ e.id }}">{{ e.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <div class="select" id="tutorSelect">
+            <label for="tutor">Tutor:</label>
+            <select id="tutores" name="tutor">
+                {% for t in Tutores %}
+                    <option value="{{ t.id }}">{{ t.usuario.nombre }} {{ t.usuario.apellidos }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <div class="select" id="entrenadorSelect">
+            <label for="equipos">Equipos para entrenador:</label>
+            <select id="equipos" name="equipos" multiple>
+                {% for e in Equipos %}
+                        <option value="{{ e.id }}">{{ e.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    
+        <input class="btn btn-primary" type="submit">
+    </form>
+
+    <a href="{% url 'administrador' %}" role="button">Volver</a>
+
+    <script>
+        $(document).ready(function() {
+            $('#rol').change(function() {
+                var selectedRol = $(this).val();
+                if (selectedRol === 'usuario' || selectedRol === 'padre') {
+                    $('#equipoSelect').hide();
+                    $('#tutorSelect').hide();
+                     $('#entrenadorSelect').hide();
+                } else if (selectedRol === 'entrenador') {
+                    $('#entrenadorSelect').show();
+                    $('#tutorSelect').hide();
+                     $('#equipoSelect').hide();
+                } else if (selectedRol === 'jugador') {
+                    $('#equipoSelect').show();
+                    $('#tutorSelect').show();
+                    $('#entrenadorSelect').hide();
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
