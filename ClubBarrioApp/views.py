@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.contrib.auth.hashers import make_password
+from django.shortcuts import render, redirect
 from .models import *
 from django.core.paginator import Paginator
 from django.http import Http404
@@ -36,17 +37,17 @@ def administrador(request):
     return render(request, 'administrador.html')
 
 def usuarios(request):
-    lista_usuarios = Usuario.objects.all()
+    lista_usuarios = User.objects.all()
     return render(request, 'usuarios.html', {'usuarios': lista_usuarios})
 
 def new_user(request):
     if request.method == 'GET':
-        Users = Usuario.objects.all()
+        Users = User.objects.all()
         Equipos = Equipo.objects.all()
         Tutores = TutorLegal.objects.all()
         return render(request, "crea_usuario.html", {'Users': Users, 'Equipos': Equipos, 'Tutores': Tutores})
     else:
-        new = Usuario()
+        new = User()
         new.nombre = request.POST.get('nombre')
         new.apellidos = request.POST.get('apellidos')
         new.email = request.POST.get('email')
@@ -82,7 +83,7 @@ def new_user(request):
 
 
 def elimina_usuario(request, id):
-    usuario = Usuario.objects.get(id=id)
+    usuario = User.objects.get(id=id)
     usuario.delete()
     return redirect('usuarios')
 
@@ -90,4 +91,30 @@ def registro(request):
     if request.method == 'GET':
         return render(request, 'registro.html')
     else:
+        nombre_usuario = request.POST.get('nombre_usuario')
         nombre=request.POST.get('nombre')
+        apellidos = request.POST.get('apellidos')
+        email = request.POST.get('email')
+        contrasenya= request.POST.get('contrasenya')
+        repetirContrasenya = request.POST.get('repetirContrasenya')
+        fecha_nacimiento = request.POST.get('fechaNacimiento')
+
+        errores = []
+
+        if contrasenya!=repetirContrasenya:
+            errores.append("Las contraseñas no coinciden.")
+
+        existe_usuario = User.objects.filter(username=nombre_usuario)
+        if existe_usuario:
+            errores.append("Ese nombre de usuario ya existe.")
+        existe_email = User.objects.filter(email=email)
+        if existe_email:
+            errores.append("Existe una cuenta asociada a ese correo.")
+
+        if len(errores) != 0:
+            return render(request, 'registro.html', {"errores": errores})
+        else:
+            usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email, nombre=nombre, apellidos=apellidos, fecha_nacimiento=fecha_nacimiento)
+            usuario.save()
+
+            return redirect('login')
