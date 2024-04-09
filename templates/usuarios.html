@@ -1,31 +1,60 @@
 {% load static %}
 {% include 'barra_admin.html' %}
-<table class="table table-striped">
-    <thead>
-    <tr>
-      <th scope="col">id</th>
-      <th scope="col">Nombre</th>
-      <th scope="col">Apellidos</th>
-      <th scope="col">Contraseña</th>
-      <th scope="col">Email</th>
-      <th scope="col">Fecha de nacimiento</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for u in usuarios %}
-    <tr>
-      <th scope="row">{{ u.id }}</th>
-      <td>{{ u.nombre }}</td>
-      <td>{{ u.apellidos }}</td>
-      <td>{{ u.password }}</td>
-      <td>{{ u.email }}</td>
-      <td>{{ u.fecha_nacimiento }}</td>
-        <td>
-            <img src="{% static 'icons8-edit-30.png' %}">
-            <img src="{% static 'icons8-basura-30.png' %}">
-        </td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+<head>
+    <style>
+    .btn-custom {
+        color: #00653d; /* Color del texto azul */
+    }
+    .table-responsive {
+        max-height: 400px; /* Ajusta la altura máxima según sea necesario */
+        overflow-y: auto; /* Agrega un scroll vertical */
+    }
+    </style>
+</head>
+<div class="container-fluid d-flex flex-column align-items-center">
+    <div class="container w-75 d-flex justify-content-start ">
+        <h1>Lista usuarios:</h1>
+    </div>
+    <div class="container w-75 d-flex justify-content-between align-items-center ">
+        <button type="button" class="btn btn-outline-success btn-custom">Nuevo usuario</button>
+
+        <div class="input-group w-25 h-50 ">
+          <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="background-color: #00653d; color: white; ">
+              <img src="{% static 'icons8-búsqueda-30.png' %}">
+          </button>
+        </div>
+    </div>
+    <div class="container w-75 m-4 ">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                  <th scope="col">id</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Apellidos</th>
+                  <th scope="col">Contraseña</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Fecha de nacimiento</th>
+                </tr>
+              </thead>
+              <tbody >
+              {% for u in usuarios %}
+                <tr>
+                  <th scope="row">{{ u.id }}</th>
+                  <td>{{ u.nombre }}</td>
+                  <td>{{ u.apellidos }}</td>
+                  <td>{{ u.password }}</td>
+                  <td>{{ u.email }}</td>
+                  <td>{{ u.fecha_nacimiento }}</td>
+                    <td>
+                        <img src="{% static 'icons8-edit-30.png' %}">
+                        <a href="{% url 'elimina_usuario' id=u.id%}"> <img src="{% static 'icons8-basura-30.png' %}"></a>
+                    </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 from django.core.paginator import Paginator
 from django.http import Http404
@@ -38,3 +38,8 @@ def administrador(request):
 def usuarios(request):
     lista_usuarios = Usuario.objects.all()
     return render(request, 'usuarios.html', {'usuarios': lista_usuarios})
+
+def elimina_usuario(request, id):
+    usuario = Usuario.objects.get(id=id)
+    usuario.delete()
+    return redirect('usuarios')
