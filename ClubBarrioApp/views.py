@@ -64,6 +64,12 @@ def new_user(request):
         new_entrenador.usuario_id = new.id
         new_entrenador.save()
 
+        list_equipos = request.POST.getlist('equipos')
+
+        for e in list_equipos:
+            equipo = Equipo.objects.get(id=e)
+            equipo.entrenadores.add(new_entrenador)
+
     if request.POST.get('rol') == 'jugador':
         new_jugador = Jugador()
         new_jugador.usuario_id = new.id

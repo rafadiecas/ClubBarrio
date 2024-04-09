@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Crea usuario</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <style>
+        #equipoSelect, #tutorSelect, #entrenadorSelect {
+            display: none;
+        }
+    </style>
+    
 </head>
+
 
 {% include "barra_admin.html" %}
 
@@ -42,7 +51,7 @@
         <label for="fecha_nacimiento">Fecha de nacimiento:</label>
         <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
         <br>
-        <div class="select">
+        <div class="select" id="equipoSelect">
             <label for="equipo">Equipo:</label>
             <select id="equipo" name="equipo">
                 {% for e in Equipos %}
@@ -51,7 +60,7 @@
             </select>
         </div>
         <br>
-        <div class="select">
+        <div class="select" id="tutorSelect">
             <label for="tutor">Tutor:</label>
             <select id="tutores" name="tutor">
                 {% for t in Tutores %}
@@ -59,12 +68,42 @@
                 {% endfor %}
             </select>
         </div>
+    
+        <div class="select" id="entrenadorSelect">
+            <label for="equipos">Equipos para entrenador:</label>
+            <select id="equipos" name="equipos" multiple>
+                {% for e in Equipos %}
+                        <option value="{{ e.id }}">{{ e.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    
         <input class="btn btn-primary" type="submit">
     </form>
 
     <a href="{% url 'administrador' %}" role="button">Volver</a>
 
-
+    <script>
+        $(document).ready(function() {
+            $('#rol').change(function() {
+                var selectedRol = $(this).val();
+                if (selectedRol === 'usuario' || selectedRol === 'padre') {
+                    $('#equipoSelect').hide();
+                    $('#tutorSelect').hide();
+                     $('#entrenadorSelect').hide();
+                } else if (selectedRol === 'entrenador') {
+                    $('#entrenadorSelect').show();
+                    $('#tutorSelect').hide();
+                     $('#equipoSelect').hide();
+                } else if (selectedRol === 'jugador') {
+                    $('#equipoSelect').show();
+                    $('#tutorSelect').show();
+                    $('#entrenadorSelect').hide();
+                }
+            });
+        });
+    </script>
 
 </body>
+
 </html>
