@@ -31,3 +31,10 @@ def pagina_noticias(request):
     }
 
     return render(request, 'Noticias.html', data)
+
+def administrador(request):
+    return render(request, 'administrador.html')
+
+def usuarios(request):
+    lista_usuarios = Usuario.objects.all()
+    return render(request, 'usuarios.html', {'usuarios': lista_usuarios})
