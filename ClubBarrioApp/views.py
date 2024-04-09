@@ -43,3 +43,9 @@ def elimina_usuario(request, id):
     usuario = Usuario.objects.get(id=id)
     usuario.delete()
     return redirect('usuarios')
+
+def registro(request):
+    if request.method == 'GET':
+        return render(request, 'registro.html')
+    else:
+        nombre=request.POST.get('nombre')

@@ -24,5 +24,6 @@ urlpatterns = [
     path('administrador/', administrador, name='administrador'),
     path('administrador/usuarios/', usuarios, name='usuarios'),
     path('administrador/usuarios/eliminar<int:id>/', elimina_usuario , name='elimina_usuario'),
+    path('registro/', registro, name='registro'),
 
 ]
