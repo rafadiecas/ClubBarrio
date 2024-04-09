@@ -15,7 +15,7 @@ class Role(models.TextChoices):
         rol = None
         for choice in Role.choices:
             if choice[1] == label:
-                rol = choice
+                rol = choice.__getitem__(1)
         return rol
 
 class UserManager(BaseUserManager):

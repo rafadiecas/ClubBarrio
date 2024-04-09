@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Crea usuario</title>
@@ -32,16 +32,18 @@
         </select>
         <br>
         <label for="username">Username:</label>
-        <input type="text" name="username" id="username" required>
+        <input type="text" name="username" id="username" value="{{ username }}" required>
         <br>
+        <div class="container" id="nombreSelect" style="margin-left: 0">
         <label for="nombre">Nombre:</label>
         <input type="text" name="nombre" id="nombre" required>
         <br>
         <label for="apellidos">Apellidos:</label>
         <input type="text" name="apellidos" id="apellidos" required>
         <br>
+        </div>
         <label for="email">Email:</label>
-        <input type="email" name="email" id="email" required>
+        <input type="email" name="email" id="email" value="{{ email }}" required>
         <br>
         <label for="password">Contraseña:</label>
         <input type="password" name="password" id="password" required>
@@ -50,7 +52,7 @@
         <input type="password" name="password2" id="password2" required>
         <br>
         <label for="fecha_nacimiento">Fecha de nacimiento:</label>
-        <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
+        <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" value="{{ fecha_nacimiento }}" required>
         <br>
         <div class="select" id="equipoSelect">
             <label for="equipo">Equipo:</label>
@@ -83,15 +85,22 @@
     </form>
 
     <a href="{% url 'administrador' %}" role="button">Volver</a>
+    
+    {% for e in errores %}
+
+            <p style="color: red">{{ e }}</p>
+
+        {% endfor %}
 
     <script>
         $(document).ready(function() {
             $('#rol').change(function() {
                 var selectedRol = $(this).val();
-                if (selectedRol === 'Usuario' || selectedRol === 'Tutor') {
+                if (selectedRol === 'Usuario') {
                     $('#equipoSelect').hide();
+                    $('#nombreSelect').hide();
                     $('#tutorSelect').hide();
-                     $('#entrenadorSelect').hide();
+                    $('#entrenadorSelect').hide();
                 } else if (selectedRol === 'Entrenador') {
                     $('#entrenadorSelect').show();
                     $('#tutorSelect').hide();
@@ -100,6 +109,12 @@
                     $('#equipoSelect').show();
                     $('#tutorSelect').show();
                     $('#entrenadorSelect').hide();
+                    $('#nombreSelect').show();
+                } else if (selectedRol === 'Tutor') {
+                    $('#tutorSelect').hide();
+                    $('#equipoSelect').hide();
+                    $('#entrenadorSelect').hide();
+                    $('#nombreSelect').hide();
                 }
             });
         });
