@@ -58,29 +58,7 @@ def new_user(request):
         password2 = request.POST.get('password2')
         fecha_nacimiento = request.POST.get('fecha_nacimiento')
 
-        errors = []
-
-        if password != password2:
-            errors.append("Las contraseñas no coinciden")
-        existe_usuario = User.objects.filter(username=username).exists()
-        if existe_usuario:
-            errors.append("Ya existe un usuario con ese nombre")
-        existe_mail = User.objects.filter(email=email).exists()
-        if existe_mail:
-            errors.append("Ya existe un usuario con ese email")
-        fecha = datetime.strptime(fecha_nacimiento, '%Y-%m-%d')
-        diferencia = datetime.now() - fecha
-        if diferencia.days < 6570 and rol != 'Jugador':
-            errors.append("El usuario debe ser mayor de edad")
-        largo = re.compile(r'.{8,}')
-        digito = re.compile(r'\d+')
-        letra_may = re.compile(r'[A-Z]+')
-        letra_min = re.compile(r'[a-z]+')
-        validaciones = [largo, digito, letra_may, letra_min]
-        for v in validaciones:
-            if not v.search(password):
-                errors.append("La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número")
-                break
+        errors = filtro(email, fecha_nacimiento,rol, username, password, password2)
 
         if len(errors) != 0:
             return render(request, "crea_usuario.html",
@@ -123,6 +101,33 @@ def new_user(request):
     return redirect('/ClubBarrioApp/administrador/usuarios/')
 
 
+def filtro(email, fecha_nacimiento, rol, username, password = "Contrasena1", password2 = "Contrasena1"):
+    errors = []
+    if password != password2:
+        errors.append("Las contraseñas no coinciden")
+    existe_usuario = User.objects.filter(username=username).exists()
+    if existe_usuario:
+        errors.append("Ya existe un usuario con ese nombre")
+    existe_mail = User.objects.filter(email=email).exists()
+    if existe_mail:
+        errors.append("Ya existe un usuario con ese email")
+    fecha = datetime.strptime(fecha_nacimiento, '%Y-%m-%d')
+    diferencia = datetime.now() - fecha
+    if diferencia.days < 6570 and rol != 'Jugador':
+        errors.append("El usuario debe ser mayor de edad")
+    largo = re.compile(r'.{8,}')
+    digito = re.compile(r'\d+')
+    letra_may = re.compile(r'[A-Z]+')
+    letra_min = re.compile(r'[a-z]+')
+    validaciones = [largo, digito, letra_may, letra_min]
+    for v in validaciones:
+        if not v.search(password):
+            errors.append(
+                "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número")
+            break
+    return errors
+
+
 def elimina_usuario(request, id):
     usuario = User.objects.get(id=id)
     usuario.delete()
@@ -138,31 +143,8 @@ def registro(request):
         repetirContrasenya = request.POST.get('repetirContrasenya')
         fecha_nacimiento = request.POST.get('fecha_nacimiento')
 
-        errores = []
+        errores = filtro(email, fecha_nacimiento, 'Usuario', nombre_usuario, contrasenya, repetirContrasenya)
 
-        if contrasenya != repetirContrasenya:
-            errores.append("Las contraseñas no coinciden.")
-
-        existe_usuario = User.objects.filter(username=nombre_usuario)
-        if existe_usuario:
-            errores.append("Ese nombre de usuario ya existe.")
-        existe_email = User.objects.filter(email=email)
-        if existe_email:
-            errores.append("Existe una cuenta asociada a ese correo.")
-        fecha = datetime.strptime(fecha_nacimiento, '%Y-%m-%d')
-        diferencia = datetime.now() - fecha
-        if diferencia.days < 6570:
-            errores.append("El usuario debe ser mayor de edad")
-        largo = re.compile(r'.{8,}')
-        digito = re.compile(r'\d+')
-        letra_may = re.compile(r'[A-Z]+')
-        letra_min = re.compile(r'[a-z]+')
-        validaciones = [largo, digito, letra_may, letra_min]
-        for v in validaciones:
-            if not v.search(contrasenya):
-                errores.append(
-                    "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número")
-                break
 
         if len(errores) != 0:
             return render(request, 'registro.html', {"errores": errores, "nombre_usuraio": nombre_usuario, "email": email, "fecha_nacimiento": fecha_nacimiento})
@@ -199,7 +181,6 @@ def desloguear(request):
 
 def edita_usuario(request, id):
     usuario = User.objects.get(id=id)
-    id = usuario.id
     password = usuario.password
     Equipos = Equipo.objects.all()
     Tutores = TutorLegal.objects.all()
@@ -234,7 +215,7 @@ def edita_usuario(request, id):
         new_usuario.email = request.POST.get('email')
         new_usuario.rol = Role.value_for_label(request.POST.get('rol'))
         new_usuario.fecha_nacimiento = request.POST.get('fecha_nacimiento')
-        usuario.save()
+        new_usuario.save()
 
         if usuario.rol == 'Tutor':
             new_padre = TutorLegal()
