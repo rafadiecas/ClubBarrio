@@ -264,6 +264,7 @@ def crear_equipo(request):
 
         return redirect('equipos')
 
+
 def editar_equipo(request, id):
     equipo = Equipo.objects.get(id=id)
     if request.method == 'GET':
@@ -288,3 +289,7 @@ def elimina_equipo(request, id):
     equipo = Equipo.objects.get(id=id)
     equipo.delete()
     return redirect('equipos')
+
+def lista_noticias(request):
+    lista_noticias = Noticias.objects.all()
+    return render(request, 'noticias_listado.html', {"noticias":lista_noticias})

@@ -29,6 +29,7 @@ urlpatterns = [
     path('administrador/usuarios/edit/<int:id>/', edita_usuario, name='edita_usuario'),
     path('logout/', desloguear, name='desloguear'),
     path('administrador/equipos/', equipos_listado, name='equipos'),
+    path('administrador/noticias/', lista_noticias , name='noticias_admin'),
     path('administrador/equipos/new', crear_equipo, name='crear_equipo'),
     path('administrador/equipos/editar/<int:id>/', editar_equipo, name='editar_equipo'),
     path('administrador/equipos/eliminar/<int:id>/', elimina_equipo, name='elimina_equipo'),
