@@ -33,5 +33,8 @@ urlpatterns = [
     path('administrador/equipos/new', crear_equipo, name='crear_equipo'),
     path('administrador/equipos/editar/<int:id>/', editar_equipo, name='editar_equipo'),
     path('administrador/equipos/eliminar/<int:id>/', elimina_equipo, name='elimina_equipo'),
+    path('administrador/noticias/new', crear_noticia, name='crear_noticia'),
+    path('administrador/noticias/eliminar/<int:id>/', elimina_noticia, name='elimina_noticia'),
+    path('administrador/noticias/editar/<int:id>/', editar_noticia, name='editar_noticia'),
 
 ]
