@@ -6,10 +6,13 @@
     <title>Noticias</title>
 
     <style>
+        .card{
+            max-width: 50%;
+        }
         #card-text{
             display: flex;
-            justify-content: center;
             flex-wrap: wrap;
+            justify-content: center;
         }
         #foto_noticia{
             max-width: 300px;
@@ -19,10 +22,10 @@
 </head>
 {% include "barra_navegacion.html" %}
 <body>
-    <div class="container">
+    <div class="pagination d-flex align-items-center flex-column">
         {% for n in entity %}
             <div class="card" style="margin-block:20px">
-                <div class="card-header">
+                <div class="card-header text-center">
                     <h2>{{ n.titulo }}</h2>
                 </div>
                 <div class="card-body" id="carta">
@@ -36,8 +39,7 @@
         {% endfor %}
 
     </div>
-
     {% include 'paginator.html' %}
-
 </body>
+{% include 'footer.html' %}
 </html>

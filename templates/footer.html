@@ -2,30 +2,24 @@
 {% load bootstrap5 %}
 <head>
     <style>
-        .footer{
+        .footer {
+            display: flex;
             background-color: #00653d;
             max-height: 220px;
-            position: static;
+            width: 100%;
+            margin-top: auto;
             padding: 0;
+            position: absolute;
         }
-        .container{
+        .main{
             max-height: 220px;
             padding: 0;
-            margin-top: 0;
-        }
-        .row{
-            padding: 0;
-            margin-top: 0;
-        }
-        .col{
-            padding: 0;
-            margin-top: 0;
         }
     </style>
 </head>
 <footer class="footer text-center text-lg-start text-white">
 
-    <div class="container p-4">
+    <div class="main container p-4">
 
         <div class="row my-4">
         <!--Titulo terminos y servicios-->
