@@ -20,21 +20,10 @@
 
 <div class="container">
 
-    <!DOCTYPE html>
-<html lang="es">
-<head>
-    <!-- Resto del código -->
-
-</head>
-
-<body>
-
-<div class="container">
 
     <h1 class="my-4">Crear usuario</h1>
 
-    <!-- Aquí es donde mostramos los errores -->
-    {% if errores %}
+        {% if errores %}
         <div class="alert alert-danger">
             <ul>
                 {% for error in errores %}
@@ -42,18 +31,7 @@
                 {% endfor %}
             </ul>
         </div>
-    {% endif %}
-
-
-</div>
-
-    <!-- Resto del código -->
-
-</body>
-
-</html>
-
-    <h1 class="my-4">Crear usuario</h1>
+        {% endif %}
 
     <form action="" method="post">
 
