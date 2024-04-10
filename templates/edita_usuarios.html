@@ -9,9 +9,7 @@
         #equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField {
             display: none;
         }
-        
 
-        
     </style>
     
 </head>
@@ -41,8 +39,9 @@
         {% csrf_token %}
 
         <div class="row">
-            <div class="col-3 responsive-div">
-                <h2 id="rol">{{ usuario.rol }}</h2>
+            <div class="col-md-4">
+                <label for="rol" class="form-label">Rol:</label>
+                <input type="text" name="rol" id="rol" class="form-control" value="{{ usuario.rol }}" disabled>
             </div>
         </div>
 
@@ -57,7 +56,7 @@
             </div>
             <div class="col-md-4" id="apellidosField">
                 <label for="apellidos" class="form-label">Apellidos:</label>
-                <input type="text" name="apellidos" id="apellidos" class="form-control" value="">
+                <input type="text" name="apellidos" id="apellidos" class="form-control" value="{{ datos.apellidos }}">
             </div>
         </div>
 
@@ -128,7 +127,7 @@
 </div>
 
     <script>
-    $(document).ready(function() {
+$(document).ready(function() {
     var roleActions = {
         'Usuario': function() {
             $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField').hide();
@@ -151,14 +150,20 @@
         }
     };
 
-    $('#rol').change(function() {
+    $('#rol').on('input', function() {
         var selectedRol = $(this).val();
         if (roleActions[selectedRol]) {
             roleActions[selectedRol]();
         }
     });
+
+    // Ejecutar la función correspondiente al cargar la página
+    var initialRol = $('#rol').val();
+    if (roleActions[initialRol]) {
+        roleActions[initialRol]();
+    }
 });
-    </script>
+</script>
 
 </body>
 
