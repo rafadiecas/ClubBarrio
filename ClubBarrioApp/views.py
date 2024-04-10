@@ -135,12 +135,10 @@ def registro(request):
         return render(request, 'registro.html')
     else:
         nombre_usuario = request.POST.get('nombre_usuario')
-        nombre=request.POST.get('nombre')
-        apellidos = request.POST.get('apellidos')
         email = request.POST.get('email')
-        contrasenya= request.POST.get('contrasenya')
+        contrasenya = request.POST.get('contrasenya')
         repetirContrasenya = request.POST.get('repetirContrasenya')
-        fecha_nacimiento = request.POST.get('fechaNacimiento')
+        fecha_nacimiento = request.POST.get('fecha_nacimiento')
 
         errores = []
 
@@ -153,11 +151,25 @@ def registro(request):
         existe_email = User.objects.filter(email=email)
         if existe_email:
             errores.append("Existe una cuenta asociada a ese correo.")
+        fecha = datetime.strptime(fecha_nacimiento, '%Y-%m-%d')
+        diferencia = datetime.now() - fecha
+        if diferencia.days < 6570:
+            errores.append("El usuario debe ser mayor de edad")
+        largo = re.compile(r'.{8,}')
+        digito = re.compile(r'\d+')
+        letra_may = re.compile(r'[A-Z]+')
+        letra_min = re.compile(r'[a-z]+')
+        validaciones = [largo, digito, letra_may, letra_min]
+        for v in validaciones:
+            if not v.search(contrasenya):
+                errores.append(
+                    "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número")
+                return render(request, 'registro.html', {"errores": errores})
 
         if len(errores) != 0:
             return render(request, 'registro.html', {"errores": errores})
         else:
-            usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email, nombre=nombre, apellidos=apellidos, fecha_nacimiento=fecha_nacimiento)
+            usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email, fecha_nacimiento=fecha_nacimiento)
             usuario.save()
 
             return redirect('login')
