@@ -270,6 +270,7 @@ def crear_equipo(request):
 
         return redirect('equipos')
 
+
 def editar_equipo(request, id):
     equipo = Equipo.objects.get(id=id)
     if request.method == 'GET':
@@ -294,3 +295,35 @@ def elimina_equipo(request, id):
     equipo = Equipo.objects.get(id=id)
     equipo.delete()
     return redirect('equipos')
+
+def lista_noticias(request):
+    lista_noticias = Noticias.objects.all()
+    return render(request, 'noticias_listado.html', {"noticias":lista_noticias})
+
+def crear_noticia(request):
+    if request.method == 'GET':
+        return render(request, 'noticia_crear.html')
+    else:
+        noticia_nueva = Noticias()
+        noticia_nueva.titulo = request.POST.get('titulo')
+        noticia_nueva.articulo = request.POST.get('articulo')
+        noticia_nueva.url_imagen = request.POST.get('url_imagen')
+        noticia_nueva.administrador_id = 1
+        noticia_nueva.save()
+        return redirect('noticias_admin')
+
+def elimina_noticia(request, id):
+    noticia = Noticias.objects.get(id=id)
+    noticia.delete()
+    return redirect('noticias_admin')
+
+def editar_noticia(request,id):
+    noticia = Noticias.objects.get(id=id)
+    if request.method == 'GET':
+        return render(request, 'noticia_crear.html', {'noticia':noticia})
+    else:
+        noticia.titulo = request.POST.get('titulo')
+        noticia.articulo = request.POST.get('articulo')
+        noticia.url_imagen = request.POST.get('url_imagen')
+        noticia.save()
+        return redirect('noticias_admin')
