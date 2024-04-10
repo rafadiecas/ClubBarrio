@@ -10,14 +10,6 @@
         overflow-y: auto; /* Agrega un scroll vertical */
     }
     </style>
-    <script>
-        function confirmarEliminarUsuario(event) {
-        var confirmacion = confirm('¿Seguro que desea eliminar usuario?');
-         if (!confirmacion) {
-        event.preventDefault();
-        }
-        }
-    </script>
 </head>
 <div class="container-fluid d-flex flex-column align-items-center">
     <div class="container w-75 d-flex justify-content-start ">
@@ -51,7 +43,7 @@
                   <th scope="row">{{ e.id }}</th>
                     <td>{{ e.nombre }}</td>
                   <td>{{ e.categoria }}</td>
-                  <td>{{ e.entrenadores }}</td>
+                  <td>{{ e.entrenadores}}</td>
                     <td>
                         <a href="{% url 'editar_equipo' id=e.id %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>
                         <a href="{% url 'elimina_equipo' id=e.id%}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>

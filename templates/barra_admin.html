@@ -50,7 +50,7 @@
           <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="{% url 'usuarios' %}">Usuarios</a></li>
               <li><a class="dropdown-item" href="{% url 'equipos' %}">Equipos</a></li>
-              <li><a class="dropdown-item" href="#">Entrenamiento</a></li>
+              <li><a class="dropdown-item" href="{% url 'entrenamientos_listado' %}">Entrenamiento</a></li>
               <li><a class="dropdown-item" href="#">Tienda</a></li>
               <li><a class="dropdown-item" href="#">Partido</a></li>
               <li><a class="dropdown-item" href="#">Noticias</a></li>
@@ -68,4 +68,12 @@
 {% block bootstrap5_extra_script %}{% endblock %}
 
 </body>
+<script>
+        function confirmarEliminarUsuario(event) {
+        var confirmacion = confirm('¿Seguro que desea eliminar?');
+         if (!confirmacion) {
+        event.preventDefault();
+        }
+        }
+    </script>
 </html>

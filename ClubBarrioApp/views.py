@@ -244,6 +244,7 @@ def edita_usuario(request, id):
         return redirect('usuarios')
 def equipos_listado(request):
     lista_equipos = Equipo.objects.all()
+    #id_entrenadores = equipo.entrenadores.values_list('id', flat=True)
     return render(request, 'equipos_listado.html',{"equipos":lista_equipos})
 
 def crear_equipo(request):
@@ -288,3 +289,43 @@ def elimina_equipo(request, id):
     equipo = Equipo.objects.get(id=id)
     equipo.delete()
     return redirect('equipos')
+
+def entrenamientos_listado(request):
+    lista_entrenamientos = Entrenamiento.objects.all()
+
+    return render(request, 'entrenamientos_listado.html',{"lista_entrenamientos":lista_entrenamientos})
+def crear_entrenamiento(request):
+    if request.method == 'GET':
+        lista_entrenadores = Entrenador.objects.all()
+        lista_lugares_entrenamiento = LugarEntrenamiento.objects.all()
+        return render(request, 'entrenamientos_crear.html',
+                      {'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento})
+    else:
+        entrenamiento_nuevo = Entrenamiento()
+        entrenamiento_nuevo.fecha = request.POST.get('fecha')
+        entrenamiento_nuevo.hora = request.POST.get('hora')
+        entrenamiento_nuevo.entrenador = Entrenador.objects.get(id=int(request.POST.get('entrenador')))
+        entrenamiento_nuevo.lugarEntrenamiento = LugarEntrenamiento.objects.get(id=int(request.POST.get('lugarEntrenamiento')))
+        entrenamiento_nuevo.save()
+
+        return redirect('entrenamientos_listado')
+def editar_entrenamiento(request, id):
+    entrenamiento = Entrenamiento.objects.get(id=id)
+    if request.method == 'GET':
+        lista_entrenadores = Entrenador.objects.all()
+        lista_lugares_entrenamiento = LugarEntrenamiento.objects.all()
+        return render(request, 'entrenamientos_crear.html',
+                      {'entrenamiento': entrenamiento, 'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento})
+    else:
+        entrenamiento.fecha = request.POST.get('fecha')
+        entrenamiento.hora = request.POST.get('hora')
+        entrenamiento.entrenador = Entrenador.objects.get(id=int(request.POST.get('entrenador')))
+        entrenamiento.lugarEntrenamiento = LugarEntrenamiento.objects.get(id=int(request.POST.get('lugarEntrenamiento')))
+        entrenamiento.save()
+
+        return redirect('entrenamientos_listado')
+
+def elimina_entrenamiento(request, id):
+    entrenamiento = Entrenamiento.objects.get(id=id)
+    entrenamiento.delete()
+    return redirect('entrenamientos_listado')
