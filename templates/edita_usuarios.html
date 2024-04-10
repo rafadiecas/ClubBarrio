@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crea usuario</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <style>
+        #equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField {
+            display: none;
+        }
+    </style>
+    
+</head>
+
+
+{% include "barra_admin.html" %}
+
+<body>
+
+<div class="container">
+
+
+    <h1 class="my-4">Edita usuario</h1>
+
+        {% if errores %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for error in errores %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+    <form action="" method="post">
+
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-3 responsive-div">
+                <h2 id="rol">{{ usuario.rol }}</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" name="username" id="username" class="form-control" value="{{ usuario.username }}" required>
+            </div>
+            <div class="col-md-4" id="nombreField">
+                <label for="nombre" class="form-label">Nombre:</label>
+                <input type="text" name="nombre" id="nombre" class="form-control" value="{{ datos.nombre }}">
+            </div>
+            <div class="col-md-4" id="apellidosField">
+                <label for="apellidos" class="form-label">Apellidos:</label>
+                <input type="text" name="apellidos" id="apellidos" class="form-control" value="">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" name="email" id="email" class="form-control" value="{{ usuario.email }}" required>
+            </div>
+            
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento:</label>
+                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{{ usuario.fecha_nacimiento|date:'Y-m-d' }}" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 select" id="equipoSelect">
+                <label for="equipo" class="form-label">Equipo:</label>
+                <select id="equipo" name="equipo" class="form-select">
+                    {% for e in Equipos %}
+                        {% if e.id == equipo.id  %}
+                                    <option value="{{ e.id }}" selected>{{ e.nombre }}</option>
+                        {% else  %}
+                            <option value="{{ e.id }}">{{ e.nombre }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-6 select" id="tutorSelect">
+                <label for="tutor" class="form-label">Tutor:</label>
+                <select id="tutores" name="tutor" class="form-select">
+                    {% for t in Tutores %}
+                        {% if t.id == tutor.id %}
+                            <option value="{{ t.id }}" selected>{{ t.nombre }}</option>
+                        {% else  %}
+                            <option value="{{ t.id }}">{{ t.nombre }} {{ t.apellidos }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </div>
+        </div>
+
+    </form>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <a href="{% url 'administrador' %}" role="button" class="btn btn-secondary mt-3">Volver</a>
+        </div>
+    </div>
+</div>
+
+    <script>
+    $(document).ready(function() {
+    var roleActions = {
+        'Usuario': function() {
+            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField').hide();
+            $('#nombre, #apellidos').removeAttr('required');
+        },
+        'Entrenador': function() {
+            $('#entrenadorSelect, #tutorSelect').hide();
+            $('#equipoSelect, #nombreField, #apellidosField').show();
+            $('#nombre, #apellidos').attr('required', true);
+        },
+        'Jugador': function() {
+            $('#entrenadorSelect').hide();
+            $('#equipoSelect, #tutorSelect, #nombreField, #apellidosField').show();
+            $('#nombre, #apellidos').attr('required', true);
+        },
+        'Tutor': function() {
+            $('#equipoSelect, #tutorSelect, #entrenadorSelect').hide();
+            $('#nombreField, #apellidosField').show();
+            $('#nombre, #apellidos').attr('required', true);
+        }
+    };
+
+    $('#rol').change(function() {
+        var selectedRol = $(this).val();
+        if (roleActions[selectedRol]) {
+            roleActions[selectedRol]();
+        }
+    });
+});
+    </script>
+
+</body>
+
+</html>

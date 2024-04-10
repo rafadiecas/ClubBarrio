@@ -122,6 +122,7 @@ class TutorLegal(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=250, default='sin nombre')
     apellidos = models.CharField(max_length=250, default='sin apellidos')
+    es_activo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nombre + " " + self.apellidos
@@ -168,6 +169,7 @@ class Jugador(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     equipo = models.ForeignKey(Equipo, on_delete=models.DO_NOTHING)
     tutorLegal = models.ForeignKey(TutorLegal, on_delete=models.CASCADE)
+    es_activo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nombre + " " + self.apellidos
