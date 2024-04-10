@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
@@ -164,12 +165,31 @@ def registro(request):
             if not v.search(contrasenya):
                 errores.append(
                     "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número")
-                return render(request, 'registro.html', {"errores": errores})
+                break
 
         if len(errores) != 0:
-            return render(request, 'registro.html', {"errores": errores})
+            return render(request, 'registro.html', {"errores": errores, "nombre_usuraio": nombre_usuario, "email": email, "fecha_nacimiento": fecha_nacimiento})
         else:
             usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email, fecha_nacimiento=fecha_nacimiento)
             usuario.save()
 
             return redirect('login')
+
+def logear(request):
+    if request.method == 'POST':
+        nombre_usuario = request.POST.get('nombre_usuario')
+        contrasenya = request.POST.get('contrasenya')
+
+        user = authenticate(request, username=nombre_usuario, password=contrasenya)
+
+        if user is not None:
+            login(request, user)
+
+            # Redirección tras un login exitoso
+            return redirect('inicio')
+        else:
+            # Mensaje de error si la autenticación falla
+            return render(request, 'login.html',{"error": "Usuario o contraseña incorrectos", "nombre_usuario": nombre_usuario})
+
+    # Mostrar formulario de login para método GET
+    return render(request, 'login.html')
