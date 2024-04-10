@@ -16,7 +16,7 @@
         <h1>Lista usuarios:</h1>
     </div>
     <div class="container w-75 d-flex justify-content-between align-items-center ">
-        <button type="button" class="btn btn-outline-success btn-custom">Nuevo usuario</button>
+        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'new_user' %}" >Nuevo usuario</a>
 
         <div class="input-group w-25 h-50 ">
           <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;">
