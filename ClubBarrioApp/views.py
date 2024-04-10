@@ -187,24 +187,28 @@ def edita_usuario(request, id):
     roles = Role.labels[:-1]
     if request.method == 'GET':
         if usuario.rol == 'Jugador':
-            tutor = TutorLegal.objects.get(usuario_id=usuario.id)
-            equipo = Equipo.objects.get(id=usuario.equipo_id)
+            tutor = Jugador.objects.get(usuario_id=id).tutorLegal
+            equipo = Jugador.objects.get(usuario_id=id).equipo
             jugador = Jugador.objects.filter(usuario_id=usuario.id)
-            return render(request, 'crea_usuario.html',
+            return render(request, 'edita_usuarios.html',
                           {'usuario': usuario, 'Equipos': Equipos, 'Tutores': Tutores, 'roles': roles, 'tutor': tutor,
-                           'equipo': equipo, 'jugador': jugador})
+                           'equipo': equipo, 'datos': jugador})
         if usuario.rol == 'Entrenador':
-            id_equipos = Equipo.objects.filter(Equipo.entrenadores.id == usuario.id)
+            id_equipos = []
+            total_equipos = Equipo.objects.all()
+            for e in total_equipos:
+                if e.entrenadores.filter(usuario_id=usuario.id).exists():
+                    id_equipos.append(e.id)
             entrenador = Entrenador.objects.filter(usuario_id=usuario.id)
-            return render(request, 'crea_usuario.html',
+            return render(request, 'edita_usuarios.html',
                           {'usuario': usuario, 'Equipos': Equipos, 'roles': roles, 'id_equipos': id_equipos,
-                           'entrenador': entrenador, 'Tutores': Tutores})
+                           'datos': entrenador, 'Tutores': Tutores})
         if usuario.rol == 'Tutor':
             tutor = TutorLegal.objects.filter(usuario_id=usuario.id)
-            return render(request, 'crea_usuario.html',
-                          {'usuario': usuario, 'roles': roles, 'tutor': tutor, 'Tutores': Tutores, 'Equipos': Equipos})
+            return render(request, 'edita_usuarios.html',
+                          {'usuario': usuario, 'roles': roles, 'datos': tutor, 'Tutores': Tutores, 'Equipos': Equipos})
 
-        return render(request, 'crea_usuario.html',
+        return render(request, 'edita_usuarios.html',
                       {'usuario': usuario, 'roles': roles, 'Tutores': Tutores, 'Equipos': Equipos})
     else:
         usuario.delete()
