@@ -39,12 +39,7 @@
 
         <div class="row">
             <div class="col-3 responsive-div">
-                <label for="rol" class="form-label">Rol:</label>
-                <select name="rol" id="rol" class="form-select">
-                {% for r in roles %}
-                    <option value="{{ r }}">{{ r }}</option>
-                {% endfor %}
-            </select>
+                <h2 id="rol">{{ usuario.rol }}</h2>
             </div>
         </div>
 
@@ -96,7 +91,11 @@
                 <label for="tutor" class="form-label">Tutor:</label>
                 <select id="tutores" name="tutor" class="form-select">
                     {% for t in Tutores %}
-                        <option value="{{ t.id }}">{{ t.nombre }} {{ t.apellidos }}</option>
+                        {% if t.id == tutor.id %}
+                            <option value="{{ t.id }}" selected>{{ t.nombre }}</option>
+                        {% else  %}
+                            <option value="{{ t.id }}">{{ t.nombre }} {{ t.apellidos }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </div>
