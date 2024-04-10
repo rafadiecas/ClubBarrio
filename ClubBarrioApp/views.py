@@ -53,7 +53,7 @@ def new_user(request):
 
         return render(request, "crea_usuario.html", {'Users': Users, 'Equipos': Equipos, 'Tutores': Tutores, 'roles': roles})
     else:
-        new = User()
+
         username = request.POST.get('username')
         rol =Role.value_for_label(request.POST.get('rol'))
         email = request.POST.get('email')

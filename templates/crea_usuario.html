@@ -34,14 +34,14 @@
         <label for="username">Username:</label>
         <input type="text" name="username" id="username" value="{{ username }}" required>
         <br>
-        <div class="container" id="nombreSelect" style="margin-left: 0">
+       
         <label for="nombre">Nombre:</label>
         <input type="text" name="nombre" id="nombre" required>
         <br>
         <label for="apellidos">Apellidos:</label>
         <input type="text" name="apellidos" id="apellidos" required>
         <br>
-        </div>
+    
         <label for="email">Email:</label>
         <input type="email" name="email" id="email" value="{{ email }}" required>
         <br>
@@ -67,7 +67,7 @@
             <label for="tutor">Tutor:</label>
             <select id="tutores" name="tutor">
                 {% for t in Tutores %}
-                    <option value="{{ t.id }}">{{ t.usuario.nombre }} {{ t.usuario.apellidos }}</option>
+                    <option value="{{ t.id }}">{{ t.nombre }} {{ t.apellidos }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -96,9 +96,8 @@
         $(document).ready(function() {
             $('#rol').change(function() {
                 var selectedRol = $(this).val();
-                if (selectedRol === 'Usuario') {
+                if (selectedRol === 'Usuario' || selectedRol === 'Tutor') { 
                     $('#equipoSelect').hide();
-                    $('#nombreSelect').hide();
                     $('#tutorSelect').hide();
                     $('#entrenadorSelect').hide();
                 } else if (selectedRol === 'Entrenador') {
@@ -109,13 +108,7 @@
                     $('#equipoSelect').show();
                     $('#tutorSelect').show();
                     $('#entrenadorSelect').hide();
-                    $('#nombreSelect').show();
-                } else if (selectedRol === 'Tutor') {
-                    $('#tutorSelect').hide();
-                    $('#equipoSelect').hide();
-                    $('#entrenadorSelect').hide();
-                    $('#nombreSelect').hide();
-                }
+                } 
             });
         });
     </script>
