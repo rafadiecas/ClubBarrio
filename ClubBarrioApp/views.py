@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
@@ -15,10 +15,6 @@ def pagina_inicio(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     list_noticias = list_noticias[0:3]
     return render(request, 'inicio.html', {'noticias': list_noticias})
-
-def login(request):
-    return render(request, 'login.html')
-
 
 def pagina_noticias(request):
     list_noticias = Noticias.objects.all().order_by('-id')
@@ -193,3 +189,7 @@ def logear(request):
 
     # Mostrar formulario de login para método GET
     return render(request, 'login.html')
+
+def desloguear(request):
+    logout(request)
+    return redirect('login')
