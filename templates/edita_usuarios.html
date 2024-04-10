@@ -9,6 +9,9 @@
         #equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField {
             display: none;
         }
+        
+
+        
     </style>
     
 </head>
@@ -100,6 +103,14 @@
                 </select>
             </div>
         </div>
+        <div class="row">
+            <div class="col-12" id="columna">
+               <label for="is_active" class="form-label" style="margin: 0"> Es Activo:</label>
+                <input type="checkbox" name="is_active" id="is_active" {% if datos.es_activo %} checked {% endif %}>
+            </div>
+
+        </div>
+        
 
         <div class="row">
             <div class="col-12 text-center">
