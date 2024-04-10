@@ -16,6 +16,23 @@ def pagina_inicio(request):
     list_noticias = list_noticias[0:3]
     return render(request, 'inicio.html', {'noticias': list_noticias})
 
+def pagina_tienda(request):
+    list_productos = Producto.objects.all()
+    page = request.GET.get('page', 1)
+
+    try:
+        paginator = Paginator(list_productos, 9) # Muestra la cantidad de productor por pagina
+        list_productos = paginator.page(page)
+    except:
+        raise Http404
+
+    data = {
+        'entity': list_productos,
+        'paginator': paginator
+    }
+
+    return render(request, 'tienda.html', data)
+
 def pagina_noticias(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     page = request.GET.get('page', 1)
