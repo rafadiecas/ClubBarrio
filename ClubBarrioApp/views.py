@@ -199,6 +199,8 @@ def desloguear(request):
 
 def edita_usuario(request, id):
     usuario = User.objects.get(id=id)
+    id = usuario.id
+    password = usuario.password
     Equipos = Equipo.objects.all()
     Tutores = TutorLegal.objects.all()
     roles = Role.labels[:-1]
@@ -224,35 +226,42 @@ def edita_usuario(request, id):
         return render(request, 'crea_usuario.html',
                       {'usuario': usuario, 'roles': roles, 'Tutores': Tutores, 'Equipos': Equipos})
     else:
-        usuario.username = request.POST.get('username')
-        usuario.email = request.POST.get('email')
-        usuario.rol = Role.value_for_label(request.POST.get('rol'))
-        usuario.fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        usuario.delete()
+        new_usuario = User()
+        new_usuario.id = id
+        new_usuario.password = password
+        new_usuario.username = request.POST.get('username')
+        new_usuario.email = request.POST.get('email')
+        new_usuario.rol = Role.value_for_label(request.POST.get('rol'))
+        new_usuario.fecha_nacimiento = request.POST.get('fecha_nacimiento')
         usuario.save()
 
         if usuario.rol == 'Tutor':
-            tutor = TutorLegal.objects.get(usuario_id=usuario.id)
-            tutor.nombre = request.POST.get('nombre')
-            tutor.apellidos = request.POST.get('apellidos')
-            tutor.save()
+            new_padre = TutorLegal()
+            new_padre.nombre = request.POST.get('nombre')
+            new_padre.apellidos = request.POST.get('apellidos')
+            new_padre.usuario_id = id
+            new_padre.save()
         if usuario.rol == 'Entrenador':
-            entrenador = Entrenador.objects.get(usuario_id=usuario.id)
-            equipos = Equipo.objects.filter(Equipo.entrenadores.id == entrenador.id)
-            entrenador.nombre = request.POST.get('nombre')
-            entrenador.apellidos = request.POST.get('apellidos')
-            entrenador.save()
+            new_entrenador = Entrenador()
+            new_entrenador.nombre = request.POST.get('nombre')
+            new_entrenador.apellidos = request.POST.get('apellidos')
+            new_entrenador.usuario_id = id
+            new_entrenador.save()
+
             list_equipos = request.POST.getlist('equipos')
-            for e in equipos:
-                e.entrenadores.remove(entrenador)
+
             for e in list_equipos:
                 equipo = Equipo.objects.get(id=e)
-                equipo.entrenadores.add(entrenador)
+                equipo.entrenadores.add(new_entrenador)
+
         if usuario.rol == 'Jugador':
-            jugador = Jugador.objects.get(usuario_id=usuario.id)
-            jugador.nombre = request.POST.get('nombre')
-            jugador.apellidos = request.POST.get('apellidos')
-            jugador.equipo_id = request.POST.get('equipo')
-            jugador.tutorLegal_id = request.POST.get('tutor')
-            jugador.save()
+            new_jugador = Jugador()
+            new_jugador.nombre = request.POST.get('nombre')
+            new_jugador.apellidos = request.POST.get('apellidos')
+            new_jugador.usuario_id = id
+            new_jugador.equipo_id = request.POST.get('equipo')
+            new_jugador.tutorLegal_id = request.POST.get('tutor')
+            new_jugador.save()
 
         return redirect('usuarios')
