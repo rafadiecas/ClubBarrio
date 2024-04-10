@@ -217,13 +217,13 @@ def edita_usuario(request, id):
         new_usuario.fecha_nacimiento = request.POST.get('fecha_nacimiento')
         new_usuario.save()
 
-        if usuario.rol == 'Tutor':
+        if new_usuario.rol == 'Tutor':
             new_padre = TutorLegal()
             new_padre.nombre = request.POST.get('nombre')
             new_padre.apellidos = request.POST.get('apellidos')
             new_padre.usuario_id = id
             new_padre.save()
-        if usuario.rol == 'Entrenador':
+        if new_usuario.rol == 'Entrenador':
             new_entrenador = Entrenador()
             new_entrenador.nombre = request.POST.get('nombre')
             new_entrenador.apellidos = request.POST.get('apellidos')
@@ -236,7 +236,7 @@ def edita_usuario(request, id):
                 equipo = Equipo.objects.get(id=e)
                 equipo.entrenadores.add(new_entrenador)
 
-        if usuario.rol == 'Jugador':
+        if new_usuario.rol == 'Jugador':
             new_jugador = Jugador()
             new_jugador.nombre = request.POST.get('nombre')
             new_jugador.apellidos = request.POST.get('apellidos')
