@@ -103,11 +103,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12" id="columna">
-               <label for="is_active" class="form-label" style="margin: 0"> Es Activo:</label>
+            <div class="col-12" id="checkbox-activo">
+                <label for="is_active" class="form-label" style="margin: 0"> Es Activo:</label>
                 <input type="checkbox" name="is_active" id="is_active" {% if datos.es_activo %} checked {% endif %}>
             </div>
-
         </div>
         
 
@@ -130,22 +129,22 @@
 $(document).ready(function() {
     var roleActions = {
         'Usuario': function() {
-            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField').hide();
+            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField, #checkbox-activo').hide();
             $('#nombre, #apellidos').removeAttr('required');
         },
         'Entrenador': function() {
-            $('#entrenadorSelect, #tutorSelect').hide();
+            $('#entrenadorSelect, #tutorSelect, #checkbox-activo').hide();
             $('#equipoSelect, #nombreField, #apellidosField').show();
             $('#nombre, #apellidos').attr('required', true);
         },
         'Jugador': function() {
             $('#entrenadorSelect').hide();
-            $('#equipoSelect, #tutorSelect, #nombreField, #apellidosField').show();
+            $('#equipoSelect, #tutorSelect, #nombreField, #apellidosField, #checkbox-activo').show();
             $('#nombre, #apellidos').attr('required', true);
         },
         'Tutor': function() {
             $('#equipoSelect, #tutorSelect, #entrenadorSelect').hide();
-            $('#nombreField, #apellidosField').show();
+            $('#nombreField, #apellidosField, #checkbox-activo').show();
             $('#nombre, #apellidos').attr('required', true);
         }
     };
