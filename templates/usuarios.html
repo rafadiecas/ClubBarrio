@@ -34,6 +34,7 @@
                    <th scope="col">Nombre usuario</th> 
                   <th scope="col">Email</th>
                   <th scope="col">Fecha de nacimiento</th>
+                    <th scope="col">Rol</th>
                   <th></th>
                 </tr>
               </thead>
@@ -44,6 +45,7 @@
                     <td>{{ u.username }}</td>
                   <td>{{ u.email }}</td>
                   <td>{{ u.fecha_nacimiento }}</td>
+                    <td>{{ u.rol.capitalize }}</td>
                     <td>
                         <img src="{% static 'icons8-edit-30.png' %}">
                         <a href="{% url 'elimina_usuario' id=u.id%}"> <img src="{% static 'icons8-basura-30.png' %}"></a>
