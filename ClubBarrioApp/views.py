@@ -181,69 +181,65 @@ def desloguear(request):
 
 def edita_usuario(request, id):
     usuario = User.objects.get(id=id)
-    password = usuario.password
     Equipos = Equipo.objects.all()
     Tutores = TutorLegal.objects.all()
     roles = Role.labels[:-1]
+    rol = usuario.rol
     if request.method == 'GET':
         if usuario.rol == 'Jugador':
-            tutor = TutorLegal.objects.get(usuario_id=usuario.id)
-            equipo = Equipo.objects.get(id=usuario.equipo_id)
-            jugador = Jugador.objects.filter(usuario_id=usuario.id)
-            return render(request, 'crea_usuario.html',
+            tutor = Jugador.objects.get(usuario_id=id).tutorLegal
+            equipo = Jugador.objects.get(usuario_id=id).equipo
+            jugador = Jugador.objects.get(usuario_id=id)
+            return render(request, 'edita_usuarios.html',
                           {'usuario': usuario, 'Equipos': Equipos, 'Tutores': Tutores, 'roles': roles, 'tutor': tutor,
-                           'equipo': equipo, 'jugador': jugador})
+                           'equipo': equipo, 'datos': jugador})
         if usuario.rol == 'Entrenador':
-            id_equipos = Equipo.objects.filter(Equipo.entrenadores.id == usuario.id)
+            id_equipos = []
+            total_equipos = Equipo.objects.all()
+            for e in total_equipos:
+                if e.entrenadores.filter(usuario_id=usuario.id).exists():
+                    id_equipos.append(e.id)
             entrenador = Entrenador.objects.filter(usuario_id=usuario.id)
-            return render(request, 'crea_usuario.html',
+            return render(request, 'edita_usuarios.html',
                           {'usuario': usuario, 'Equipos': Equipos, 'roles': roles, 'id_equipos': id_equipos,
-                           'entrenador': entrenador, 'Tutores': Tutores})
+                           'Tutores': Tutores})
         if usuario.rol == 'Tutor':
-            tutor = TutorLegal.objects.filter(usuario_id=usuario.id)
-            return render(request, 'crea_usuario.html',
-                          {'usuario': usuario, 'roles': roles, 'tutor': tutor, 'Tutores': Tutores, 'Equipos': Equipos})
+            tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+            return render(request, 'edita_usuarios.html',
+                          {'usuario': usuario, 'roles': roles, 'datos': tutor, 'Tutores': Tutores, 'Equipos': Equipos})
 
-        return render(request, 'crea_usuario.html',
+        return render(request, 'edita_usuarios.html',
                       {'usuario': usuario, 'roles': roles, 'Tutores': Tutores, 'Equipos': Equipos})
     else:
-        usuario.delete()
-        new_usuario = User()
-        new_usuario.id = id
-        new_usuario.password = password
-        new_usuario.username = request.POST.get('username')
-        new_usuario.email = request.POST.get('email')
-        new_usuario.rol = Role.value_for_label(request.POST.get('rol'))
-        new_usuario.fecha_nacimiento = request.POST.get('fecha_nacimiento')
-        new_usuario.save()
 
-        if new_usuario.rol == 'Tutor':
-            new_padre = TutorLegal()
-            new_padre.nombre = request.POST.get('nombre')
-            new_padre.apellidos = request.POST.get('apellidos')
-            new_padre.usuario_id = id
-            new_padre.save()
-        if new_usuario.rol == 'Entrenador':
-            new_entrenador = Entrenador()
-            new_entrenador.nombre = request.POST.get('nombre')
-            new_entrenador.apellidos = request.POST.get('apellidos')
-            new_entrenador.usuario_id = id
-            new_entrenador.save()
+        usuario.username = request.POST.get('username')
+        usuario.email = request.POST.get('email')
+        usuario.fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        usuario.save()
 
+        if usuario.rol == 'Tutor':
+            tutor = TutorLegal.objects.get(usuario_id=id)
+            tutor.nombre = request.POST.get('nombre')
+            tutor.apellidos = request.POST.get('apellidos')
+            tutor.es_activo = request.POST.get('is_active')
+            tutor.save()
+        if usuario.rol == 'Entrenador':
+            entrenador = Entrenador.objects.get(usuario_id=id)
+            entrenador.nombre = request.POST.get('nombre')
+            entrenador.apellidos = request.POST.get('apellidos')
+            entrenador.save()
             list_equipos = request.POST.getlist('equipos')
-
             for e in list_equipos:
                 equipo = Equipo.objects.get(id=e)
-                equipo.entrenadores.add(new_entrenador)
-
-        if new_usuario.rol == 'Jugador':
-            new_jugador = Jugador()
-            new_jugador.nombre = request.POST.get('nombre')
-            new_jugador.apellidos = request.POST.get('apellidos')
-            new_jugador.usuario_id = id
-            new_jugador.equipo_id = request.POST.get('equipo')
-            new_jugador.tutorLegal_id = request.POST.get('tutor')
-            new_jugador.save()
+                equipo.entrenadores.add(entrenador)
+        if usuario.rol == 'Jugador':
+            jugador = Jugador.objects.get(usuario_id=id)
+            jugador.nombre = request.POST.get('nombre')
+            jugador.apellidos = request.POST.get('apellidos')
+            jugador.equipo_id = request.POST.get('equipo')
+            jugador.tutorLegal_id = request.POST.get('tutor')
+            jugador.es_activo = request.POST.get('is_active')
+            jugador.save()
 
         return redirect('usuarios')
 def equipos_listado(request):
