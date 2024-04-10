@@ -44,11 +44,11 @@
             </div>
             <div class="col-md-4" id="nombreField">
                 <label for="nombre" class="form-label">Nombre:</label>
-                <input type="text" name="nombre" id="nombre" class="form-control" required>
+                <input type="text" name="nombre" id="nombre" class="form-control">
             </div>
             <div class="col-md-4" id="apellidosField">
                 <label for="apellidos" class="form-label">Apellidos:</label>
-                <input type="text" name="apellidos" id="apellidos" class="form-control" required>
+                <input type="text" name="apellidos" id="apellidos" class="form-control">
             </div>
         </div>
 
@@ -140,15 +140,6 @@
         }
     });
 });
-    </script>
-    <script>
-        $(window).resize(function() {
-            if ($(window).width() < 900) {
-                $('.responsive-div').removeClass('col-3').addClass('col-5');
-        } else {
-            $('.responsive-div').removeClass('col-5').addClass('col-3');
-            }
-        });
     </script>
 
 </body>
