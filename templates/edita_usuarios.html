@@ -9,9 +9,7 @@
         #equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField {
             display: none;
         }
-        
 
-        
     </style>
     
 </head>
@@ -41,8 +39,9 @@
         {% csrf_token %}
 
         <div class="row">
-            <div class="col-3 responsive-div">
-                <h2 id="rol">{{ usuario.rol }}</h2>
+            <div class="col-md-4">
+                <label for="rol" class="form-label">Rol:</label>
+                <input type="text" name="rol" id="rol" class="form-control" value="{{ usuario.rol }}" disabled>
             </div>
         </div>
 
@@ -57,7 +56,7 @@
             </div>
             <div class="col-md-4" id="apellidosField">
                 <label for="apellidos" class="form-label">Apellidos:</label>
-                <input type="text" name="apellidos" id="apellidos" class="form-control" value="">
+                <input type="text" name="apellidos" id="apellidos" class="form-control" value="{{ datos.apellidos }}">
             </div>
         </div>
 
@@ -104,11 +103,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12" id="columna">
-               <label for="is_active" class="form-label" style="margin: 0"> Es Activo:</label>
+            <div class="col-12" id="checkbox-activo">
+                <label for="is_active" class="form-label" style="margin: 0"> Es Activo:</label>
                 <input type="checkbox" name="is_active" id="is_active" {% if datos.es_activo %} checked {% endif %}>
             </div>
-
         </div>
         
 
@@ -128,37 +126,43 @@
 </div>
 
     <script>
-    $(document).ready(function() {
+$(document).ready(function() {
     var roleActions = {
         'Usuario': function() {
-            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField').hide();
+            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField, #checkbox-activo').hide();
             $('#nombre, #apellidos').removeAttr('required');
         },
         'Entrenador': function() {
-            $('#entrenadorSelect, #tutorSelect').hide();
+            $('#entrenadorSelect, #tutorSelect, #checkbox-activo').hide();
             $('#equipoSelect, #nombreField, #apellidosField').show();
             $('#nombre, #apellidos').attr('required', true);
         },
         'Jugador': function() {
             $('#entrenadorSelect').hide();
-            $('#equipoSelect, #tutorSelect, #nombreField, #apellidosField').show();
+            $('#equipoSelect, #tutorSelect, #nombreField, #apellidosField, #checkbox-activo').show();
             $('#nombre, #apellidos').attr('required', true);
         },
         'Tutor': function() {
             $('#equipoSelect, #tutorSelect, #entrenadorSelect').hide();
-            $('#nombreField, #apellidosField').show();
+            $('#nombreField, #apellidosField, #checkbox-activo').show();
             $('#nombre, #apellidos').attr('required', true);
         }
     };
 
-    $('#rol').change(function() {
+    $('#rol').on('input', function() {
         var selectedRol = $(this).val();
         if (roleActions[selectedRol]) {
             roleActions[selectedRol]();
         }
     });
+
+    // Ejecutar la función correspondiente al cargar la página
+    var initialRol = $('#rol').val();
+    if (roleActions[initialRol]) {
+        roleActions[initialRol]();
+    }
 });
-    </script>
+</script>
 
 </body>
 
