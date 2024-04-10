@@ -31,9 +31,6 @@
                 <thead>
                 <tr>
                   <th scope="col">id</th>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Apellidos</th>
-                  <th scope="col">Contraseña</th>
                   <th scope="col">Email</th>
                   <th scope="col">Fecha de nacimiento</th>
                 </tr>
@@ -42,9 +39,6 @@
               {% for u in usuarios %}
                 <tr>
                   <th scope="row">{{ u.id }}</th>
-                  <td>{{ u.nombre }}</td>
-                  <td>{{ u.apellidos }}</td>
-                  <td>{{ u.password }}</td>
                   <td>{{ u.email }}</td>
                   <td>{{ u.fecha_nacimiento }}</td>
                     <td>
