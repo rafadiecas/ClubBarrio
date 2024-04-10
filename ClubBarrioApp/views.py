@@ -181,7 +181,6 @@ def desloguear(request):
 
 def edita_usuario(request, id):
     usuario = User.objects.get(id=id)
-    password = usuario.password
     Equipos = Equipo.objects.all()
     Tutores = TutorLegal.objects.all()
     roles = Role.labels[:-1]
@@ -190,7 +189,7 @@ def edita_usuario(request, id):
         if usuario.rol == 'Jugador':
             tutor = Jugador.objects.get(usuario_id=id).tutorLegal
             equipo = Jugador.objects.get(usuario_id=id).equipo
-            jugador = Jugador.objects.filter(usuario_id=usuario.id)
+            jugador = Jugador.objects.get(usuario_id=id)
             return render(request, 'edita_usuarios.html',
                           {'usuario': usuario, 'Equipos': Equipos, 'Tutores': Tutores, 'roles': roles, 'tutor': tutor,
                            'equipo': equipo, 'datos': jugador})
@@ -203,9 +202,9 @@ def edita_usuario(request, id):
             entrenador = Entrenador.objects.filter(usuario_id=usuario.id)
             return render(request, 'edita_usuarios.html',
                           {'usuario': usuario, 'Equipos': Equipos, 'roles': roles, 'id_equipos': id_equipos,
-                           'datos': entrenador, 'Tutores': Tutores})
+                           'Tutores': Tutores})
         if usuario.rol == 'Tutor':
-            tutor = TutorLegal.objects.filter(usuario_id=usuario.id)
+            tutor = TutorLegal.objects.get(usuario_id=usuario.id)
             return render(request, 'edita_usuarios.html',
                           {'usuario': usuario, 'roles': roles, 'datos': tutor, 'Tutores': Tutores, 'Equipos': Equipos})
 
@@ -222,6 +221,7 @@ def edita_usuario(request, id):
             tutor = TutorLegal.objects.get(usuario_id=id)
             tutor.nombre = request.POST.get('nombre')
             tutor.apellidos = request.POST.get('apellidos')
+            tutor.es_activo = request.POST.get('is_active')
             tutor.save()
         if usuario.rol == 'Entrenador':
             entrenador = Entrenador.objects.get(usuario_id=id)
@@ -238,6 +238,7 @@ def edita_usuario(request, id):
             jugador.apellidos = request.POST.get('apellidos')
             jugador.equipo_id = request.POST.get('equipo')
             jugador.tutorLegal_id = request.POST.get('tutor')
+            jugador.es_activo = request.POST.get('is_active')
             jugador.save()
 
         return redirect('usuarios')
