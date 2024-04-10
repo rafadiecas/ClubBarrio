@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
@@ -14,11 +15,6 @@ def pagina_inicio(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     list_noticias = list_noticias[0:3]
     return render(request, 'inicio.html', {'noticias': list_noticias})
-
-
-def login(request):
-    return render(request, 'login.html')
-
 
 def pagina_noticias(request):
     list_noticias = Noticias.objects.all().order_by('-id')
@@ -37,15 +33,12 @@ def pagina_noticias(request):
 
     return render(request, 'Noticias.html', data)
 
-
 def administrador(request):
     return render(request, 'administrador.html')
-
 
 def usuarios(request):
     lista_usuarios = User.objects.all()
     return render(request, 'usuarios.html', {'usuarios': lista_usuarios})
-
 
 def new_user(request):
     Users = User.objects.all()
@@ -86,8 +79,7 @@ def new_user(request):
         validaciones = [largo, digito, letra_may, letra_min]
         for v in validaciones:
             if not v.search(password):
-                errors.append(
-                    "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número")
+                errors.append("La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número")
                 break
 
         if len(errors) != 0:
@@ -136,7 +128,6 @@ def elimina_usuario(request, id):
     usuario.delete()
     return redirect('usuarios')
 
-
 def registro(request):
     if request.method == 'GET':
         return render(request, 'registro.html')
@@ -171,16 +162,39 @@ def registro(request):
             if not v.search(contrasenya):
                 errores.append(
                     "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número")
-                return render(request, 'registro.html', {"errores": errores})
+                break
 
         if len(errores) != 0:
-            return render(request, 'registro.html', {"errores": errores})
+            return render(request, 'registro.html', {"errores": errores, "nombre_usuraio": nombre_usuario, "email": email, "fecha_nacimiento": fecha_nacimiento})
         else:
             usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email,
                                           fecha_nacimiento=fecha_nacimiento)
             usuario.save()
 
             return redirect('login')
+
+def logear(request):
+    if request.method == 'POST':
+        nombre_usuario = request.POST.get('nombre_usuario')
+        contrasenya = request.POST.get('contrasenya')
+
+        user = authenticate(request, username=nombre_usuario, password=contrasenya)
+
+        if user is not None:
+            login(request, user)
+
+            # Redirección tras un login exitoso
+            return redirect('inicio')
+        else:
+            # Mensaje de error si la autenticación falla
+            return render(request, 'login.html',{"error": "Usuario o contraseña incorrectos", "nombre_usuario": nombre_usuario})
+
+    # Mostrar formulario de login para método GET
+    return render(request, 'login.html')
+
+def desloguear(request):
+    logout(request)
+    return redirect('login')
 
 
 def edita_usuario(request, id):
