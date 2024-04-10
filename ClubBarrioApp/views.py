@@ -221,7 +221,10 @@ def edita_usuario(request, id):
             tutor = TutorLegal.objects.get(usuario_id=id)
             tutor.nombre = request.POST.get('nombre')
             tutor.apellidos = request.POST.get('apellidos')
-            tutor.es_activo = request.POST.get('is_active')
+            if request.POST.get('is_active') == 'on':
+                tutor.es_activo = True
+            else:
+                tutor.es_activo = False
             tutor.save()
         if usuario.rol == 'Entrenador':
             entrenador = Entrenador.objects.get(usuario_id=id)
@@ -238,7 +241,10 @@ def edita_usuario(request, id):
             jugador.apellidos = request.POST.get('apellidos')
             jugador.equipo_id = request.POST.get('equipo')
             jugador.tutorLegal_id = request.POST.get('tutor')
-            jugador.es_activo = request.POST.get('is_active')
+            if request.POST.get('is_active') == 'on':
+                jugador.es_activo = True
+            else:
+                jugador.es_activo = False
             jugador.save()
 
         return redirect('usuarios')
