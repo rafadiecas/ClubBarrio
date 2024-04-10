@@ -246,3 +246,9 @@ def edita_usuario(request, id):
             new_jugador.save()
 
         return redirect('usuarios')
+def equipos_listado(request):
+    lista_equipos = Equipo.objects.all()
+    return render(request, 'equipos_listado.html',{"equipos":lista_equipos})
+
+def crear_equipo(request):
+    pass
