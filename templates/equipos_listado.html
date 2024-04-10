@@ -1,2 +1,64 @@
 {% load static %}
 {% include 'barra_admin.html' %}
+<head>
+    <style>
+    .btn-custom {
+        color: #00653d; /* Color del texto azul */
+    }
+    .table-responsive {
+        max-height: 400px; /* Ajusta la altura máxima según sea necesario */
+        overflow-y: auto; /* Agrega un scroll vertical */
+    }
+    </style>
+    <script>
+        function confirmarEliminarUsuario(event) {
+        var confirmacion = confirm('¿Seguro que desea eliminar usuario?');
+         if (!confirmacion) {
+        event.preventDefault();
+        }
+        }
+    </script>
+</head>
+<div class="container-fluid d-flex flex-column align-items-center">
+    <div class="container w-75 d-flex justify-content-start ">
+        <h1>Lista equipos:</h1>
+    </div>
+    <div class="container w-75 d-flex justify-content-between align-items-center ">
+        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_equipo' %}" >Nuevo equipo</a>
+
+        <div class="input-group w-25 h-50 ">
+          <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="background-color: #00653d; color: white; ">
+              <img src="{% static 'icons8-búsqueda-30.png' %}">
+          </button>
+        </div>
+    </div>
+    <div class="container w-75 m-4 ">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                  <th scope="col">id</th>
+                   <th scope="col">Nombre equipo</th>
+                  <th scope="col">Categoría</th>
+                  <th scope="col">Entrenadores</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody >
+              {% for e in equipos %}
+                <tr>
+                  <th scope="row">{{ e.id }}</th>
+                    <td>{{ e.nombre }}</td>
+                  <td>{{ e.categoria }}</td>
+                  <td>{{ e.entrenadores }}</td>
+                    <td>
+                        <a href="{% url 'editar_equipo' id=e.id %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>
+                        <a href="{% url 'elimina_equipo' id=e.id%}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>

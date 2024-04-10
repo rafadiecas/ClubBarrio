@@ -24,10 +24,13 @@ urlpatterns = [
     path('administrador/', administrador, name='administrador'),
     path('administrador/usuarios/', usuarios, name='usuarios'),
     path('administrador/usuarios/new',new_user, name='new_user'),
-    path('administrador/usuarios/eliminar<int:id>/', elimina_usuario , name='elimina_usuario'),
+    path('administrador/usuarios/eliminar/<int:id>/', elimina_usuario , name='elimina_usuario'),
     path('registro/', registro, name='registro'),
     path('administrador/usuarios/edit/<int:id>/', edita_usuario, name='edita_usuario'),
     path('logout/', desloguear, name='desloguear'),
     path('administrador/equipos/', equipos_listado, name='equipos'),
+    path('administrador/equipos/new', crear_equipo, name='crear_equipo'),
+    path('administrador/equipos/editar/<int:id>/', editar_equipo, name='editar_equipo'),
+    path('administrador/equipos/eliminar/<int:id>/', elimina_equipo, name='elimina_equipo'),
 
 ]
