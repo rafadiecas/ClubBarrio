@@ -15,6 +15,7 @@ def pagina_inicio(request):
     list_noticias = list_noticias[0:3]
     return render(request, 'inicio.html', {'noticias': list_noticias})
 
+
 def login(request):
     return render(request, 'login.html')
 
@@ -36,12 +37,15 @@ def pagina_noticias(request):
 
     return render(request, 'Noticias.html', data)
 
+
 def administrador(request):
     return render(request, 'administrador.html')
+
 
 def usuarios(request):
     lista_usuarios = User.objects.all()
     return render(request, 'usuarios.html', {'usuarios': lista_usuarios})
+
 
 def new_user(request):
     Users = User.objects.all()
@@ -50,11 +54,12 @@ def new_user(request):
     roles = Role.labels[:-1]
     if request.method == 'GET':
 
-        return render(request, "crea_usuario.html", {'Users': Users, 'Equipos': Equipos, 'Tutores': Tutores, 'roles': roles})
+        return render(request, "crea_usuario.html",
+                      {'Users': Users, 'Equipos': Equipos, 'Tutores': Tutores, 'roles': roles})
     else:
 
         username = request.POST.get('username')
-        rol =Role.value_for_label(request.POST.get('rol'))
+        rol = Role.value_for_label(request.POST.get('rol'))
         email = request.POST.get('email')
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
@@ -72,7 +77,7 @@ def new_user(request):
             errors.append("Ya existe un usuario con ese email")
         fecha = datetime.strptime(fecha_nacimiento, '%Y-%m-%d')
         diferencia = datetime.now() - fecha
-        if diferencia.days < 6570:
+        if diferencia.days < 6570 and rol != 'Jugador':
             errors.append("El usuario debe ser mayor de edad")
         largo = re.compile(r'.{8,}')
         digito = re.compile(r'\d+')
@@ -81,16 +86,18 @@ def new_user(request):
         validaciones = [largo, digito, letra_may, letra_min]
         for v in validaciones:
             if not v.search(password):
-                errors.append("La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número")
+                errors.append(
+                    "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número")
                 break
 
         if len(errors) != 0:
-            return render(request, "crea_usuario.html", {"errores": errors, "username": username, "email": email, "roles": roles, "fecha_nacimiento": fecha_nacimiento, "Users": Users, "Equipos": Equipos, "Tutores": Tutores})
+            return render(request, "crea_usuario.html",
+                          {"errores": errors, "username": username, "email": email, "roles": roles,
+                           "fecha_nacimiento": fecha_nacimiento, "Equipos": Equipos, "Tutores": Tutores})
         else:
             new = User.objects.create(username=username, password=make_password(password), email=email, rol=rol,
                                       fecha_nacimiento=fecha_nacimiento)
             new.save()
-
 
     if request.POST.get('rol') == 'Tutor':
         new_padre = TutorLegal()
@@ -121,7 +128,6 @@ def new_user(request):
         new_jugador.tutorLegal_id = request.POST.get('tutor')
         new_jugador.save()
 
-
     return redirect('/ClubBarrioApp/administrador/usuarios/')
 
 
@@ -129,6 +135,7 @@ def elimina_usuario(request, id):
     usuario = User.objects.get(id=id)
     usuario.delete()
     return redirect('usuarios')
+
 
 def registro(request):
     if request.method == 'GET':
@@ -142,7 +149,7 @@ def registro(request):
 
         errores = []
 
-        if contrasenya!=repetirContrasenya:
+        if contrasenya != repetirContrasenya:
             errores.append("Las contraseñas no coinciden.")
 
         existe_usuario = User.objects.filter(username=nombre_usuario)
@@ -169,7 +176,69 @@ def registro(request):
         if len(errores) != 0:
             return render(request, 'registro.html', {"errores": errores})
         else:
-            usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email, fecha_nacimiento=fecha_nacimiento)
+            usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email,
+                                          fecha_nacimiento=fecha_nacimiento)
             usuario.save()
 
             return redirect('login')
+
+
+def edita_usuario(request, id):
+    usuario = User.objects.get(id=id)
+    Equipos = Equipo.objects.all()
+    Tutores = TutorLegal.objects.all()
+    roles = Role.labels[:-1]
+    if request.method == 'GET':
+        if usuario.rol == 'Jugador':
+            tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+            equipo = Equipo.objects.get(id=usuario.equipo_id)
+            jugador = Jugador.objects.filter(usuario_id=usuario.id)
+            return render(request, 'crea_usuario.html',
+                          {'usuario': usuario, 'Equipos': Equipos, 'Tutores': Tutores, 'roles': roles, 'tutor': tutor,
+                           'equipo': equipo, 'jugador': jugador})
+        if usuario.rol == 'Entrenador':
+            id_equipos = Equipo.objects.filter(Equipo.entrenadores.id == usuario.id)
+            entrenador = Entrenador.objects.filter(usuario_id=usuario.id)
+            return render(request, 'crea_usuario.html',
+                          {'usuario': usuario, 'Equipos': Equipos, 'roles': roles, 'id_equipos': id_equipos,
+                           'entrenador': entrenador, 'Tutores': Tutores})
+        if usuario.rol == 'Tutor':
+            tutor = TutorLegal.objects.filter(usuario_id=usuario.id)
+            return render(request, 'crea_usuario.html',
+                          {'usuario': usuario, 'roles': roles, 'tutor': tutor, 'Tutores': Tutores, 'Equipos': Equipos})
+
+        return render(request, 'crea_usuario.html',
+                      {'usuario': usuario, 'roles': roles, 'Tutores': Tutores, 'Equipos': Equipos})
+    else:
+        usuario.username = request.POST.get('username')
+        usuario.email = request.POST.get('email')
+        usuario.rol = Role.value_for_label(request.POST.get('rol'))
+        usuario.fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        usuario.save()
+
+        if usuario.rol == 'Tutor':
+            tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+            tutor.nombre = request.POST.get('nombre')
+            tutor.apellidos = request.POST.get('apellidos')
+            tutor.save()
+        if usuario.rol == 'Entrenador':
+            entrenador = Entrenador.objects.get(usuario_id=usuario.id)
+            equipos = Equipo.objects.filter(Equipo.entrenadores.id == entrenador.id)
+            entrenador.nombre = request.POST.get('nombre')
+            entrenador.apellidos = request.POST.get('apellidos')
+            entrenador.save()
+            list_equipos = request.POST.getlist('equipos')
+            for e in equipos:
+                e.entrenadores.remove(entrenador)
+            for e in list_equipos:
+                equipo = Equipo.objects.get(id=e)
+                equipo.entrenadores.add(entrenador)
+        if usuario.rol == 'Jugador':
+            jugador = Jugador.objects.get(usuario_id=usuario.id)
+            jugador.nombre = request.POST.get('nombre')
+            jugador.apellidos = request.POST.get('apellidos')
+            jugador.equipo_id = request.POST.get('equipo')
+            jugador.tutorLegal_id = request.POST.get('tutor')
+            jugador.save()
+
+        return redirect('usuarios')

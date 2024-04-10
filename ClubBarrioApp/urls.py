@@ -26,5 +26,6 @@ urlpatterns = [
     path('administrador/usuarios/new',new_user, name='new_user'),
     path('administrador/usuarios/eliminar<int:id>/', elimina_usuario , name='elimina_usuario'),
     path('registro/', registro, name='registro'),
+    path('administrador/usuarios/edit/<int:id>/', edita_usuario, name='edita_usuario'),
 
 ]
