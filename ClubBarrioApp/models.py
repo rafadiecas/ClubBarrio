@@ -5,12 +5,18 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 
 # Create your models here.
 class Role(models.TextChoices):
+    USUARIO = 'USUARIO', 'Usuario'
     JUGADOR = 'JUG', 'Jugador'
     TUTOR = 'TUTOR', 'Tutor'
     ENTRENADOR = 'ENTRENADOR', 'Entrenador'
-    USUARIO = 'USUARIO', 'Usuario'
     ADMIN = 'ADMIN', 'Administrador'
 
+    def value_for_label(label):
+        rol = None
+        for choice in Role.choices:
+            if choice[1] == label:
+                rol = choice.__getitem__(1)
+        return rol
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
