@@ -1,19 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Crea usuario</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <style>
-        #equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField {
-            display: none;
-        }
-    </style>
-
-</head>
-
-
 {% include "barra_admin.html" %}
 
 <body>
@@ -40,71 +26,37 @@
         <div class="row">
             <div class="col-md-4">
                 <label for="nombre" class="form-label">Nombre:</label>
-                <input type="text" name="nombre" id="nombre" class="form-control" value="{{ nombre }}" required>
+                <input type="text" name="nombre" id="nombre" class="form-control" value="{{ equipo.nombre }}" required>
             </div>
             <div class="col-md-4" id="nombreField">
                 <label for="escudo" class="form-label">Escudo:</label>
-                <input type="text" name="escudo" id="escudo" class="form-control">
+                <input type="text" name="escudo" id="escudo" class="form-control" value="{{ equipo.escudo }}">
             </div>
-            <div class="col-md-4 responsive-div">
-                <label for="categoria" class="form-label">Categoría:</label>
-                <select name="categoria" id="categoria" class="form-select">
-                {% for r in roles %}
-                    <option value="{{ r }}">{{ r }}</option>
-                {% endfor %}
-            </select>
-            </div>
-        </div>
-        </div>
 
+        </div>
         <div class="row">
             <div class="col-md-4">
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" name="email" id="email" class="form-control" value="{{ email }}" required>
-            </div>
-            <div class="col-md-4">
-                <label for="password" class="form-label">Contraseña:</label>
-                <input type="password" name="password" id="password" class="form-control" required>
-            </div>
-            <div class="col-md-4">
-                <label for="password2" class="form-label">Repite contraseña:</label>
-                <input type="password" name="password2" id="password2" class="form-control" required>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento:</label>
-                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{{ fecha_nacimiento }}" required>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 select" id="equipoSelect">
-                <label for="equipo" class="form-label">Equipo:</label>
-                <select id="equipo" name="equipo" class="form-select">
-                    {% for e in Equipos %}
-                        <option value="{{ e.id }}">{{ e.nombre }}</option>
+                <label for="categoria" class="form-label">Categorías:</label>
+                <select name="categoria" id="categoria" class="form-select" >
+                    {% for c in lista_categorias %}
+                        <option value="{{ c.id }}" {% if c.id == equipo.categoria.id %} selected {% endif %}>{{ c }}</option>
                     {% endfor %}
                 </select>
             </div>
-
-            <div class="col-md-6 select" id="tutorSelect">
-                <label for="tutor" class="form-label">Tutor:</label>
-                <select id="tutores" name="tutor" class="form-select">
-                    {% for t in Tutores %}
-                        <option value="{{ t.id }}">{{ t.nombre }} {{ t.apellidos }}</option>
+            <div class="col-md-4">
+                <label for="entrenadores" class="form-label">Entrenadores:</label>
+                <select name="entrenadores" id="entrenadores" class="form-select" multiple>
+                    {% for e in entrenadores %}
+                        <option value="{{ e.id }}"{% if e.id in id_entrenadores%} selected {% endif %}>{{ e }}</option>
                     {% endfor %}
                 </select>
             </div>
         </div>
-
         <div class="row">
             <div class="col-12 text-center">
                 <button type="submit" class="btn btn-primary mt-3">Submit</button>
             </div>
         </div>
-
     </form>
 
     <div class="row">
@@ -113,39 +65,6 @@
         </div>
     </div>
 </div>
-
-    <script>
-    $(document).ready(function() {
-    var roleActions = {
-        'Usuario': function() {
-            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField').hide();
-            $('#nombre, #apellidos').removeAttr('required');
-        },
-        'Entrenador': function() {
-            $('#entrenadorSelect, #tutorSelect').hide();
-            $('#equipoSelect, #nombreField, #apellidosField').show();
-            $('#nombre, #apellidos').attr('required', true);
-        },
-        'Jugador': function() {
-            $('#entrenadorSelect').hide();
-            $('#equipoSelect, #tutorSelect, #nombreField, #apellidosField').show();
-            $('#nombre, #apellidos').attr('required', true);
-        },
-        'Tutor': function() {
-            $('#equipoSelect, #tutorSelect, #entrenadorSelect').hide();
-            $('#nombreField, #apellidosField').show();
-            $('#nombre, #apellidos').attr('required', true);
-        }
-    };
-
-    $('#rol').change(function() {
-        var selectedRol = $(this).val();
-        if (roleActions[selectedRol]) {
-            roleActions[selectedRol]();
-        }
-    });
-});
-    </script>
 
 </body>
 

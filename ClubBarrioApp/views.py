@@ -251,4 +251,44 @@ def equipos_listado(request):
     return render(request, 'equipos_listado.html',{"equipos":lista_equipos})
 
 def crear_equipo(request):
-    pass
+    if request.method == 'GET':
+        lista_categorias = categoria.objects.all()
+        entrenadores = Entrenador.objects.all()
+        return render(request, 'equipo_crear.html',{'lista_categorias': lista_categorias, 'entrenadores': entrenadores})
+    else:
+        equipo_nuevo= Equipo()
+        equipo_nuevo.nombre= request.POST.get('nombre')
+        equipo_nuevo.escudo = request.POST.get('escudo')
+        equipo_nuevo.categoria= categoria.objects.get(id=int(request.POST.get('categoria')))
+        equipo_nuevo.save()
+
+        lista_entrenadores = request.POST.getlist('entrenadores')
+        for e in lista_entrenadores:
+            equipo_nuevo.entrenadores.add(e)
+
+        return redirect('equipos')
+
+def editar_equipo(request, id):
+    equipo = Equipo.objects.get(id=id)
+    if request.method == 'GET':
+        lista_categorias = categoria.objects.all()
+        entrenadores = Entrenador.objects.all()
+        id_entrenadores = equipo.entrenadores.values_list('id', flat=True)
+        return render(request, 'equipo_crear.html',{'equipo':equipo,'id_entrenadores':id_entrenadores, 'lista_categorias': lista_categorias, 'entrenadores': entrenadores})
+    else:
+        equipo.nombre = request.POST.get('nombre')
+        equipo.escudo = request.POST.get('escudo')
+        equipo.categoria = categoria.objects.get(id=int(request.POST.get('categoria')))
+        equipo.save()
+
+        lista_entrenadores = request.POST.getlist('entrenadores')
+        equipo.entrenadores.clear()
+        for e in lista_entrenadores:
+            equipo.entrenadores.add(e)
+
+        return redirect('equipos')
+
+def elimina_equipo(request, id):
+    equipo = Equipo.objects.get(id=id)
+    equipo.delete()
+    return redirect('equipos')
