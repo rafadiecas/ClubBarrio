@@ -6,33 +6,52 @@
     <title>Tienda</title>
 
     <style>
+        .pagination{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 3%;
+        }
         .card{
+            display: flex;
             max-width: 25%;
-            flex-direction: row;
+            margin: 3%;
+        }
+#carta{
+            display: flex;
+            flex-direction: column;
         }
         #card-text{
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: row;
+            text-align: center;
+
+        }
+        #nombre{
+            color: blue;
+        }
+        #precio{
+            color: red;
         }
         #foto_noticia{
             max-width: 300px;
-            max-height: 300px;
+            max-height: 450px;
         }
+
     </style>
 </head>
 {% include "barra_navegacion.html" %}
 <body>
-    <div class="pagination d-flex align-items-center flex-column">
+    <div class="pagination d-flex flex-row mb-3 row-cols-md-3 align-items-center ">
         {% for p in entity %}
-            <div class="card row-cols-md-4 row-cols-sm-1" style="margin-block:20px">
-                <div class="card-header text-center">
-                    <h2>{{ p.nombre }}</h2>
-                </div>
-                <div class="card-body" id="carta">
+            <div class="card row-cols-md-1 bg-light">
+                <div class="card-body">
+                    <img src="https://img01.ztat.net/article/spp-media-p1/9ac495af371840f9ae1baee4bf6cd260/addc44d703b54e60a9f34a5da962e16d.jpg?imwidth=1800" id="foto_noticia">
                     <div class="row row-cols-md-2 row-cols-sm-1" id="card-text">
-                        <p>{{ p.tipo }}</p>
-                        <p>{{ p.talla }}</p>
-                        <p>{{ p.precio }}</p>
+                        <h4 id="nombre">{{ p.nombre }}</h4>
+                        <b><h3>{{ p.talla }}</h3></b>
+                        <p>Aqui deberia estar la descripcion</p>
+                        <h5 id="precio">{{ p.precio }}€</h5>
                     </div>
                 </div>
             </div>
