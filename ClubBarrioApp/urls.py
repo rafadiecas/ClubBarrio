@@ -40,5 +40,7 @@ urlpatterns = [
     path('administrador/entrenamientos/new', crear_entrenamiento, name='crear_entrenamiento'),
     path('administrador/entrenamientos/editar/<int:id>/', editar_entrenamiento, name='editar_entrenamiento'),
     path('administrador/entrenamientos/eliminar/<int:id>/', elimina_entrenamiento, name='elimina_entrenamiento'),
+    path('administrador/partidos/', partidos_listado, name='partidos_listado'),
+    path('administrador/partidos/new', crear_partido, name='crear_partido'),
 
 ]
