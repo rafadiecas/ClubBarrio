@@ -14,7 +14,7 @@
 </head>
 <div class="container-fluid d-flex flex-column align-items-center">
     <div class="container w-75 d-flex justify-content-start ">
-        <h1>Lista de entrenamientos:</h1>
+        <h1>Lista de Partidos:</h1>
     </div>
     <div class="container w-75 d-flex justify-content-between align-items-center ">
         <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_entrenamiento' %}" >Nuevo partido:</a>
@@ -56,8 +56,8 @@
                   <td>{{ p.equipo2.nombre }}</td>
                   <td>{{ p.temporada.anyo }}</td>
                     <td>
-                        <a href="#"> <img src="{% static 'icons8-edit-30.png' %}"></a>
-                        <a href="#" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>
+                        <a href="{% url 'editar_partido' id=p.id %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>
+                        <a href="{% url 'elimina_partido' id=p.id %}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>
                 </tr>
               {% endfor %}
               </tbody>

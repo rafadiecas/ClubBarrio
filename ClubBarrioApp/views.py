@@ -431,9 +431,37 @@ def crear_partido(request):
         partido_nuevo.equipo2 = Equipo.objects.get(id=int(request.POST.get('equipo_visitante')))
         partido_nuevo.temporada = Temporada.objects.get(id=int(request.POST.get('temporada')))
         if request.POST.get('equipo_local') == request.POST.get('equipo_visitante'):
-            return render(request, 'partidos_crear.html', {'error': 'Los equipos no pueden ser iguales'})
+            errores = ["Los equipos no pueden ser iguales"]
+            return render(request, 'partidos_crear.html', {'errores': errores, 'lista_equipos': Equipo.objects.all(), 'temporadas': Temporada.objects.all()})
         else:
             partido_nuevo.save()
+            return redirect('partidos_listado')
+
+def elimina_partido(request, id):
+    partido = Partido.objects.get(id=id)
+    partido.delete()
+    return redirect('partidos_listado')
+
+def editar_partido(request, id):
+    partido = Partido.objects.get(id=id)
+    if request.method == 'GET':
+        lista_equipos = Equipo.objects.all()
+        temporadas = Temporada.objects.all()
+        return render(request, 'partidos_crear.html', {'partido': partido, 'lista_equipos': lista_equipos, 'temporadas': temporadas})
+    else:
+        partido.fecha = request.POST.get('fecha')
+        partido.hora = request.POST.get('hora')
+        partido.lugar = request.POST.get('lugar')
+        partido.puntos_equipo1 = request.POST.get('puntos_equipo1')
+        partido.puntos_equipo2 = request.POST.get('puntos_equipo2')
+        partido.equipo1 = Equipo.objects.get(id=int(request.POST.get('equipo_local')))
+        partido.equipo2 = Equipo.objects.get(id=int(request.POST.get('equipo_visitante')))
+        partido.temporada = Temporada.objects.get(id=int(request.POST.get('temporada')))
+        if request.POST.get('equipo_local') == request.POST.get('equipo_visitante'):
+            errores = ["Los equipos no pueden ser iguales"]
+            return render(request, 'partidos_crear.html', {'errores': errores, 'lista_equipos': Equipo.objects.all(), 'temporadas': Temporada.objects.all()})
+        else:
+            partido.save()
             return redirect('partidos_listado')
 
 

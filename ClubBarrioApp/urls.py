@@ -46,5 +46,7 @@ urlpatterns = [
     path('administrador/estadisticas_jugador/eliminar/<int:id>/', elimina_estadisticas_jugador, name='elimina_estadisticas_jugador'),
     path('administrador/partidos/', partidos_listado, name='partidos_listado'),
     path('administrador/partidos/new', crear_partido, name='crear_partido'),
+    path('administrador/partidos/eliminar/<int:id>/', elimina_partido, name='elimina_partido'),
+    path('administrador/partidos/editar/<int:id>/', editar_partido, name='editar_partido'),
 
 ]
