@@ -15,11 +15,34 @@
             max-width: 300px;
             max-height: 300px;
         }
+        
+        .text-comment {
+          overflow-wrap: break-word;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          width: 260px;
+          height: 10.2em;
+          white-space: nowrap;
+          
+        }
+        
+        .textoCompleto {
+          height: auto;
+          width: auto;
+          white-space: normal;
+        }
+        
+        .more {
+          cursor: pointer;
+          color: blue;
+          text-decoration: underline;
+        }
+        
     </style>
 </head>
 {% include "barra_navegacion.html" %}
 <body>
-    <div class="container">
+    <div class="container" style="width: 60%">
         {% for n in entity %}
             <div class="card" style="margin-block:20px">
                 <div class="card-header">
@@ -27,15 +50,35 @@
                 </div>
                 <div class="card-body" id="carta">
                     <div class="row row-cols-md-2 row-cols-sm-1" id="card-text">
-                    <p>{{ n.articulo }}</p>
-                    <img src="{{ n.url_imagen }}" class="img-fluid" alt="imagen" id="foto_noticia">
+                        <div class="text-comment">
+                            <p class="text-truncate">{{ n.articulo }}</p>
+                            <span class="more">Leer más...</span>
+                        </div>
+                        <img src="{{ n.url_imagen }}" class="img-fluid" alt="imagen" id="foto_noticia">
                     </div>
                 </div>
             </div>
-
         {% endfor %}
-
     </div>
+    
+   <script>
+        var buttons = document.querySelectorAll('.more');
+    
+        buttons.forEach(button => {
+            button.addEventListener('click', toggleText);
+        });
+    
+        function toggleText(event) {
+            var buttonText = event.target.innerHTML;
+            var cardText = event.target.parentElement;
+    
+            cardText.classList.toggle('textoCompleto');
+            cardText.querySelector('p').classList.toggle('text-truncate');
+    
+            buttonText === 'Leer más...' ? buttonText = 'Leer menos...' : buttonText = 'Leer más...';
+            event.target.innerHTML = buttonText;
+        }
+    </script>
 
     {% include 'paginator.html' %}
 
