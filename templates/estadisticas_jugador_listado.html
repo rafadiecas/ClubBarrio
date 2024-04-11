@@ -14,10 +14,10 @@
 </head>
 <div class="container-fluid d-flex flex-column align-items-center">
     <div class="container w-75 d-flex justify-content-start ">
-        <h1>Lista de entrenamientos:</h1>
+        <h1>Lista de estadísticas jugadores:</h1>
     </div>
     <div class="container w-75 d-flex justify-content-between align-items-center ">
-        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_entrenamiento' %}" >Nuevo partido:</a>
+        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_estadisticas_jugador' %}" >Crear estadística</a>
 
         <div class="input-group w-25 h-50 ">
           <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;">
@@ -32,32 +32,30 @@
                 <thead>
                 <tr>
                   <th scope="col">id</th>
-                   <th scope="col">Fecha</th>
-                  <th scope="col">Hora</th>
-                  <th scope="col">Lugar</th>
-                 <th scope="col">Puntos Local</th>
-                 <th scope="col">Puntos Visitante</th>
-                 <th scope="col">Equipo Local</th>
-                 <th scope="col">Equipo Visitante</th>
-                 <th scope="col">Temporada</th>
+                  <th scope="col">Jugador</th>
+                  <th scope="col">Minutos</th>
+                  <th scope="col">Puntos</th>
+                  <th scope="col">Asistencias</th>
+                  <th scope="col">Rebotes</th>
+                  <th scope="col">Faltas</th>
+                  <th scope="col">Partido</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody >
-              {% for p in lista_partidos %}
+              {% for lej in lista_estadisticas_jugador %}
                 <tr>
-                  <th scope="row">{{ p.id }}</th>
-                  <td>{{ p.fecha }}</td>
-                  <td>{{ p.hora }}</td>
-                  <td>{{ p.lugar }}</td>
-                  <td>{{ p.puntos_equipo1 }}</td>
-                  <td>{{ p.puntos_equipo2 }}</td>
-                  <td>{{ p.equipo1.nombre }}</td>
-                  <td>{{ p.equipo2.nombre }}</td>
-                  <td>{{ p.temporada.anyo }}</td>
-                    <td>
-                        <a href="#"> <img src="{% static 'icons8-edit-30.png' %}"></a>
-                        <a href="#" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>
+                  <th scope="row">{{ lej.id }}</th>
+                  <td>{{ lej.jugador }}</td>
+                  <td>{{ lej.minutos }}</td>
+                  <td>{{ lej.puntos }}</td>
+                  <td>{{ lej.asistencias    }}</td>
+                  <td>{{ lej.rebotes}}</td>
+                  <td>{{ lej.faltas}}</td>
+                  <td>{{ lej.partido.equipo1}} vs {{ lej.partido.equipo2}}</td>
+                  <td>
+                        <a href="{% url 'editar_estadisticas_jugador' id=lej.id %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>
+                        <a href="{% url 'elimina_estadisticas_jugador' id=lej.id%}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>
                 </tr>
               {% endfor %}
               </tbody>

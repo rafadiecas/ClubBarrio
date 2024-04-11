@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+{% include "barra_admin.html" %}
+
+<body>
+
+<div class="container">
+
+
+    <h1 class="my-4">Crear equipo</h1>
+
+        {% if errores %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for error in errores %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+    <form action="" method="post">
+
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">
+                <label for="partido" class="form-label">Partido:</label>
+                <select name="partido" id="partido" class="form-select">
+                    {% for p in lista_partidos %}
+                        <option value="{{ p.id }}"{% if p.id == estadisticas_jugador.partido.id %} selected {% endif %}>{{ p.equipo1 }} vs {{ p.equipo2 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="minutos" class="form-label">Minutos:</label>
+                <input type="text" name="minutos" id="minutos" class="form-control" value="{{ estadisticas_jugador.minutos  }}" required>
+            </div>
+            <div class="col-md-4" id="nombreField">
+                <label for="puntos" class="form-label">Puntos:</label>
+                <input type="text" name="puntos" id="puntos" class="form-control" value="{{ estadisticas_jugador.puntos}}">
+            </div>
+            <div class="col-md-4" id="nombreField">
+                <label for="asistencias" class="form-label">Asistencias:</label>
+                <input type="text" name="asistencias" id="asistencias" class="form-control" value="{{ estadisticas_jugador.asistencias}}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4" id="nombreField">
+                <label for="rebotes" class="form-label">Rebotes:</label>
+                <input type="text" name="rebotes" id="rebotes" class="form-control" value="{{ estadisticas_jugador.rebotes}}">
+            </div>
+            <div class="col-md-4" id="nombreField">
+                <label for="faltas" class="form-label">Faltas:</label>
+                <input type="text" name="faltas" id="faltas" class="form-control" value="{{ estadisticas_jugador.faltas}}">
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <a href="{% url 'administrador' %}" role="button" class="btn btn-secondary mt-3">Volver</a>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
