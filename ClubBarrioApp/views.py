@@ -367,3 +367,47 @@ def editar_noticia(request,id):
         noticia.url_imagen = request.POST.get('url_imagen')
         noticia.save()
         return redirect('noticias_admin')
+
+def estadisticas_jugador_listado(request):
+    lista_estadisticas_jugador = EstadisticasJugador.objects.all()
+    return render(request, 'estadisticas_jugador_listado.html', {"lista_estadisticas_jugador":lista_estadisticas_jugador})
+def crear_estadisticas_jugador(request):
+    if request.method == 'GET':
+        lista_partidos = Partido.objects.all()
+        lista_jugador = Jugador.objects.all()
+        return render(request, 'estadisticas_jugador_crear.html',
+                      {'lista_partidos': lista_partidos, 'lista_jugador': lista_jugador})
+    else:
+        estadisticas_jugador_nuevo = EstadisticasJugador()
+        estadisticas_jugador_nuevo.puntos = request.POST.get('puntos')
+        estadisticas_jugador_nuevo.minutos = request.POST.get('minutos')
+        estadisticas_jugador_nuevo.rebotes = request.POST.get('rebotes')
+        estadisticas_jugador_nuevo.faltas = request.POST.get('minutos')
+        estadisticas_jugador_nuevo.asistencias = request.POST.get('asistencias')
+        estadisticas_jugador_nuevo.jugador = Jugador.objects.get(id=int(request.POST.get('jugador')))
+        estadisticas_jugador_nuevo.partido = Partido.objects.get(id=int(request.POST.get('partido')))
+        estadisticas_jugador_nuevo.save()
+
+        return redirect('entrenamientos_listado')
+def editar_estadisticas_jugador(request, id):
+    estadisticas_jugador = EstadisticasJugador.objects.get(id=id)
+    if request.method == 'GET':
+        lista_entrenadores = Entrenador.objects.all()
+        lista_partidos = Partido.objects.all()
+        return render(request, 'estadisticas_jugador_crear.html',
+                      {'estadisticas_jugador': estadisticas_jugador, 'lista_entrenadores': lista_entrenadores, 'lista_partidos': lista_partidos})
+    else:
+        estadisticas_jugador.puntos = request.POST.get('puntos')
+        estadisticas_jugador.minutos = request.POST.get('minutos')
+        estadisticas_jugador.rebotes = request.POST.get('rebotes')
+        estadisticas_jugador.faltas = request.POST.get('minutos')
+        estadisticas_jugador.asistencias = request.POST.get('asistencias')
+        estadisticas_jugador.partido = Partido.objects.get(id=int(request.POST.get('partido')))
+        estadisticas_jugador.save()
+
+        return redirect('estadisticas_jugador_listado')
+
+def elimina_estadisticas_jugador(request, id):
+    estadistica_jugador = EstadisticasJugador.objects.get(id=id)
+    estadistica_jugador.delete()
+    return redirect('estadistica_jugador_listado')

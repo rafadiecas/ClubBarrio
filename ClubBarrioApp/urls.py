@@ -40,5 +40,8 @@ urlpatterns = [
     path('administrador/entrenamientos/new', crear_entrenamiento, name='crear_entrenamiento'),
     path('administrador/entrenamientos/editar/<int:id>/', editar_entrenamiento, name='editar_entrenamiento'),
     path('administrador/entrenamientos/eliminar/<int:id>/', elimina_entrenamiento, name='elimina_entrenamiento'),
-
+    path('administrador/estadisticas_jugador/', estadisticas_jugador_listado, name='estadisticas_jugador_listado'),
+    path('administrador/estadisticas_jugador/new', crear_estadisticas_jugador, name='crear_estadisticas_jugador'),
+    path('administrador/estadisticas_jugador/editar/<int:id>/', editar_estadisticas_jugador, name='editar_estadisticas_jugador'),
+    path('administrador/estadisticas_jugador/eliminar/<int:id>/', elimina_estadisticas_jugador, name='elimina_estadisticas_jugador'),
 ]

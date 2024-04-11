@@ -103,3 +103,4 @@ INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEn
 
 
 
+INSERT INTO ClubBarrioApp_partido (fecha, hora, lugar, puntos_equipo1, puntos_equipo2, equipo1_id,equipo2_id, temporada_id) VALUES ('1111-11-22', '11:11:00','Safa', 50, 21,1,2,1);
