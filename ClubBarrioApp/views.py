@@ -384,8 +384,8 @@ def crear_partido(request):
         partido_nuevo.lugar = request.POST.get('lugar')
         partido_nuevo.puntos_equipo1 = request.POST.get('puntos_equipo1')
         partido_nuevo.puntos_equipo2 = request.POST.get('puntos_equipo2')
-        partido_nuevo.equipo_local = Equipo.objects.get(id=int(request.POST.get('equipo_local')))
-        partido_nuevo.equipo_visitante = Equipo.objects.get(id=int(request.POST.get('equipo_visitante')))
+        partido_nuevo.equipo1 = Equipo.objects.get(id=int(request.POST.get('equipo_local')))
+        partido_nuevo.equipo2 = Equipo.objects.get(id=int(request.POST.get('equipo_visitante')))
         partido_nuevo.temporada = Temporada.objects.get(id=int(request.POST.get('temporada')))
         if request.POST.get('equipo_local') == request.POST.get('equipo_visitante'):
             return render(request, 'partidos_crear.html', {'error': 'Los equipos no pueden ser iguales'})
