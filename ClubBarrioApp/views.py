@@ -411,3 +411,29 @@ def elimina_estadisticas_jugador(request, id):
     estadistica_jugador = EstadisticasJugador.objects.get(id=id)
     estadistica_jugador.delete()
     return redirect('estadistica_jugador_listado')
+def partidos_listado(request):
+    lista_partidos = Partido.objects.all()
+    return render(request, 'partidos_listado.html',{"lista_partidos":lista_partidos})
+
+def crear_partido(request):
+    if request.method == 'GET':
+        lista_equipos = Equipo.objects.all()
+        temporadas = Temporada.objects.all()
+        return render(request, 'partidos_crear.html', {'lista_equipos': lista_equipos, 'temporadas': temporadas})
+    else:
+        partido_nuevo = Partido()
+        partido_nuevo.fecha = request.POST.get('fecha')
+        partido_nuevo.hora = request.POST.get('hora')
+        partido_nuevo.lugar = request.POST.get('lugar')
+        partido_nuevo.puntos_equipo1 = request.POST.get('puntos_equipo1')
+        partido_nuevo.puntos_equipo2 = request.POST.get('puntos_equipo2')
+        partido_nuevo.equipo_local = Equipo.objects.get(id=int(request.POST.get('equipo_local')))
+        partido_nuevo.equipo_visitante = Equipo.objects.get(id=int(request.POST.get('equipo_visitante')))
+        partido_nuevo.temporada = Temporada.objects.get(id=int(request.POST.get('temporada')))
+        if request.POST.get('equipo_local') == request.POST.get('equipo_visitante'):
+            return render(request, 'partidos_crear.html', {'error': 'Los equipos no pueden ser iguales'})
+        else:
+            partido_nuevo.save()
+            return redirect('partidos_listado')
+
+

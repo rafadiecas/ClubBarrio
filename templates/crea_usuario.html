@@ -6,7 +6,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <style>
-        #equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField {
+        #equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField, #equiposSelect {
             display: none;
         }
     </style>
@@ -103,6 +103,16 @@
                     {% endfor %}
                 </select>
             </div>
+            <div class="row">
+                <div class="col-md-6 select" id="equiposSelect">
+                    <label for="equipos" class="form-label">Equipos:</label>
+                    <select id="equipos" name="equipos" class="form-select" multiple>
+                        {% for e in Equipos %}
+                            <option value="{{ e.id }}">{{ e.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
         </div>
 
         <div class="row">
@@ -124,21 +134,21 @@
     $(document).ready(function() {
     var roleActions = {
         'Usuario': function() {
-            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField').hide();
+            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField, #equiposSelect').hide();
             $('#nombre, #apellidos').removeAttr('required');
         },
         'Entrenador': function() {
-            $('#entrenadorSelect, #tutorSelect').hide();
-            $('#equipoSelect, #nombreField, #apellidosField').show();
+            $('#entrenadorSelect, #tutorSelect, #equipoSelect').hide();
+            $('#nombreField, #apellidosField, #equiposSelect').show();
             $('#nombre, #apellidos').attr('required', true);
         },
         'Jugador': function() {
-            $('#entrenadorSelect').hide();
+            $('#entrenadorSelect, #equiposSelect').hide();
             $('#equipoSelect, #tutorSelect, #nombreField, #apellidosField').show();
             $('#nombre, #apellidos').attr('required', true);
         },
         'Tutor': function() {
-            $('#equipoSelect, #tutorSelect, #entrenadorSelect').hide();
+            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #equiposSelect').hide();
             $('#nombreField, #apellidosField').show();
             $('#nombre, #apellidos').attr('required', true);
         }
