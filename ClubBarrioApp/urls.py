@@ -50,6 +50,8 @@ urlpatterns = [
     path('administrador/partidos/editar/<int:id>/', editar_partido, name='editar_partido'),
     path('administrador/tienda/', lista_tienda, name='lista_tienda'),
     path('administrador/tienda/new', crear_producto, name='crear_producto'),
+    path('administrador/tienda/eliminar/<int:id>/', elimina_producto, name='elimina_producto'),
+    path('administrador/tienda/editar/<int:id>/', edita_producto, name='edita_producto'),
     path('tienda/', pagina_tienda, name='tienda'),
 
 ]

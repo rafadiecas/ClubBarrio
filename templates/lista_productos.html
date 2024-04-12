@@ -53,8 +53,8 @@
                     <td>{{ p.talla.nombre }}</td>
                     <td>{{ p.tipo.nombre }}</td>
                     <td>
-                        <a href="#"> <img src="{% static 'icons8-edit-30.png' %}"></a>
-                        <a href="#" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>
+                        <a href="{% url 'edita_producto' id=p.id  %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>
+                        <a href="{% url 'elimina_producto' id=p.id  %}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>
                 </tr>
               {% endfor %}
               </tbody>

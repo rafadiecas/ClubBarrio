@@ -501,3 +501,24 @@ def crear_producto(request):
         producto_nuevo.url_imagen = request.POST.get('url_imagen')
         producto_nuevo.save()
         return redirect('lista_tienda')
+
+def elimina_producto(request, id):
+    producto = Producto.objects.get(id=id)
+    producto.delete()
+    return redirect('lista_tienda')
+
+def edita_producto(request, id):
+    producto = Producto.objects.get(id=id)
+    if request.method == 'GET':
+        tallas = Talla.objects.all()
+        tipos = Tipo.objects.all()
+        return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos})
+    else:
+        producto.nombre = request.POST.get('nombre')
+        producto.precio = request.POST.get('precio')
+        producto.talla = Talla.objects.get(id=int(request.POST.get('talla')))
+        producto.tipo = Tipo.objects.get(id=int(request.POST.get('tipo')))
+        producto.stock = request.POST.get('stock')
+        producto.url_imagen = request.POST.get('url_imagen')
+        producto.save()
+        return redirect('lista_tienda')
