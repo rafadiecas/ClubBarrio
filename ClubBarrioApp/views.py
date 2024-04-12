@@ -7,6 +7,7 @@ import re
 from .models import *
 from django.core.paginator import Paginator
 from django.http import Http404
+from .decorator import user_required, rol_requerido
 
 
 # Create your views here.
@@ -33,6 +34,8 @@ def pagina_noticias(request):
 
     return render(request, 'Noticias.html', data)
 
+# @user_required
+# @rol_requerido('Administrador')
 def administrador(request):
     return render(request, 'administrador.html')
 
