@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+{% include "barra_admin.html" %}
+
+<body>
+
+<div class="container">
+
+
+    <h1 class="my-4">Crear Partido</h1>
+
+        {% if errores %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for error in errores %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+    <form action="" method="post">
+
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="fecha" class="form-label">Fecha:</label>
+                <input type="date" name="fecha" id="fecha" class="form-control" value="{{ partido.fecha|date:'Y-m-d'  }}" required>
+            </div>
+            <div class="col-md-4" id="nombreField">
+                <label for="hora" class="form-label">Hora:</label>
+                <input type="time" name="hora" id="hora" class="form-control" value="{{ partido.hora|time:'H:i' }}">
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="lugar" class="form-label">Lugar:</label>
+                <input type="text" name="lugar" id="lugar" class="form-control" value="{{ partido.lugar }}">
+            </div>
+            <div class="col-md-4">
+                <label for="puntos_equipo1" class="form-label">Puntos equipo 1:</label>
+                <input type="text" name="puntos_equipo1" id="puntos_equipo1" class="form-control" value="{{ partido.puntos_equipo1 }}">
+            </div>
+            <div class="col-md-4">
+                <label for="puntos_equipo2" class="form-label">Puntos equipo 2:</label>
+                <input type="text" name="puntos_equipo2" id="lugar" class="form-control" value="{{ partido.puntos_equipo2 }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="equipo_local" class="form-label">Equipo 1:</label>
+                <select name="equipo_local" id="equipo_local" class="form-select">
+                    {% for equipo in lista_equipos %}
+                       <option value="{{ equipo.id }}" {% if partido.equipo1.id == equipo.id %} selected {% endif %}>{{ equipo.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="equipo_visitante" class="form-label">Equipo 2:</label>
+                <select name="equipo_visitante" id="equipo_visitante" class="form-select">
+                    {% for equipo in lista_equipos %}
+                        <option value="{{ equipo.id }}" {% if partido.equipo2.id == equipo.id %} selected {% endif %}>{{ equipo.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label for="temporada" class="form-label">Temporada:</label>
+            <select name="temporada" id="temporada" class="form-select">
+                {% for temporada in temporadas %}
+                    <option value="{{ temporada.id }}"{% if partido.temporada.id == temporada.id %} selected {% endif %}>{{ temporada.anyo }}</option>
+                {% endfor %}
+            </select>
+          
+    </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <a href="{% url 'administrador' %}" role="button" class="btn btn-secondary mt-3">Volver</a>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

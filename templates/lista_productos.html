@@ -1,0 +1,64 @@
+{% load static %}
+{% include 'barra_admin.html' %}
+<head>
+    <style>
+    .btn-custom {
+        color: #00653d; /* Color del texto azul */
+    }
+    .table-responsive {
+        max-height: 400px; /* Ajusta la altura máxima según sea necesario */
+        overflow-y: auto; /* Agrega un scroll vertical */
+    }
+    </style>
+
+</head>
+<div class="container-fluid d-flex flex-column align-items-center">
+    <div class="container w-75 d-flex justify-content-start ">
+        <h1>Lista de Productos</h1>
+    </div>
+    <div class="container w-75 d-flex justify-content-between align-items-center ">
+        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_producto' %}" >Nuevo Producto</a>
+
+        <div class="input-group w-25 h-50 ">
+          <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;" id="inputBuscar">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="background-color: #00653d; color: white; ">
+              <img src="{% static 'icons8-búsqueda-30.png' %}">
+          </button>
+        </div>
+    </div>
+    <div class="container w-75 m-5 ">
+        <div class="table-responsive">
+            <table class="table" id="tabla">
+                <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                   <th scope="col">Nombre</th>
+                  <th scope="col">Precio</th>
+                  <th scope="col">Stock</th>
+                    <th scope="col">Url Imagen</th>
+                  <th scope="col">Talla</th>
+                    <th scope="col">Tipo</th>
+
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody >
+              {% for p in lista_productos %}
+                <tr>
+                  <th scope="row">{{ p.id }}</th>
+                  <td>{{ p.nombre }}</td>
+                  <td>{{ p.precio }}</td>
+                  <td>{{ p.stock }}</td>
+                    <td>{{ p.url_imagen }}</td>
+                    <td>{{ p.talla.nombre }}</td>
+                    <td>{{ p.tipo.nombre }}</td>
+                    <td>
+                        <a href="{% url 'edita_producto' id=p.id  %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>
+                        <a href="{% url 'elimina_producto' id=p.id  %}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>
