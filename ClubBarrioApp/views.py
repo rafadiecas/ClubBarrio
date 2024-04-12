@@ -38,7 +38,7 @@ def administrador(request):
 
 def usuarios(request):
     lista_usuarios = User.objects.all()
-    return render(request, 'usuarios_listado.html', {'usuarios': lista_usuarios})
+    return render(request, 'lista_usuarios.html', {'usuarios': lista_usuarios})
 
 def new_user(request):
     Users = User.objects.all()
@@ -47,7 +47,7 @@ def new_user(request):
     roles = Role.labels[:-1]
     if request.method == 'GET':
 
-        return render(request, "crea_usuario.html",
+        return render(request, "crear_usuario.html",
                       {'Users': Users, 'Equipos': Equipos, 'Tutores': Tutores, 'roles': roles})
     else:
 
@@ -61,7 +61,7 @@ def new_user(request):
         errors = filtro(email, fecha_nacimiento,rol, username, password, password2)
 
         if len(errors) != 0:
-            return render(request, "crea_usuario.html",
+            return render(request, "crear_usuario.html",
                           {"errores": errors, "username": username, "email": email, "roles": roles,
                            "fecha_nacimiento": fecha_nacimiento, "Equipos": Equipos, "Tutores": Tutores})
         else:
@@ -190,7 +190,7 @@ def edita_usuario(request, id):
             tutor = Jugador.objects.get(usuario_id=id).tutorLegal
             equipo = Jugador.objects.get(usuario_id=id).equipo
             jugador = Jugador.objects.get(usuario_id=id)
-            return render(request, 'edita_usuarios.html',
+            return render(request, 'editar_usuarios.html',
                           {'usuario': usuario, 'Equipos': Equipos, 'Tutores': Tutores, 'roles': roles, 'tutor': tutor,
                            'equipo': equipo, 'datos': jugador})
         if usuario.rol == 'Entrenador':
@@ -200,15 +200,15 @@ def edita_usuario(request, id):
                 if e.entrenadores.filter(usuario_id=usuario.id).exists():
                     id_equipos.append(e.id)
             entrenador = Entrenador.objects.filter(usuario_id=usuario.id)
-            return render(request, 'edita_usuarios.html',
+            return render(request, 'editar_usuarios.html',
                           {'usuario': usuario, 'Equipos': Equipos, 'roles': roles, 'id_equipos': id_equipos,
                            'Tutores': Tutores})
         if usuario.rol == 'Tutor':
             tutor = TutorLegal.objects.get(usuario_id=usuario.id)
-            return render(request, 'edita_usuarios.html',
+            return render(request, 'editar_usuarios.html',
                           {'usuario': usuario, 'roles': roles, 'datos': tutor, 'Tutores': Tutores, 'Equipos': Equipos})
 
-        return render(request, 'edita_usuarios.html',
+        return render(request, 'editar_usuarios.html',
                       {'usuario': usuario, 'roles': roles, 'Tutores': Tutores, 'Equipos': Equipos})
     else:
 
@@ -250,13 +250,13 @@ def edita_usuario(request, id):
         return redirect('usuarios')
 def equipos_listado(request):
     lista_equipos = Equipo.objects.all()
-    return render(request, 'equipos_listado.html',{"equipos":lista_equipos})
+    return render(request, 'lista_equipos.html', {"equipos":lista_equipos})
 
 def crear_equipo(request):
     if request.method == 'GET':
         lista_categorias = categoria.objects.all()
         entrenadores = Entrenador.objects.all()
-        return render(request, 'equipo_crear.html',{'lista_categorias': lista_categorias, 'entrenadores': entrenadores})
+        return render(request, 'crear_equipo.html', {'lista_categorias': lista_categorias, 'entrenadores': entrenadores})
     else:
         equipo_nuevo= Equipo()
         equipo_nuevo.nombre= request.POST.get('nombre')
@@ -276,7 +276,7 @@ def editar_equipo(request, id):
         lista_categorias = categoria.objects.all()
         entrenadores = Entrenador.objects.all()
         id_entrenadores = equipo.entrenadores.values_list('id', flat=True)
-        return render(request, 'equipo_crear.html',{'equipo':equipo,'id_entrenadores':id_entrenadores, 'lista_categorias': lista_categorias, 'entrenadores': entrenadores})
+        return render(request, 'crear_equipo.html', {'equipo':equipo, 'id_entrenadores':id_entrenadores, 'lista_categorias': lista_categorias, 'entrenadores': entrenadores})
     else:
         equipo.nombre = request.POST.get('nombre')
         equipo.escudo = request.POST.get('escudo')
@@ -298,12 +298,12 @@ def elimina_equipo(request, id):
 def entrenamientos_listado(request):
     lista_entrenamientos = Entrenamiento.objects.all()
 
-    return render(request, 'entrenamientos_listado.html',{"lista_entrenamientos":lista_entrenamientos})
+    return render(request, 'lista_entrenamiento.html', {"lista_entrenamientos":lista_entrenamientos})
 def crear_entrenamiento(request):
     if request.method == 'GET':
         lista_entrenadores = Entrenador.objects.all()
         lista_lugares_entrenamiento = LugarEntrenamiento.objects.all()
-        return render(request, 'entrenamientos_crear.html',
+        return render(request, 'crear_entrenamiento.html',
                       {'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento})
     else:
         entrenamiento_nuevo = Entrenamiento()
@@ -319,7 +319,7 @@ def editar_entrenamiento(request, id):
     if request.method == 'GET':
         lista_entrenadores = Entrenador.objects.all()
         lista_lugares_entrenamiento = LugarEntrenamiento.objects.all()
-        return render(request, 'entrenamientos_crear.html',
+        return render(request, 'crear_entrenamiento.html',
                       {'entrenamiento': entrenamiento, 'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento})
     else:
         entrenamiento.fecha = request.POST.get('fecha')
@@ -338,11 +338,11 @@ def elimina_entrenamiento(request, id):
 
 def lista_noticias(request):
     lista_noticias = Noticias.objects.all()
-    return render(request, 'noticias_listado.html', {"noticias":lista_noticias})
+    return render(request, 'lista_noticias.html', {"noticias":lista_noticias})
 
 def crear_noticia(request):
     if request.method == 'GET':
-        return render(request, 'noticia_crear.html')
+        return render(request, 'crear_noticias.html')
     else:
         noticia_nueva = Noticias()
         noticia_nueva.titulo = request.POST.get('titulo')
@@ -360,7 +360,7 @@ def elimina_noticia(request, id):
 def editar_noticia(request,id):
     noticia = Noticias.objects.get(id=id)
     if request.method == 'GET':
-        return render(request, 'noticia_crear.html', {'noticia':noticia})
+        return render(request, 'crear_noticias.html', {'noticia':noticia})
     else:
         noticia.titulo = request.POST.get('titulo')
         noticia.articulo = request.POST.get('articulo')
@@ -370,12 +370,12 @@ def editar_noticia(request,id):
 
 def estadisticas_jugador_listado(request):
     lista_estadisticas_jugador = EstadisticasJugador.objects.all()
-    return render(request, 'estadisticas_jugador_listado.html', {"lista_estadisticas_jugador":lista_estadisticas_jugador})
+    return render(request, 'lista_estadisticas_jugador.html', {"lista_estadisticas_jugador":lista_estadisticas_jugador})
 def crear_estadisticas_jugador(request):
     if request.method == 'GET':
         lista_partidos = Partido.objects.all()
         lista_jugador = Jugador.objects.all()
-        return render(request, 'estadisticas_jugador_crear.html',
+        return render(request, 'crear_estadisticas_jugador.html',
                       {'lista_partidos': lista_partidos, 'lista_jugador': lista_jugador})
     else:
         estadisticas_jugador_nuevo = EstadisticasJugador()
@@ -394,7 +394,7 @@ def editar_estadisticas_jugador(request, id):
     if request.method == 'GET':
         lista_entrenadores = Entrenador.objects.all()
         lista_partidos = Partido.objects.all()
-        return render(request, 'estadisticas_jugador_crear.html',
+        return render(request, 'crear_estadisticas_jugador.html',
                       {'estadisticas_jugador': estadisticas_jugador, 'lista_entrenadores': lista_entrenadores, 'lista_partidos': lista_partidos})
     else:
         estadisticas_jugador.puntos = request.POST.get('puntos')
@@ -413,13 +413,13 @@ def elimina_estadisticas_jugador(request, id):
     return redirect('estadistica_jugador_listado')
 def partidos_listado(request):
     lista_partidos = Partido.objects.all()
-    return render(request, 'partidos_listado.html',{"lista_partidos":lista_partidos})
+    return render(request, 'lista_partidos.html', {"lista_partidos":lista_partidos})
 
 def crear_partido(request):
     if request.method == 'GET':
         lista_equipos = Equipo.objects.all()
         temporadas = Temporada.objects.all()
-        return render(request, 'partidos_crear.html', {'lista_equipos': lista_equipos, 'temporadas': temporadas})
+        return render(request, 'crear_partidos.html', {'lista_equipos': lista_equipos, 'temporadas': temporadas})
     else:
         partido_nuevo = Partido()
         partido_nuevo.fecha = request.POST.get('fecha')
@@ -432,7 +432,7 @@ def crear_partido(request):
         partido_nuevo.temporada = Temporada.objects.get(id=int(request.POST.get('temporada')))
         if request.POST.get('equipo_local') == request.POST.get('equipo_visitante'):
             errores = ["Los equipos no pueden ser iguales"]
-            return render(request, 'partidos_crear.html', {'errores': errores, 'lista_equipos': Equipo.objects.all(), 'temporadas': Temporada.objects.all()})
+            return render(request, 'crear_partidos.html', {'errores': errores, 'lista_equipos': Equipo.objects.all(), 'temporadas': Temporada.objects.all()})
         else:
             partido_nuevo.save()
             return redirect('partidos_listado')
@@ -447,7 +447,7 @@ def editar_partido(request, id):
     if request.method == 'GET':
         lista_equipos = Equipo.objects.all()
         temporadas = Temporada.objects.all()
-        return render(request, 'partidos_crear.html', {'partido': partido, 'lista_equipos': lista_equipos, 'temporadas': temporadas})
+        return render(request, 'crear_partidos.html', {'partido': partido, 'lista_equipos': lista_equipos, 'temporadas': temporadas})
     else:
         partido.fecha = request.POST.get('fecha')
         partido.hora = request.POST.get('hora')
@@ -459,9 +459,28 @@ def editar_partido(request, id):
         partido.temporada = Temporada.objects.get(id=int(request.POST.get('temporada')))
         if request.POST.get('equipo_local') == request.POST.get('equipo_visitante'):
             errores = ["Los equipos no pueden ser iguales"]
-            return render(request, 'partidos_crear.html', {'errores': errores, 'lista_equipos': Equipo.objects.all(), 'temporadas': Temporada.objects.all()})
+            return render(request, 'crear_partidos.html', {'errores': errores, 'lista_equipos': Equipo.objects.all(), 'temporadas': Temporada.objects.all()})
         else:
             partido.save()
             return redirect('partidos_listado')
 
 
+def lista_tienda(request):
+    lista_productos = Producto.objects.all()
+    return render(request, 'lista_productos.html', {"lista_productos":lista_productos})
+
+def crear_producto(request):
+    if request.method == 'GET':
+        tallas = Talla.objects.all()
+        tipos = Tipo.objects.all()
+        return render(request, 'crear_productos.html', {'tallas': tallas, 'tipos': tipos})
+    else:
+        producto_nuevo = Producto()
+        producto_nuevo.nombre = request.POST.get('nombre')
+        producto_nuevo.precio = request.POST.get('precio')
+        producto_nuevo.talla = Talla.objects.get(id=int(request.POST.get('talla')))
+        producto_nuevo.tipo = Tipo.objects.get(id=int(request.POST.get('tipo')))
+        producto_nuevo.stock = request.POST.get('stock')
+        producto_nuevo.url_imagen = request.POST.get('url_imagen')
+        producto_nuevo.save()
+        return redirect('lista_tienda')

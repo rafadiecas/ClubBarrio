@@ -112,19 +112,23 @@ INSERT INTO ClubBarrioApp_temporada (id, anyo) VALUES (1, '2024');
 
 /* tallas */
 
-INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (1, 'xs');
-INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (2, 's');
-INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (3, 'm');
-INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (4, 'l');
-INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (5, 'xl');
-INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (6, 'xxl');
+INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (1, 'XS');
+INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (2, 'S');
+INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (3, 'M');
+INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (4, 'L');
+INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (5, 'XL');
+INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (6, 'XXL');
 
 
 /* tipo producto */
 
-INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (1, 'camiseta');
-INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (2, 'equipacion');
-INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (3, 'calzonas');
-INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (4, 'sudadera');
+INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (1, 'Camiseta');
+INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (2, 'Equipacion');
+INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (3, 'Calzonas');
+INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (4, 'Sudadera');
+
+/* producto */
+INSERT INTO ClubBarrioApp_producto (id, nombre, precio, stock, talla_id, tipo_id) VALUES (1, 'Equipacion', 30, 10, 5, 2);
+
 
 

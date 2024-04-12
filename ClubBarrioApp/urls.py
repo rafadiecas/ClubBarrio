@@ -48,5 +48,7 @@ urlpatterns = [
     path('administrador/partidos/new', crear_partido, name='crear_partido'),
     path('administrador/partidos/eliminar/<int:id>/', elimina_partido, name='elimina_partido'),
     path('administrador/partidos/editar/<int:id>/', editar_partido, name='editar_partido'),
+    path('administrador/tienda/', lista_tienda, name='lista_tienda'),
+    path('administrador/tienda/new', crear_producto, name='crear_producto'),
 
 ]
