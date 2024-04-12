@@ -12,6 +12,11 @@
     {% endif %}
     {% block bootstrap5_extra_head %}{% endblock %}
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css">
+
     <style>
         .bg-body-tertiary {
             background-color: #00653D !important;
@@ -21,6 +26,7 @@
             color: white;
          ;
         }
+        
 
         @media screen and (min-width: 768px) {
           .navbar-brand img {
@@ -30,6 +36,31 @@
             margin-right: 0;
             padding: 0 1em;
           }
+        }
+        #tabla {
+            margin-top: 15px;
+        }
+        .page-item.active .page-link {
+            z-index: 3;
+            color: #fff;
+            background-color: #00653D;
+            border-color: #00653D;
+        }
+        .page-link {
+            color: #00653D;
+        }
+        .dt-info{
+            display: flex;
+            justify-content: center;
+        }
+        .pagination{
+            justify-content: center;
+        }
+        .pagination {
+            display: flex;
+            padding-left: 0;
+            list-style: none;
+            justify-content: center;
         }
     </style>
 </head>
@@ -49,12 +80,12 @@
           </button>
           <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="{% url 'usuarios' %}">Usuarios</a></li>
-              <li><a class="dropdown-item" href="#">Equipos</a></li>
-              <li><a class="dropdown-item" href="#">Entrenamiento</a></li>
+              <li><a class="dropdown-item" href="{% url 'equipos' %}">Equipos</a></li>
+              <li><a class="dropdown-item" href="{% url 'entrenamientos_listado' %}">Entrenamiento</a></li>
               <li><a class="dropdown-item" href="#">Tienda</a></li>
-              <li><a class="dropdown-item" href="#">Partido</a></li>
-              <li><a class="dropdown-item" href="#">Noticias</a></li>
-              <li><a class="dropdown-item" href="#">Estadísticas</a></li>
+              <li><a class="dropdown-item" href="{% url 'partidos_listado' %}">Partido</a></li>
+              <li><a class="dropdown-item" href="{% url 'noticias_admin' %}">Noticias</a></li>
+              <li><a class="dropdown-item" href="{% url 'estadisticas_jugador_listado' %}">Estadísticas</a></li>
           </ul>
       </div>
   </div>
@@ -68,4 +99,38 @@
 {% block bootstrap5_extra_script %}{% endblock %}
 
 </body>
+<script>
+        function confirmarEliminarUsuario(event) {
+        var confirmacion = confirm('¿Seguro que desea eliminar?');
+         if (!confirmacion) {
+        event.preventDefault();
+        }
+        }
+    </script>
+<script>
+    $(document).ready(function(){
+        let tabla = $("#tabla").DataTable({
+            "dom": 'lrtip', // Excluye 'f' para eliminar el cuadro de búsqueda predeterminado
+            "lengthMenu": [[10, 25, -1], [10, 25, "All"]],
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "zeroRecords": "No se encontraron registros",
+                "info": "Mostrando la página _PAGE_ de _PAGES_",
+                "infoEmpty": "No hay registros disponibles",
+                "infoFiltered": "(filtrado de _MAX_ registros totales)",
+                "search": "Buscar:",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+        });
+
+        $("#inputBuscar").on("keyup", function() {
+            tabla.search($(this).val()).draw();
+        });
+    });
+</script>
 </html>

@@ -93,6 +93,7 @@ class Producto(models.Model):
     precio = models.FloatField()
     stock = models.IntegerField(default=0)
     pedidos = models.ManyToManyField(Pedido)
+    url_imagen = models.CharField(max_length=500 , default='sin imagen')
     tipo = models.ForeignKey(Tipo, on_delete=models.DO_NOTHING, null=True)
     talla = models.ForeignKey(Talla, on_delete=models.DO_NOTHING, null=True)
 

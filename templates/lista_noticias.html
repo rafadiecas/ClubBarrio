@@ -12,7 +12,7 @@
     </style>
     <script>
         function confirmarEliminarUsuario(event) {
-        var confirmacion = confirm('¿Seguro que desea eliminar usuario?');
+        var confirmacion = confirm('¿Seguro que desea eliminar noticia?');
          if (!confirmacion) {
         event.preventDefault();
         }
@@ -21,13 +21,13 @@
 </head>
 <div class="container-fluid d-flex flex-column align-items-center">
     <div class="container w-75 d-flex justify-content-start ">
-        <h1>Lista usuarios:</h1>
+        <h1>Lista noticias:</h1>
     </div>
     <div class="container w-75 d-flex justify-content-between align-items-center ">
-        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'new_user' %}" >Nuevo usuario</a>
+        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_noticia' %}" >Nueva noticia</a>
 
         <div class="input-group w-25 h-50 ">
-          <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;">
+          <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;" id="inputBuscar">
           <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="background-color: #00653d; color: white; ">
               <img src="{% static 'icons8-búsqueda-30.png' %}">
           </button>
@@ -35,28 +35,26 @@
     </div>
     <div class="container w-75 m-4 ">
         <div class="table-responsive">
-            <table class="table">
+            <table class="table" id="tabla">
                 <thead>
                 <tr>
                   <th scope="col">id</th>
-                   <th scope="col">Nombre usuario</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Fecha de nacimiento</th>
-                    <th scope="col">Rol</th>
+                   <th scope="col">Noticia</th>
+                  <th scope="col">URL imagen</th>
+                  <th scope="col">Texto noticia</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody >
-              {% for u in usuarios %}
+              {% for n in noticias %}
                 <tr>
-                  <th scope="row">{{ u.id }}</th>
-                    <td>{{ u.username }}</td>
-                  <td>{{ u.email }}</td>
-                  <td>{{ u.fecha_nacimiento }}</td>
-                    <td>{{ u.rol.capitalize }}</td>
+                  <th scope="row">{{ n.id }}</th>
+                    <td>{{ n.titulo }}</td>
+                  <td>{{ n.url_imagen }}</td>
+                    <td><div class="container text-truncate " style="width: 150px">{{ n.articulo }}</div></td>
                     <td>
-                        <a href="{% url 'edita_usuario' id=u.id %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>
-                        <a href="{% url 'elimina_usuario' id=u.id%}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>
+                        <a href="{% url 'editar_noticia' id=n.id %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>
+                        <a href="{% url 'elimina_noticia' id=n.id %}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>
                 </tr>
               {% endfor %}
               </tbody>

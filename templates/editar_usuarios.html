@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <title>Crea usuario</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    
     <style>
         #equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField {
             display: none;
         }
-    </style>
 
+    </style>
+    
 </head>
 
 
@@ -21,7 +22,7 @@
 <div class="container">
 
 
-    <h1 class="my-4">Crear equipo</h1>
+    <h1 class="my-4">Edita usuario</h1>
 
         {% if errores %}
         <div class="alert alert-danger">
@@ -39,43 +40,38 @@
 
         <div class="row">
             <div class="col-md-4">
-                <label for="nombre" class="form-label">Nombre:</label>
-                <input type="text" name="nombre" id="nombre" class="form-control" value="{{ nombre }}" required>
-            </div>
-            <div class="col-md-4" id="nombreField">
-                <label for="escudo" class="form-label">Escudo:</label>
-                <input type="text" name="escudo" id="escudo" class="form-control">
-            </div>
-            <div class="col-md-4 responsive-div">
-                <label for="categoria" class="form-label">Categoría:</label>
-                <select name="categoria" id="categoria" class="form-select">
-                {% for r in roles %}
-                    <option value="{{ r }}">{{ r }}</option>
-                {% endfor %}
-            </select>
+                <label for="rol" class="form-label">Rol:</label>
+                <input type="text" name="rol" id="rol" class="form-control" value="{{ usuario.rol }}" disabled>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" name="username" id="username" class="form-control" value="{{ usuario.username }}" required>
+            </div>
+            <div class="col-md-4" id="nombreField">
+                <label for="nombre" class="form-label">Nombre:</label>
+                <input type="text" name="nombre" id="nombre" class="form-control" value="{{ datos.nombre }}">
+            </div>
+            <div class="col-md-4" id="apellidosField">
+                <label for="apellidos" class="form-label">Apellidos:</label>
+                <input type="text" name="apellidos" id="apellidos" class="form-control" value="{{ datos.apellidos }}">
+            </div>
         </div>
 
         <div class="row">
             <div class="col-md-4">
                 <label for="email" class="form-label">Email:</label>
-                <input type="email" name="email" id="email" class="form-control" value="{{ email }}" required>
+                <input type="email" name="email" id="email" class="form-control" value="{{ usuario.email }}" required>
             </div>
-            <div class="col-md-4">
-                <label for="password" class="form-label">Contraseña:</label>
-                <input type="password" name="password" id="password" class="form-control" required>
-            </div>
-            <div class="col-md-4">
-                <label for="password2" class="form-label">Repite contraseña:</label>
-                <input type="password" name="password2" id="password2" class="form-control" required>
-            </div>
+            
         </div>
 
         <div class="row">
             <div class="col-md-4">
                 <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento:</label>
-                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{{ fecha_nacimiento }}" required>
+                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{{ usuario.fecha_nacimiento|date:'Y-m-d' }}" required>
             </div>
         </div>
 
@@ -84,7 +80,11 @@
                 <label for="equipo" class="form-label">Equipo:</label>
                 <select id="equipo" name="equipo" class="form-select">
                     {% for e in Equipos %}
-                        <option value="{{ e.id }}">{{ e.nombre }}</option>
+                        {% if e.id == equipo.id  %}
+                                    <option value="{{ e.id }}" selected>{{ e.nombre }}</option>
+                        {% else  %}
+                            <option value="{{ e.id }}">{{ e.nombre }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </div>
@@ -93,11 +93,22 @@
                 <label for="tutor" class="form-label">Tutor:</label>
                 <select id="tutores" name="tutor" class="form-select">
                     {% for t in Tutores %}
-                        <option value="{{ t.id }}">{{ t.nombre }} {{ t.apellidos }}</option>
+                        {% if t.id == tutor.id %}
+                            <option value="{{ t.id }}" selected>{{ t.nombre }}</option>
+                        {% else  %}
+                            <option value="{{ t.id }}">{{ t.nombre }} {{ t.apellidos }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </div>
         </div>
+        <div class="row">
+            <div class="col-12" id="checkbox-activo">
+                <label for="is_active" class="form-label" style="margin: 0"> Es Activo:</label>
+                <input type="checkbox" name="is_active" id="is_active" {% if datos.es_activo %} checked {% endif %}>
+            </div>
+        </div>
+        
 
         <div class="row">
             <div class="col-12 text-center">
@@ -115,37 +126,43 @@
 </div>
 
     <script>
-    $(document).ready(function() {
+$(document).ready(function() {
     var roleActions = {
         'Usuario': function() {
-            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField').hide();
+            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField, #checkbox-activo').hide();
             $('#nombre, #apellidos').removeAttr('required');
         },
         'Entrenador': function() {
-            $('#entrenadorSelect, #tutorSelect').hide();
+            $('#entrenadorSelect, #tutorSelect, #checkbox-activo').hide();
             $('#equipoSelect, #nombreField, #apellidosField').show();
             $('#nombre, #apellidos').attr('required', true);
         },
         'Jugador': function() {
             $('#entrenadorSelect').hide();
-            $('#equipoSelect, #tutorSelect, #nombreField, #apellidosField').show();
+            $('#equipoSelect, #tutorSelect, #nombreField, #apellidosField, #checkbox-activo').show();
             $('#nombre, #apellidos').attr('required', true);
         },
         'Tutor': function() {
             $('#equipoSelect, #tutorSelect, #entrenadorSelect').hide();
-            $('#nombreField, #apellidosField').show();
+            $('#nombreField, #apellidosField, #checkbox-activo').show();
             $('#nombre, #apellidos').attr('required', true);
         }
     };
 
-    $('#rol').change(function() {
+    $('#rol').on('input', function() {
         var selectedRol = $(this).val();
         if (roleActions[selectedRol]) {
             roleActions[selectedRol]();
         }
     });
+
+    // Ejecutar la función correspondiente al cargar la página
+    var initialRol = $('#rol').val();
+    if (roleActions[initialRol]) {
+        roleActions[initialRol]();
+    }
 });
-    </script>
+</script>
 
 </body>
 

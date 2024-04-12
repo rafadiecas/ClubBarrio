@@ -1,0 +1,65 @@
+{% load static %}
+{% include 'barra_admin.html' %}
+<head>
+    <style>
+    .btn-custom {
+        color: #00653d; /* Color del texto azul */
+    }
+    .table-responsive {
+        max-height: 400px; /* Ajusta la altura máxima según sea necesario */
+        overflow-y: auto; /* Agrega un scroll vertical */
+    }
+    </style>
+
+</head>
+<div class="container-fluid d-flex flex-column align-items-center">
+    <div class="container w-75 d-flex justify-content-start ">
+        <h1>Lista de estadísticas jugadores:</h1>
+    </div>
+    <div class="container w-75 d-flex justify-content-between align-items-center ">
+        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_estadisticas_jugador' %}" >Crear estadística</a>
+
+        <div class="input-group w-25 h-50 ">
+          <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;" id="inputBuscar">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="background-color: #00653d; color: white; ">
+              <img src="{% static 'icons8-búsqueda-30.png' %}">
+          </button>
+        </div>
+    </div>
+    <div class="container w-75 m-4 ">
+        <div class="table-responsive">
+            <table class="table" id="tabla">
+                <thead>
+                <tr>
+                  <th scope="col">id</th>
+                  <th scope="col">Jugador</th>
+                  <th scope="col">Minutos</th>
+                  <th scope="col">Puntos</th>
+                  <th scope="col">Asistencias</th>
+                  <th scope="col">Rebotes</th>
+                  <th scope="col">Faltas</th>
+                  <th scope="col">Partido</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody >
+              {% for lej in lista_estadisticas_jugador %}
+                <tr>
+                  <th scope="row">{{ lej.id }}</th>
+                  <td>{{ lej.jugador }}</td>
+                  <td>{{ lej.minutos }}</td>
+                  <td>{{ lej.puntos }}</td>
+                  <td>{{ lej.asistencias    }}</td>
+                  <td>{{ lej.rebotes}}</td>
+                  <td>{{ lej.faltas}}</td>
+                  <td>{{ lej.partido.equipo1}} vs {{ lej.partido.equipo2}}</td>
+                  <td>
+                        <a href="{% url 'editar_estadisticas_jugador' id=lej.id %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>
+                        <a href="{% url 'elimina_estadisticas_jugador' id=lej.id%}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>
