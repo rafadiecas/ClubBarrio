@@ -1,6 +1,6 @@
 /*User*/
 
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (1, 'pbkdf2_sha256$600000$Lkur6xZGVrV9cqZe9fckwJ$4U31ueCaIXRG+6vX6DRXkm6CfR3Oxryyf/vzGhE1t3A=', '2024-04-10 14:22:29.604654', 'Luis', 'luis@luis.es', 'Usuario', '1990-01-01', 1, 0);
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (1, 'pbkdf2_sha256$600000$Lkur6xZGVrV9cqZe9fckwJ$4U31ueCaIXRG+6vX6DRXkm6CfR3Oxryyf/vzGhE1t3A=', '2024-04-10 14:22:29.604654', 'Luis', 'luis@luis.es', 'Administrador', '1990-01-01', 1, 0);
 INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (2, 'pbkdf2_sha256$600000$nG3BeFq8AJIF6bBfTj8Dxz$565CHDqaP6jIKV7h6c7BlOBi3gBRQGwpABFwy1DKD4s=', null, 'Rafa', 'rafa@rafa.es', 'Usuario', '1988-10-13', 1, 0);
 INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (3, 'pbkdf2_sha256$600000$xodAkavCRjKkowpLeESDzZ$hmYDc0ixaGmjy8YVhcYp5HpRceoxcwQEDDcTdhaSEL0=', null, 'Nahuel', 'nahuel@nahuel.es', 'Usuario', '2000-01-01', 1, 0);
 INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (4, 'pbkdf2_sha256$600000$R5YhxEh1ehUF0VOwSaNSCV$bOcNEuj1VyxtXeENe0+ZV9R1ulGzrSgyUVDarPn7OSY=', null, 'Mario', 'mario@mario.es', 'Usuario', '2000-01-01', 1, 0);
@@ -18,9 +18,10 @@ INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, 
 INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (24, 'pbkdf2_sha256$600000$ARJtYLqSTnfpZy51WHMOZv$4LbjUcnrkeyug78NLECChOghWaw1zmqf//21WnjgwFk=', null, 'Usuario15', 'usuario15@example.com', 'Jugador', '1998-11-28', 1, 0);
 
 
+
 /*Administrador*/
 
-INSERT INTO ClubBarrioApp_administrador (id, nombre, apellidos,usuario_id) VALUES (1, 'Juan', 'García', 1);
+INSERT INTO ClubBarrioApp_administrador (id, nombre, apellidos,usuario_id) VALUES (1, 'Luis', 'Marin', 1);
 
 /*Tutor*/
 INSERT INTO ClubBarrioApp_tutorlegal (id, usuario_id, apellidos, nombre, es_activo) VALUES (2, 8, 'Ignacio', 'Jose', 1);
@@ -101,6 +102,11 @@ INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEn
 INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id) VALUES (11, '2024-04-21', '16:45:00', 1, 1);
 
 
-
+/*Partido*/
 
 INSERT INTO ClubBarrioApp_partido (fecha, hora, lugar, puntos_equipo1, puntos_equipo2, equipo1_id,equipo2_id, temporada_id) VALUES ('1111-11-22', '11:11:00','Safa', 50, 21,1,2,1);
+
+/*Temporada*/
+
+INSERT INTO ClubBarrioApp_temporada (id, anyo) VALUES (1, '2024');
+

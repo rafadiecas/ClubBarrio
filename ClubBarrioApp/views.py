@@ -38,7 +38,7 @@ def administrador(request):
 
 def usuarios(request):
     lista_usuarios = User.objects.all()
-    return render(request, 'usuarios.html', {'usuarios': lista_usuarios})
+    return render(request, 'usuarios_listado.html', {'usuarios': lista_usuarios})
 
 def new_user(request):
     Users = User.objects.all()

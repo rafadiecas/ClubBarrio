@@ -19,7 +19,7 @@
         <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'new_user' %}" >Nuevo usuario</a>
 
         <div class="input-group w-25 h-50 ">
-          <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;">
+          <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;" id="inputBuscar">
           <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="background-color: #00653d; color: white; ">
               <img src="{% static 'icons8-búsqueda-30.png' %}">
           </button>
@@ -27,7 +27,7 @@
     </div>
     <div class="container w-75 m-4 ">
         <div class="table-responsive">
-            <table class="table">
+            <table class="table" id="tabla">
                 <thead>
                 <tr>
                   <th scope="col">id</th>
