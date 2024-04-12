@@ -44,10 +44,10 @@
 </head>
 {% include "barra_navegacion.html" %}
 <body>
-    <div class="container d-flex align-items-center flex-column" style="width: 60%">
+    <div class="container" style="width: 60%">
         {% for n in entity %}
             <div class="card" style="margin-block:20px">
-                <div class="card-header text-center">
+                <div class="card-header">
                     <h2>{{ n.titulo }}</h2>
                 </div>
                 <div class="card-body" id="carta">
@@ -83,6 +83,6 @@
     </script>
 
     {% include 'paginator.html' %}
+
 </body>
-{% include 'footer.html' %}
 </html>
