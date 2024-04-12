@@ -165,6 +165,10 @@ def logear(request):
         if user is not None:
             login(request, user)
 
+
+            if user.rol== "Administrador":
+                return redirect('administrador')
+
             # Redirección tras un login exitoso
             return redirect('inicio')
         else:
