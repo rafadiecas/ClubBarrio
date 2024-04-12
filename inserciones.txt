@@ -110,3 +110,21 @@ INSERT INTO ClubBarrioApp_partido (fecha, hora, lugar, puntos_equipo1, puntos_eq
 
 INSERT INTO ClubBarrioApp_temporada (id, anyo) VALUES (1, '2024');
 
+/* tallas */
+
+INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (1, 'xs');
+INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (2, 's');
+INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (3, 'm');
+INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (4, 'l');
+INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (5, 'xl');
+INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (6, 'xxl');
+
+
+/* tipo producto */
+
+INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (1, 'camiseta');
+INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (2, 'equipacion');
+INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (3, 'calzonas');
+INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (4, 'sudadera');
+
+
