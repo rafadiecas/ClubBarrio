@@ -512,3 +512,10 @@ def edita_producto(request, id):
         producto.url_imagen = request.POST.get('url_imagen')
         producto.save()
         return redirect('lista_tienda')
+
+
+def pagina_usuario(request):
+    list_noticias = Noticias.objects.all().order_by('-id')
+    list_noticias = list_noticias[0:3]
+    list_partidos = Partido.objects.all()
+    return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos})
