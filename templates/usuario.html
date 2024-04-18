@@ -36,6 +36,20 @@
         .carousel-control-next-icon, .carousel-control-prev-icon {
             background-color: black;
         }
+        
+
+
+/* Cambia el color de los títulos de los días */
+        .fc-day-header {
+            background-color: #00653d;
+            color: white;
+        }
+        
+        /* Cambia el color de los números de los días */
+        .fc-day-number {
+            color: #00653d;
+        }
+        
     </style>
      <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -46,23 +60,35 @@
 {% include "barra_navegacion.html" %}
 
 <body>
-    <h1 class="text-center">QUIENES SOMOS</h1>
     <div class="container-fluid" id="contenedor">
-        <div class="row row-cols-md-2 row-cols-lg-2 row-cols-sm-1">
-            <div class="col">
-                <p>¡Bienvenidos al Club de Barrio SAFA!</p><br>
+        <div class="row row-cols-md-2 row-cols-lg-2 row-cols-sm-1 row-cols-1 mb-3">
+            <div class="col d-flex flex-column text-center px-5">
+                <h1 class="mb-5">Inscríbete</h1>
                 <p>
-                    Sumérgete en el corazón vibrante de nuestra comunidad en SAFA, un oasis de diversión, deporte y camaradería en el corazón de nuestro barrio. Desde su establecimiento, SAFA se ha convertido en mucho más que un simple club; es un punto de encuentro para personas de todas las edades y pasiones.
-                </p> <br>
-                <p>
-                    En SAFA, celebramos la pasión por el deporte, la amistad y el crecimiento personal. Ya sea que estés buscando mejorar tus habilidades en el campo, compartir momentos de alegría con amigos y familiares, o simplemente desconectar del ajetreo diario, nuestro club ofrece un espacio acogedor y lleno de energía positiva.
-                </p> <br>
-                <p>
-                    Únete a nosotros mientras exploramos todo lo que SAFA tiene para ofrecer: desde competiciones emocionantes hasta actividades recreativas, eventos comunitarios y mucho más. En SAFA, todos son bienvenidos a formar parte de nuestra familia deportiva y a crear recuerdos que durarán toda la vida.
+                    ¡Únete a nuestro equipo de baloncesto infantil y experimenta la emoción del juego en su 
+                    máximo esplendor! 
                 </p>
+                <br>
+                <p>
+                    En nuestra familia deportiva, no solo aprenderás las habilidades fundamentales 
+                    del baloncesto, sino que también cultivarás la camaradería, el trabajo en equipo y la determinación.
+                </p>
+                <br>
+                <p>
+                    Nuestros entrenadores están comprometidos a ayudarte a crecer como jugador y como persona, mientras te 
+                    diviertes y alcanzas tus metas en la cancha. 
+                </p>
+                <br>
+                <p>
+                    ¡Ven y forma parte de esta aventura donde cada pase, cada 
+                    tiro y cada victoria son momentos inolvidables que compartirás con tus compañeros de equipo! ¡Inscríbete 
+                    ahora y descubre el apasionante mundo del baloncesto junto a nosotros!
+                </p>
+                  <a class="btn btn-outline-success btn-custom align-self-center mt-3" role="button" href="{% url 'crear_entrenamiento' %}" >Inscripción</a>
             </div>
-            <div class="col" id="derecha">
-                  <div id='calendar'></div>
+            <div class="col d-flex flex-column text-center px-7 mt-5 mt-sm-0" id="derecha">
+                <h1 class="mb-5">Próximos partidos</h1>
+                  <div id='calendar' class="w-75"></div>
             </div>
         </div>
     </div>
