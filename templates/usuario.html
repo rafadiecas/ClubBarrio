@@ -87,7 +87,7 @@
                   <a class="btn btn-outline-success btn-custom align-self-center mt-3" role="button" href="{% url 'crear_entrenamiento' %}" >Inscripción</a>
             </div>
             <div class="col d-flex flex-column text-center px-7 mt-5 mt-sm-0" id="derecha">
-                <h1 class="mb-5">Próximos partidos</h1>
+                <h1 class="mb-5 mt-md-0 mt-sm-4">Próximos partidos</h1>
                   <div id='calendar' class="w-75"></div>
             </div>
         </div>
@@ -99,15 +99,13 @@
 
         {% for n in noticias %}
 
-          <div class="carousel-item {% if forloop.first%} active {% endif %}">
+          <div class="carousel-item {% if forloop.first%} active {% endif %} py-4 my-4">
              <div class="row justify-content-center align-items-center row-cols-1 row-cols-md-2 row-cols-sm-1">
-                <img src="{{ n.url_imagen }}" class="d-block w-50" alt="foto_carrusel" id="foto_carrusel">
-                <div class="row justify-content-around align-items-center row-cols-1 row-cols-md-2 row-cols-sm-1">
-                    <div class="col">
+                <img src="{{ n.url_imagen }}" class="img-fluid d-md-block d-none" style="max-width: 350px; min-width: 200px" alt="foto_carrusel" id="foto_carrusel">
+                <div class="col px-5">
                         <h2>{{ n.titulo }}</h2>
                         <br>
                         <p>{{ n.articulo }}</p>
-                    </div>
                 </div>
              </div>
           </div>
