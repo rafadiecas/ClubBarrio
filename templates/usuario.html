@@ -49,6 +49,16 @@
         .fc-day-number {
             color: #00653d;
         }
+
+        #widget_tiempo {
+            position: fixed;
+            top: 200px;
+            right: 0; 
+            max-width: 200px; 
+            min-width: 50px;
+            z-index: 9999;
+            background-color:  #00653d;
+        }
         
     </style>
      <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
@@ -62,6 +72,12 @@
 {% include "barra_navegacion.html" %}
 
 <body>
+     <div id="widget_tiempo" class="py-2 rounded-start d-none d-sm-block">
+        <div class="container-fluid position-sticky top-0 start-0">
+           <div id="ww_8676dbf7a199e" v='1.3' loc='id' a='{"t":"horizontal","lang":"es","sl_lpl":1,"ids":["wl4484"],"font":"Arial","sl_ics":"one_a","sl_sot":"celsius","cl_bkg":"#455A64","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722","el_whr":3}'>Más previsiones: <a href="https://oneweather.org/es/madrid/25_days/" id="ww_8676dbf7a199e_u" target="_blank">Tiempo 25 días</a></div><script async src="https://app2.weatherwidget.org/js/?id=ww_8676dbf7a199e"></script>
+        </div>
+         <img src="{% static '6207a0fe26ab99000460a356.png' %}" alt="weather" style="display: none;max-width: 90px; padding-inline: 10px"/>
+    </div>
     <div class="container-fluid" id="contenedor">
         <div class="row row-cols-md-2 row-cols-lg-2 row-cols-sm-1 row-cols-1 mb-3">
             <div class="col d-flex flex-column text-center px-5">
@@ -147,6 +163,17 @@ $(document).ready(function() {
         ]
     });
 });
+</script>
+
+<script>
+    var widgetTiempo = document.getElementById('widget_tiempo');
+
+    widgetTiempo.addEventListener('click', ocultarWidget);
+
+    function ocultarWidget(event) {
+        widgetTiempo.children[0].style.display = widgetTiempo.children[0].style.display === 'none' ? 'block' : 'none';
+        widgetTiempo.children[1].style.display = widgetTiempo.children[1].style.display === 'none' ? 'block' : 'none';
+    }
 </script>
 
 </body>
