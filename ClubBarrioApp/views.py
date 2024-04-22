@@ -194,6 +194,7 @@ def edita_usuario(request, id):
     Tutores = TutorLegal.objects.all()
     roles = Role.labels[:-1]
     rol = usuario.rol
+
     if request.method == 'GET':
         if usuario.rol == 'Jugador':
             tutor = Jugador.objects.get(usuario_id=id).tutorLegal
@@ -214,8 +215,9 @@ def edita_usuario(request, id):
                            'Tutores': Tutores})
         if usuario.rol == 'Tutor':
             tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+            tarifas = tarifa.labels
             return render(request, 'editar_usuarios.html',
-                          {'usuario': usuario, 'roles': roles, 'datos': tutor, 'Tutores': Tutores, 'Equipos': Equipos})
+                          {'usuario': usuario, 'roles': roles, 'datos': tutor, 'Tutores': Tutores, 'Equipos': Equipos, 'tarifas': tarifas})
 
         return render(request, 'editar_usuarios.html',
                       {'usuario': usuario, 'roles': roles, 'Tutores': Tutores, 'Equipos': Equipos})
@@ -230,6 +232,7 @@ def edita_usuario(request, id):
             tutor = TutorLegal.objects.get(usuario_id=id)
             tutor.nombre = request.POST.get('nombre')
             tutor.apellidos = request.POST.get('apellidos')
+            tutor.tarifa = tarifa.value_for_label(request.POST.get('tarifa'))
             if request.POST.get('is_active') == 'on':
                 tutor.es_activo = True
             else:
