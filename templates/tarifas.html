@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pagina de Tarifas</title>
+
+    <style>
+        li {
+            padding-block: 15px;
+        }
+        
+        
+    </style>
+</head>
+
+{% include "barra_navegacion.html" %}
+
+<body>
+
+<div class="container-fluid d-flex justify-content-center mt-5">
+
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center w-75">
+        <div class="col d-flex align-items-stretch">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                 <h4 class="my-0 fw-normal">Basic</h4>
+                </div>
+                <div class="card-body">
+                <h1 class="card-title pricing-card-title">15€<small class="text-muted fw-light">/mes</small></h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                <li>Acceso para 1 jugador</li>
+                <li>Descuento 5% en tienda</li>
+                <li>Acceso a resultados del equipo</li>
+                </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col d-flex align-items-stretch">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                 <h4 class="my-0 fw-normal">Plus</h4>
+                </div>
+                <div class="card-body">
+                <h1 class="card-title pricing-card-title">25€<small class="text-muted fw-light">/mes</small></h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                <li>Acceso para 3 jugadores</li>
+                <li>Descuento 5% en tienda</li>
+                <li>Acceso a resultados del equipo</li>
+                <li>1 entrada gratis para los partidos</li>
+                </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col d-flex align-items-stretch pe-0">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                 <h4 class="my-0 fw-normal">Premium</h4>
+                </div>
+                <div class="card-body">
+                <h1 class="card-title pricing-card-title">35€<small class="text-muted fw-light">/mes</small></h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                <li>Acceso para 5 jugadores</li>
+                <li>Descuento 10% en tienda</li>
+                <li>Acceso a resultados del equipo</li>
+                <li>3 entrada gratis para los partidos</li>
+                </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+</body>
+</html>

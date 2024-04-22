@@ -524,3 +524,6 @@ def pagina_usuario(request):
     list_noticias = list_noticias[0:3]
     list_partidos = Partido.objects.all()
     return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos})
+
+def tarifas(request):
+    return render(request, 'tarifas.html')
