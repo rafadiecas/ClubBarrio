@@ -18,6 +18,11 @@ class Role(models.TextChoices):
                 rol = choice.__getitem__(1)
         return rol
 
+class tarifa(models.TextChoices):
+    BASE = 'BASE', 'Base'
+    PLUS = 'PLUS', 'Plus'
+    PREMIUM = 'PREMIUM', 'Premium'
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -124,6 +129,7 @@ class TutorLegal(models.Model):
     nombre = models.CharField(max_length=250, default='sin nombre')
     apellidos = models.CharField(max_length=250, default='sin apellidos')
     es_activo = models.BooleanField(default=True)
+    tarifa = models.CharField(max_length=50, choices=tarifa.choices, default=tarifa.BASE)
 
     def __str__(self):
         return self.nombre + " " + self.apellidos

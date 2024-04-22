@@ -34,8 +34,8 @@ def pagina_noticias(request):
 
     return render(request, 'Noticias.html', data)
 
-# @user_required
-# @rol_requerido('Administrador')
+#@user_required
+#@rol_requerido('Administrador')
 def administrador(request):
     return render(request, 'administrador.html')
 
