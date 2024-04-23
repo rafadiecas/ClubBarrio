@@ -1,6 +1,6 @@
 {% load static %}
 {% load bootstrap5 %}
-<html>
+<html lang="">
 
 <head>
     <meta charset="utf-8">
@@ -41,7 +41,7 @@
 <body>
 <nav class="navbar navbar-expand-md navbar-dark">
   <div class="container-fluid">
-    <a class="navbar-brand d-md-none" href="">
+    <a class="navbar-brand d-md-none" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% else %} {% url 'inicio' %} {% endif %} ">
   <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="" >
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,10 +52,24 @@
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="{% url 'noticias' %}">Noticias</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'tarifas' %}">Tarifas</a>
-        </li>
-        <a class="navbar-brand d-none d-md-block" href="{% url 'inicio' %}">
+      {% if user.is_authenticated and user.rol == "Tutor" %}
+          <div class="btn-group">
+          <button type="button" class="btn" style="color: white;font-size: 1.1em;padding: 0.5em 1em;">Gestion</button>
+          <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="color: white">
+            <span class="visually-hidden">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+              {% for h in hijos %}
+              <li><a class="dropdown-item" href="{% url 'noticias' %}">{{ h.nombre }} {{ h.apellidos }}</a></li>
+              {% endfor %}
+          </ul>
+      </div>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'tarifas' %}">Tarifas</a>
+          </li>
+      {% endif %}
+        <a class="navbar-brand d-none d-md-block" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% else %} {% url 'inicio' %} {% endif %} ">
           <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="">
         </a>
         <li class="nav-item">

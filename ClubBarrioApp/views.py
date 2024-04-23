@@ -32,6 +32,17 @@ def pagina_noticias(request):
         'paginator': paginator
     }
 
+    usuario = request.user
+    if usuario.rol == 'Tutor':
+        tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+        hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+        data = {
+            'entity': list_noticias,
+            'paginator': paginator,
+            'hijos': hijos
+        }
+        return render(request, 'Noticias.html', data)
+
     return render(request, 'Noticias.html', data)
 
 #@user_required
@@ -171,7 +182,7 @@ def logear(request):
             if user.rol== "Administrador":
                 return redirect('administrador')
 
-            elif user.rol == "Usuario":
+            elif user.rol == "Usuario" or user.rol == "Tutor":
                 return redirect('usuario')
 
             # Redirección tras un login exitoso
@@ -523,7 +534,13 @@ def pagina_usuario(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     list_noticias = list_noticias[0:3]
     list_partidos = Partido.objects.all()
-    return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos})
+    usuario = request.user
+    if usuario.rol == 'Tutor':
+        tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+        hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+        return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijos': hijos})
+    else:
+        return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos})
 
 def tarifas(request):
     return render(request, 'tarifas.html')
