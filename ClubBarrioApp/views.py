@@ -527,3 +527,20 @@ def pagina_usuario(request):
 
 def tarifas(request):
     return render(request, 'tarifas.html')
+
+def inscripciones(request):
+    if request.method == 'GET':
+        return render(request, 'inscripcion_tarifa.html')
+    else:
+        usuario = request.user
+        usuario.rol = 'Tutor'
+        usuario.save()
+        tutor = TutorLegal()
+        tutor.usuario = usuario
+        tutor.nombre = request.POST.get('nombre')
+        tutor.apellidos = request.POST.get('apellidos')
+        tutor.tarifa = request.POST.get('tarifa_seleccionada')
+        tutor.save()
+
+        return redirect('usuario')
+

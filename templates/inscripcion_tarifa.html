@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pagina de Tarifas</title>
+
+    <style>
+        li {
+            padding-block: 15px;
+        }
+        .card.selected {
+            border: 2px solid #006b1b;
+        }
+        
+        
+    </style>
+</head>
+
+{% include "barra_navegacion.html" %}
+
+<body>
+
+<form action="" method="post">
+
+        {% csrf_token %}
+
+<div class="flex-container d-flex justify-content-center mt-5">
+
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center w-75">
+        <div class="col d-flex align-items-stretch justify-content-center">
+            <div class="card mb-4 rounded-3 shadow-sm" onclick="selectTarifa('Basic')">
+                <div class="card-header py-3">
+                 <h4 class="my-0 fw-normal">Basic</h4>
+                </div>
+                <div class="card-body">
+                <h1 class="card-title pricing-card-title">15€<small class="text-muted fw-light">/mes</small></h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                <li>Acceso para 1 jugador</li>
+                <li>Descuento 5% en tienda</li>
+                <li>Acceso a resultados del equipo</li>
+                </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col d-flex align-items-stretch justify-content-center">
+            <div class="card mb-4 rounded-3 shadow-sm" onclick="selectTarifa('Plus')">
+                <div class="card-header py-3">
+                 <h4 class="my-0 fw-normal">Plus</h4>
+                </div>
+                <div class="card-body">
+                <h1 class="card-title pricing-card-title">25€<small class="text-muted fw-light">/mes</small></h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                <li>Acceso para 3 jugadores</li>
+                <li>Descuento 5% en tienda</li>
+                <li>Acceso a resultados del equipo</li>
+                <li>1 entrada gratis para los partidos</li>
+                </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col d-flex align-items-stretch pe-0 justify-content-center">
+            <div class="card mb-4 rounded-3 shadow-sm" onclick="selectTarifa('Premium')">
+                <div class="card-header py-3">
+                 <h4 class="my-0 fw-normal">Premium</h4>
+                </div>
+                <div class="card-body">
+                <h1 class="card-title pricing-card-title">35€<small class="text-muted fw-light">/mes</small></h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                <li>Acceso para 5 jugadores</li>
+                <li>Descuento 10% en tienda</li>
+                <li>Acceso a resultados del equipo</li>
+                <li>3 entrada gratis para los partidos</li>
+                </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+    
+<div class="row d-flex justify-content-center">
+     <div class="col-md-4" id="nombreField">
+            <label for="nombre" class="form-label">Nombre:</label>
+            <input type="text" name="nombre" id="nombre" class="form-control">
+        </div>
+        <div class="col-md-4" id="apellidosField">
+            <label for="apellidos" class="form-label">Apellidos:</label>
+            <input type="text" name="apellidos" id="apellidos" class="form-control">
+        </div>
+</div>
+<div class="row d-flex justify-content-center">
+     <div class="col-md-3">
+            <label for="numero" class="form-label">Número de tarjeta:</label>
+            <input type="text" name="numero" id="numero" class="form-control" required>
+        </div>
+        <div class="col-md-3">
+            <label for="cvc" class="form-label">CVC:</label>
+            <input type="text" name="cvc" id="cvc" placeholder="CVC" class="form-control" required>
+        </div>
+        <div class="col-md-3">
+            <label for="fecha" class="form-label">Fecha de caducidad:</label>
+            <input type="text" name="fecha" id="fecha" placeholder="MM/YY" class="form-control" required>
+        </div>
+</div>      
+    
+<input type="hidden" id="tarifa_seleccionada" name="tarifa_seleccionada">    
+
+<div class="row">
+    <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary mt-3" onclick="function pagorealizado() {
+            alert('Pago realizado con éxito');       
+        }
+        pagorealizado()">Submit</button>
+    </div>
+</div>
+    
+
+    
+</form>
+
+<script>
+    // Función para seleccionar una tarifa y resaltar el card seleccionado
+    function selectTarifa(tarifa) {
+        // Remover la clase 'selected' de todos los cards
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.classList.remove('selected');
+        });
+        // Agregar la clase 'selected' al card seleccionado
+        const cardsArray = Array.from(cards);
+        const selectedCard = cardsArray.filter(card => card.textContent.includes(tarifa))[0];
+        selectedCard.classList.add('selected');
+        // Actualizar el valor del campo oculto con la tarifa seleccionada
+        document.getElementById('tarifa_seleccionada').value = tarifa;
+    }
+</script>
+
+</body>
+
+
+</html>

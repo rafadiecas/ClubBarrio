@@ -3,6 +3,9 @@
 {% include "barra_admin.html" %}
 
 <body>
+<head>
+    <title>Crear Noticias</title>
+</head>
 
 <div class="container">
 
@@ -25,7 +28,7 @@
 
         <div class="row">
             <div class="col-md-4">
-                <label for="Titulo" class="form-label">Nombre:</label>
+                <label for="Titulo" class="form-label">Titulo:</label>
                 <input type="text" name="titulo" id="titulo" class="form-control" value="{{ noticia.titulo }}" required>
             </div>
             <div class="col-md-4">
