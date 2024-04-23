@@ -16,8 +16,9 @@
             display: flex;
             max-width: 25%;
             margin: 3%;
+            flex-wrap: wrap;
         }
-#carta{
+        #carta{
             display: flex;
             flex-direction: column;
         }
@@ -29,33 +30,42 @@
         }
         #nombre{
             color: blue;
+            overflow-wrap: break-word;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
         #precio{
             color: red;
+            overflow-wrap: break-word;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
-        #foto_noticia{
+        #foto_tienda{
             max-width: 300px;
             max-height: 450px;
+            object-fit: contain;
+            aspect-ratio: auto;
         }
 
     </style>
 </head>
 {% include "barra_navegacion.html" %}
 <body>
-    <div class="pagination d-flex flex-row mb-3 row-cols-md-3 align-items-center ">
+    <div class="pagination row">
         {% for p in entity %}
-            <div class="card row-cols-md-1 bg-light">
+            <div class="card col-lg-4 col-md-6 col-sm-12 mb-3" style="width: 18rem;">
+                <img src="{{ p.url_imagen }}" class="card-img-top col" alt="...">
                 <div class="card-body">
-                    <img src="https://img01.ztat.net/article/spp-media-p1/9ac495af371840f9ae1baee4bf6cd260/addc44d703b54e60a9f34a5da962e16d.jpg?imwidth=1800" id="foto_noticia">
-                    <div class="row row-cols-md-2 row-cols-sm-1" id="card-text">
-                        <h4 id="nombre">{{ p.nombre }}</h4>
-                        <b><h3>{{ p.talla }}</h3></b>
-                        <p>Aqui deberia estar la descripcion</p>
-                        <h5 id="precio">{{ p.precio }}€</h5>
-                    </div>
+                    <h5 class="card-title" id="nombre">{{ p.nombre }}</h5>
                 </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">{{ p.talla }}</li>
+                    <li class="list-group-item" id="precio">{{ p.precio }}€</li>
+                </ul>
+                <!--<div class="card-body">
+                    <a href="#" class="card-link">Card link</a>
+                </div>-->
             </div>
-
         {% endfor %}
 
     </div>
