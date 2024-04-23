@@ -15,6 +15,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.15/sorting/datetime-moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/es.js"></script> <!-- Carga el archivo de idioma español -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css">
 
     <style>
@@ -121,28 +124,48 @@
     </script>
 <script>
     $(document).ready(function(){
-        let tabla = $("#tabla").DataTable({
-            "dom": 'lrtip', // Excluye 'f' para eliminar el cuadro de búsqueda predeterminado
-            "lengthMenu": [[10, 25, -1], [10, 25, "All"]],
-            "language": {
-                "lengthMenu": "Mostrar _MENU_ registros por página",
-                "zeroRecords": "No se encontraron registros",
-                "info": "Mostrando la página _PAGE_ de _PAGES_",
-                "infoEmpty": "No hay registros disponibles",
-                "infoFiltered": "(filtrado de _MAX_ registros totales)",
-                "search": "Buscar:",
-                "paginate": {
-                    "first": "Primero",
-                    "last": "Último",
-                    "next": "Siguiente",
-                    "previous": "Anterior"
+    // Define el idioma de Moment.js a español
+    moment.locale('es');
+
+    let tabla = $("#tabla").DataTable({
+        "dom": 'lrtip',
+        "lengthMenu": [[10, 25, -1], [10, 25, "All"]],
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No se encontraron registros",
+            "info": "Mostrando la página _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(filtrado de _MAX_ registros totales)",
+            "search": "Buscar:",
+            "paginate": {
+                "first": "Primero",
+                "last": "Último",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        },
+        "columnDefs": [
+            {
+                "targets": [1], // Aplica el formato a la segunda y tercera columna (índices 1 y 2)
+                "render": function (data) {
+                    return moment(data).format('LL');
                 }
             },
-        });
+            {
+                "targets": [2], // Aplica el formato a la tercera columna (índice 2)
+                "render": function (data) {
+                    // Reemplaza 'noon' con '12:00 PM'
+                    data = data.replace('noon', '12:00 PM');
+                    return moment(data, 'h:mm a').format('HH:mm'); // Formato de 24 horas
+                }
+            },
 
-        $("#inputBuscar").on("keyup", function() {
-            tabla.search($(this).val()).draw();
-        });
+        ]
     });
+
+    $("#inputBuscar").on("keyup", function() {
+        tabla.search($(this).val()).draw();
+    });
+});
 </script>
 </html>
