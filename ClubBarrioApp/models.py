@@ -208,6 +208,7 @@ class Partido(models.Model):
     equipo1 = models.ForeignKey(Equipo, on_delete=models.DO_NOTHING, related_name='equipo_local')
     equipo2 = models.ForeignKey(Equipo, on_delete=models.DO_NOTHING, related_name='equipo_visitante')
     temporada = models.ForeignKey(Temporada, on_delete=models.DO_NOTHING)
+    jornada = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.fecha) + " " + str(
