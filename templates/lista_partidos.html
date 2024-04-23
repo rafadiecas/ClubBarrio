@@ -40,6 +40,7 @@
                  <th scope="col">Puntos Visitante</th>
                  <th scope="col">Equipo Local</th>
                  <th scope="col">Equipo Visitante</th>
+                 <th scope="col">Jornada</th>
                  <th scope="col">Temporada</th>
                   <th></th>
                 </tr>
@@ -55,6 +56,7 @@
                   <td>{{ p.puntos_equipo2 }}</td>
                   <td>{{ p.equipo1.nombre }}</td>
                   <td>{{ p.equipo2.nombre }}</td>
+                    <td>{{ p.jornada }}</td>
                   <td>{{ p.temporada.anyo }}</td>
                     <td>
                         <a href="{% url 'editar_partido' id=p.id %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>

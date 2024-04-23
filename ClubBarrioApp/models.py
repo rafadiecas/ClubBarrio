@@ -225,5 +225,5 @@ class EstadisticasJugador(models.Model):
     faltas = models.IntegerField()
 
     def __str__(self):
-        return self.jugador.usuario.nombre + " " + self.jugador.usuario.apellidos + " " + self.partido.equipo1.nombre + " vs " + self.partido.equipo2.nombre + " " + str(
+        return self.jugador.nombre + " " + self.jugador.apellidos + " " + self.partido.equipo1.nombre + " vs " + self.partido.equipo2.nombre + " " + str(
             self.puntos) + " puntos"
