@@ -9,6 +9,8 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.http import JsonResponse
 from .decorator import user_required, rol_requerido
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 
 
 # Create your views here.
@@ -96,8 +98,11 @@ def perfil_pass(request):
                 error_en_cambio_de_contraseña = True
                 return JsonResponse({'errores': errores}, status=400)
 
-            tutor.usuario.password = make_password(nueva_contraseña)
-            tutor.save()
+            usuario.password = make_password(nueva_contraseña)
+            usuario.save()  # Guarda el usuario después de cambiar la contraseña
+            update_session_auth_hash(request, usuario)  # Actualiza la sesión del usuario
+
+            return JsonResponse({'success': 'Contraseña cambiada con éxito'})
 
         return render(request, 'profile.html', {'tutor': tutor, 'error_en_cambio_de_contraseña': error_en_cambio_de_contraseña})
 

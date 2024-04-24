@@ -206,11 +206,13 @@
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Change Password</button>
                         </div>
-                        <div id="error-messages"></div>
-                    </div>
-                    {% for e in errores %}
+                        <div id="error-messages">
+                            {% for e in errores %}
                             <p>{{ e }}</p>
                         {% endfor %}
+                        </div>
+                        <div id="success-messages"></div>
+                    </div>
                 </form>
               </div>
             </div>
@@ -247,7 +249,12 @@
         type: 'POST',
         data: $(this).serialize(),
         success: function(data) {
-            // Si la contraseña se cambió con éxito, puedes redirigir al usuario a otra página o mostrar un mensaje de éxito
+            // Si la contraseña se cambió con éxito, redirige al usuario a profile.html
+            window.location.href = "{% url 'perfil' %}";
+            // Muestra el mensaje de éxito en la página
+            $('#success-messages').html('<p>' + data.success + '</p>');
+            // Muestra un pop-up con el mensaje de éxito
+            alert(data.success);
         },
         error: function(jqXHR, textStatus, errorThrown) {
             if (jqXHR.status === 400) {
