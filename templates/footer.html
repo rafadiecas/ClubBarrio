@@ -1,0 +1,84 @@
+{% load static %}
+{% load bootstrap5 %}
+<head>
+    <style>
+        .footer {
+            display: flex;
+            background-color: #00653d;
+            max-height: 220px;
+            width: 100%;
+            margin-top: auto;
+            padding: 0;
+            position: absolute;
+        }
+        .main{
+            max-height: 220px;
+            padding: 0;
+        }
+    </style>
+</head>
+<footer class="footer text-center text-lg-start text-white">
+
+    <div class="main container p-4">
+
+        <div class="row my-4">
+        <!--Titulo terminos y servicios-->
+            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                <div class="text-center">
+                    <h5 class="text-uppercase mb-4">TERMINOS Y SERVICIOS</h5>
+                </div>
+            </div>
+
+            <!--Titulo redes sociales-->
+            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                <div class="text-center">
+                    <h5 class="text-uppercase mb-4">REDES SOCIALES</h5>
+                </div>
+
+                <!--Lista con todas las redes sociales-->
+                <ul class="list-unstyled d-flex flex-row justify-content-center">
+                    <li>
+                        <a class="text-white px-2" href="#!">
+                            <img src="{% static "icons8-facebook-48.png" %}">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-white px-2" href="#!">
+                            <img src="{% static "icons8-instagram-48.png" %}">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-white ps-2" href="#!">
+                            <img src="{% static 'icons8-twitter-48.png' %}">
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-white ps-2" href="#!">
+                            <img src="{% static 'icons8-tik-tok-48.png' %}">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!--Titulo contactanos-->
+            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                <div class="text-center">
+                    <h5 class="text-uppercase mb-4">CONTACTANOS</h5>
+                </div>
+
+                <!--Información de contacto-->
+                <ul class="list-unstyled text-center">
+                    <li>
+                        <p><i class="fas fa-map-marker-alt pe-2"></i>C. Calatrava, 38, Casco Antiguo, 41002 Sevilla</p>
+                    </li>
+                    <li>
+                        <p><i class="fas fa-phone pe-2"></i>+34 954 25 89 71</p>
+                    </li>
+                    <li>
+                        <p><i class="fas fa-envelope pe-2 mb-0"></i>clubdebarrio@gmail.com</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
