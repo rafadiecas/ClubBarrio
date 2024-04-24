@@ -128,7 +128,7 @@ INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (3, 'Calzonas');
 INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (4, 'Sudadera');
 
 /* producto */
-INSERT INTO ClubBarrioApp_producto (id, nombre, precio, stock, talla_id, tipo_id) VALUES (1, 'Equipacion', 30, 10, 5, 2);
+INSERT INTO ClubBarrioApp_producto (id, nombre, precio, stock, talla_id, tipo_id, url_imagen) VALUES (1, 'Equipación', 30, 10, 1, 2, 'https://s1.elespanol.com/2022/07/01/deportes/futbol/684442017_225506853_1280x1706.jpg');
 
 
 
