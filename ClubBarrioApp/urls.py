@@ -56,6 +56,11 @@ urlpatterns = [
     path('tarifas/', tarifas, name='tarifas'),
     path('usuario/inscripcion', inscripciones, name='inscripciones'),
     path('tienda/', pagina_tienda, name='tienda'),
+    path('usuario/gestion_familia/', lista_hijos, name='gestion_familia'),
+    path('usuario/gestion_familia/new', crea_hijos, name='crear_hijo'),
+    path('usuario/gestion_familia/eliminar/<int:id>/', elimina_hijo, name='elimina_hijo'),
+    path('usuario/gestion_familia/editar/<int:id>/', edita_hijo, name='edita_hijo'),
+    path('usuario/perfil', perfil, name='perfil'),
 
 
 ]
