@@ -664,14 +664,48 @@ def elimina_hijo(request, id):
     return redirect('gestion_familia')
 
 def edita_hijo(request, id):
-    hijo = Jugador.objects.get(id=id)
+    jugador = Jugador.objects.get(id=id)
     equipos = Equipo.objects.all()
-    fecha_nacimiento = hijo.usuario.fecha_nacimiento
+    fecha_nacimiento = jugador.usuario.fecha_nacimiento
+    errors = []
     if request.method == 'GET':
-        return render(request, 'crear_hijo.html', {'hijo': hijo, 'equipos': equipos,'modo_edicion': True, 'fecha_nacimiento': fecha_nacimiento})
+        return render(request, 'crear_hijo.html', {'jugador': jugador, 'equipos': equipos,'modo_edicion': True, 'fecha_nacimiento': fecha_nacimiento})
     else:
-        hijo.nombre = request.POST.get('nombre')
-        hijo.apellidos = request.POST.get('apellidos')
-        hijo.equipo = Equipo.objects.get(id=int(request.POST.get('equipo')))
-        hijo.save()
+        if 'boton' in request.POST and request.POST['boton'] == 'seleccion_datos':
+
+            jugador.nombre = (request.POST.get('nombre'))
+            jugador.apellidos = request.POST.get('apellidos')
+            jugador.usuario.fecha_nacimiento = request.POST.get('fecha_nacimiento')
+            diferencia = datetime.now() - datetime.strptime(request.POST.get('fecha_nacimiento'), '%Y-%m-%d')
+            lista_equipos = []
+
+
+            if diferencia.days < 1825:
+                categoria = 'Prebenjamin'
+            elif diferencia.days < 2920:
+                categoria = 'Benjamin'
+            elif diferencia.days < 4015:
+                categoria = 'Alevin'
+            elif diferencia.days < 5110:
+                categoria = 'Infantil'
+            elif diferencia.days < 6205:
+                categoria = 'Cadete'
+            elif diferencia.days < 7300:
+                categoria = 'Juvenil'
+            else:
+                errors.append("El jugador debe ser menor de 20 años")
+
+            if len(errors) != 0:
+                return render(request, 'crear_hijo.html', {'jugador': jugador,'modo_edicion': True, 'fecha_nacimiento': fecha_nacimiento,'errores': errors, 'edicion_equipo': False})
+
+            jugador.save()
+
+            for equipo in Equipo.objects.all():
+                if categoria in equipo.categoria.tipo:
+                    lista_equipos.append(equipo)
+            return render(request, 'crear_hijo.html',
+                          {'equipos': lista_equipos, 'edicion_equipo': True,'jugador': jugador})
+
+        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('tarifa_seleccionada')))
+        jugador.save()
         return redirect('gestion_familia')

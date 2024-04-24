@@ -19,7 +19,7 @@
 <div class="container">
 
 
-    <h1 class="my-4">Crear Jugador</h1>
+    <h1 class="my-4">{% if modo_edicion %} Editar {% else %} Crear {% endif %} Jugador</h1>
 
         {% if errores %}
         <div class="alert alert-danger">
@@ -55,10 +55,10 @@
                 </div>
             {% endfor %}
         </div>
-        <input type="hidden" id="tarifa_seleccionada" name="tarifa_seleccionada">  
+        <input type="hidden" id="tarifa_seleccionada" name="tarifa_seleccionada">
         <input type="hidden" id="nombre-jug" name="nombre-jug" value="{{ nombre }}">
-        <input type="hidden" id="apellidos-jug" name="apellidos-jug" value="{{ apellidos }}">   
-        <input type="hidden" id="hijo" name="hijo" value="{{ hijo.id }}">    
+        <input type="hidden" id="apellidos-jug" name="apellidos-jug" value="{{ apellidos }}">
+        <input type="hidden" id="hijo" name="hijo" value="{{ hijo.id }}">
             
        {% else %}
     
@@ -70,11 +70,11 @@
             </div>
             <div class="col-md-4" id="nombreField">
                 <label for="nombre" class="form-label">Nombre:</label>
-                <input type="text" name="nombre" id="nombre" class="form-control" value="{{ nombre }}">
+                <input type="text" name="nombre" id="nombre" class="form-control" value="{% if modo_edicion %}{{ jugador.nombre }}{% else %}{{ nombre }}{% endif %}">
             </div>
             <div class="col-md-4" id="apellidosField">
                 <label for="apellidos" class="form-label">Apellidos:</label>
-                <input type="text" name="apellidos" id="apellidos" class="form-control" value="{{ apellidos }}">
+                <input type="text" name="apellidos" id="apellidos" class="form-control" value="{% if modo_edicion %} {{ jugador.apellidos }} {% else %} {{ apellidos }} {% endif %}">
             </div>
         </div>
 
@@ -96,7 +96,7 @@
         <div class="row">
             <div class="col-md-4">
                 <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento:</label>
-                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{{ fecha_nacimiento }}" required>
+                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{% if modo_edicion %} {{ jugador.usuario.fecha_nacimiento|date:'Y-m-d' }} {% else %} {{ fecha_nacimiento }} {% endif %}" required>
             </div>
         </div>
         
