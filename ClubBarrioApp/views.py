@@ -7,6 +7,7 @@ import re
 from .models import *
 from django.core.paginator import Paginator
 from django.http import Http404
+from django.http import JsonResponse
 from .decorator import user_required, rol_requerido
 
 
@@ -54,14 +55,55 @@ def usuarios(request):
     lista_usuarios = User.objects.all()
     return render(request, 'lista_usuarios.html', {'usuarios': lista_usuarios})
 
+def validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirmacion_contraseña):
+    errores = []
+    if not usuario.check_password(contraseña_actual):
+        errores.append("La contraseña actual es incorrecta")
+    if nueva_contraseña != confirmacion_contraseña:
+        errores.append("Las contraseñas no coinciden")
+    return errores
+
 def perfil(request):
     usuario = request.user
     if usuario.rol == 'Tutor':
         usuario = User.objects.get(id=usuario.id)
         tutor = TutorLegal.objects.get(usuario_id=usuario.id)
         jugadores = Jugador.objects.filter(tutorLegal_id=tutor.id)
+
+        if request.method == 'POST':
+            tutor.nombre = request.POST.get('nombre')
+            tutor.apellidos = request.POST.get('apellidos')
+            tutor.save()
+
         return render(request, 'profile.html', {'tutor': tutor, 'jugadores': jugadores})
+
     return render(request, 'profile.html')
+
+def perfil_pass(request):
+    usuario = request.user
+    error_en_cambio_de_contraseña = False
+    if usuario.rol == 'Tutor':
+        usuario = User.objects.get(id=usuario.id)
+        tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+
+        if request.method == 'POST':
+            contraseña_actual = request.POST.get('password_actual')
+            nueva_contraseña = request.POST.get('new_password')
+            confirmacion_contraseña = request.POST.get('confirmacion_password')
+
+            errores = validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirmacion_contraseña)
+            if errores:
+                error_en_cambio_de_contraseña = True
+                return JsonResponse({'errores': errores}, status=400)
+
+            tutor.usuario.password = make_password(nueva_contraseña)
+            tutor.save()
+
+        return render(request, 'profile.html', {'tutor': tutor, 'error_en_cambio_de_contraseña': error_en_cambio_de_contraseña})
+
+    return render(request, 'profile.html')
+
+
 
 def new_user(request):
     Users = User.objects.all()
