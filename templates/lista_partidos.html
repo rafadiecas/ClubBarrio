@@ -1,6 +1,7 @@
 {% load static %}
 {% include 'barra_admin.html' %}
 <head>
+    <title>Lista Partidos</title>
     <style>
     .btn-custom {
         color: #00653d; /* Color del texto azul */
@@ -17,7 +18,7 @@
         <h1>Lista de Partidos:</h1>
     </div>
     <div class="container w-75 d-flex justify-content-between align-items-center ">
-        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_entrenamiento' %}" >Nuevo partido:</a>
+        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_partido' %}" >Nuevo partido:</a>
 
         <div class="input-group w-25 h-50 ">
           <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;" id="inputBuscar">
@@ -39,6 +40,7 @@
                  <th scope="col">Puntos Visitante</th>
                  <th scope="col">Equipo Local</th>
                  <th scope="col">Equipo Visitante</th>
+                 <th scope="col">Jornada</th>
                  <th scope="col">Temporada</th>
                   <th></th>
                 </tr>
@@ -54,6 +56,7 @@
                   <td>{{ p.puntos_equipo2 }}</td>
                   <td>{{ p.equipo1.nombre }}</td>
                   <td>{{ p.equipo2.nombre }}</td>
+                    <td>{{ p.jornada }}</td>
                   <td>{{ p.temporada.anyo }}</td>
                     <td>
                         <a href="{% url 'editar_partido' id=p.id %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>

@@ -7,6 +7,7 @@ import re
 from .models import *
 from django.core.paginator import Paginator
 from django.http import Http404
+from .decorator import user_required, rol_requerido
 
 
 # Create your views here.
@@ -48,8 +49,21 @@ def pagina_noticias(request):
         'paginator': paginator
     }
 
+    usuario = request.user
+    if usuario.rol == 'Tutor':
+        tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+        hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+        data = {
+            'entity': list_noticias,
+            'paginator': paginator,
+            'hijos': hijos
+        }
+        return render(request, 'Noticias.html', data)
+
     return render(request, 'Noticias.html', data)
 
+#@user_required
+#@rol_requerido('Administrador')
 def administrador(request):
     return render(request, 'administrador.html')
 
@@ -182,6 +196,12 @@ def logear(request):
         if user is not None:
             login(request, user)
 
+            if user.rol== "Administrador":
+                return redirect('administrador')
+
+            elif user.rol == "Usuario" or user.rol == "Tutor":
+                return redirect('usuario')
+
             # Redirección tras un login exitoso
             return redirect('inicio')
         else:
@@ -202,6 +222,7 @@ def edita_usuario(request, id):
     Tutores = TutorLegal.objects.all()
     roles = Role.labels[:-1]
     rol = usuario.rol
+
     if request.method == 'GET':
         if usuario.rol == 'Jugador':
             tutor = Jugador.objects.get(usuario_id=id).tutorLegal
@@ -222,8 +243,9 @@ def edita_usuario(request, id):
                            'Tutores': Tutores})
         if usuario.rol == 'Tutor':
             tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+            tarifas = tarifa.labels
             return render(request, 'editar_usuarios.html',
-                          {'usuario': usuario, 'roles': roles, 'datos': tutor, 'Tutores': Tutores, 'Equipos': Equipos})
+                          {'usuario': usuario, 'roles': roles, 'datos': tutor, 'Tutores': Tutores, 'Equipos': Equipos, 'tarifas': tarifas})
 
         return render(request, 'editar_usuarios.html',
                       {'usuario': usuario, 'roles': roles, 'Tutores': Tutores, 'Equipos': Equipos})
@@ -238,6 +260,7 @@ def edita_usuario(request, id):
             tutor = TutorLegal.objects.get(usuario_id=id)
             tutor.nombre = request.POST.get('nombre')
             tutor.apellidos = request.POST.get('apellidos')
+            tutor.tarifa = tarifa.value_for_label(request.POST.get('tarifa'))
             if request.POST.get('is_active') == 'on':
                 tutor.es_activo = True
             else:
@@ -522,3 +545,36 @@ def edita_producto(request, id):
         producto.url_imagen = request.POST.get('url_imagen')
         producto.save()
         return redirect('lista_tienda')
+
+
+def pagina_usuario(request):
+    list_noticias = Noticias.objects.all().order_by('-id')
+    list_noticias = list_noticias[0:3]
+    list_partidos = Partido.objects.all()
+    usuario = request.user
+    if usuario.rol == 'Tutor':
+        tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+        hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+        return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijos': hijos})
+    else:
+        return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos})
+
+def tarifas(request):
+    return render(request, 'tarifas.html')
+
+def inscripciones(request):
+    if request.method == 'GET':
+        return render(request, 'inscripcion_tarifa.html')
+    else:
+        usuario = request.user
+        usuario.rol = 'Tutor'
+        usuario.save()
+        tutor = TutorLegal()
+        tutor.usuario = usuario
+        tutor.nombre = request.POST.get('nombre')
+        tutor.apellidos = request.POST.get('apellidos')
+        tutor.tarifa = request.POST.get('tarifa_seleccionada')
+        tutor.save()
+
+        return redirect('usuario')
+

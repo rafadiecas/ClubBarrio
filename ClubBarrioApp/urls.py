@@ -52,6 +52,9 @@ urlpatterns = [
     path('administrador/tienda/new', crear_producto, name='crear_producto'),
     path('administrador/tienda/eliminar/<int:id>/', elimina_producto, name='elimina_producto'),
     path('administrador/tienda/editar/<int:id>/', edita_producto, name='edita_producto'),
-    path('tienda/', pagina_tienda, name='tienda'),
+    path('usuario/', pagina_usuario, name='usuario'),
+    path('tarifas/', tarifas, name='tarifas'),
+    path('usuario/inscripcion', inscripciones, name='inscripciones'),
+
 
 ]

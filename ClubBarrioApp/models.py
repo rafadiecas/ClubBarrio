@@ -18,6 +18,21 @@ class Role(models.TextChoices):
                 rol = choice.__getitem__(1)
         return rol
 
+
+class tarifa(models.TextChoices):
+    BASE = 'BASE', 'Base'
+    PLUS = 'PLUS', 'Plus'
+    PREMIUM = 'PREMIUM', 'Premium'
+
+    @classmethod
+    def value_for_label(cls, label):
+        tarifa = None
+        for choice in cls.choices:
+            if choice[1] == label:
+                tarifa = choice[0]
+        return tarifa
+
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -93,7 +108,7 @@ class Producto(models.Model):
     precio = models.FloatField()
     stock = models.IntegerField(default=0)
     pedidos = models.ManyToManyField(Pedido)
-    url_imagen = models.CharField(max_length=500 , default='sin imagen')
+    url_imagen = models.CharField(max_length=500, default='sin imagen')
     tipo = models.ForeignKey(Tipo, on_delete=models.DO_NOTHING, null=True)
     talla = models.ForeignKey(Talla, on_delete=models.DO_NOTHING, null=True)
 
@@ -104,7 +119,7 @@ class Producto(models.Model):
 class Administrador(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=250, default='sin nombre')
-    apellidos = models.CharField(max_length=250,default='sin apellidos')
+    apellidos = models.CharField(max_length=250, default='sin apellidos')
 
     def __str__(self):
         return self.nombre + " " + self.apellidos
@@ -124,6 +139,7 @@ class TutorLegal(models.Model):
     nombre = models.CharField(max_length=250, default='sin nombre')
     apellidos = models.CharField(max_length=250, default='sin apellidos')
     es_activo = models.BooleanField(default=True)
+    tarifa = models.CharField(max_length=50, choices=tarifa.choices, default=tarifa.BASE)
 
     def __str__(self):
         return self.nombre + " " + self.apellidos
@@ -187,11 +203,12 @@ class Partido(models.Model):
     fecha = models.DateField()
     hora = models.TimeField()
     lugar = models.CharField(max_length=500)
-    puntos_equipo1 = models.IntegerField()
-    puntos_equipo2 = models.IntegerField()
+    puntos_equipo1 = models.IntegerField(default=0)
+    puntos_equipo2 = models.IntegerField(default=0)
     equipo1 = models.ForeignKey(Equipo, on_delete=models.DO_NOTHING, related_name='equipo_local')
     equipo2 = models.ForeignKey(Equipo, on_delete=models.DO_NOTHING, related_name='equipo_visitante')
     temporada = models.ForeignKey(Temporada, on_delete=models.DO_NOTHING)
+    jornada = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.fecha) + " " + str(
@@ -208,5 +225,5 @@ class EstadisticasJugador(models.Model):
     faltas = models.IntegerField()
 
     def __str__(self):
-        return self.jugador.usuario.nombre + " " + self.jugador.usuario.apellidos + " " + self.partido.equipo1.nombre + " vs " + self.partido.equipo2.nombre + " " + str(
+        return self.jugador.nombre + " " + self.jugador.apellidos + " " + self.partido.equipo1.nombre + " vs " + self.partido.equipo2.nombre + " " + str(
             self.puntos) + " puntos"
