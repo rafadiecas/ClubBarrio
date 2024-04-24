@@ -578,4 +578,5 @@ def inscripciones(request):
         tutor.save()
 
         return redirect('usuario')
-
+def terminos_y_servicios(request):
+    return render(request, 'terminos_y_servicios.html')
