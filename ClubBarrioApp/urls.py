@@ -55,6 +55,7 @@ urlpatterns = [
     path('usuario/', pagina_usuario, name='usuario'),
     path('tarifas/', tarifas, name='tarifas'),
     path('usuario/inscripcion', inscripciones, name='inscripciones'),
+    path('usuario/perfil', perfil, name='perfil'),
 
 
 ]

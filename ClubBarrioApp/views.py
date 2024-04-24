@@ -55,6 +55,15 @@ def usuarios(request):
     lista_usuarios = User.objects.all()
     return render(request, 'lista_usuarios.html', {'usuarios': lista_usuarios})
 
+def perfil(request):
+    usuario = request.user
+    if usuario.rol == 'Tutor':
+        usuario = User.objects.get(id=usuario.id)
+        tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+        jugadores = Jugador.objects.filter(tutorLegal_id=tutor.id)
+        return render(request, 'profile.html', {'tutor': tutor, 'jugadores': jugadores})
+    return render(request, 'profile.html')
+
 def new_user(request):
     Users = User.objects.all()
     Equipos = Equipo.objects.all()
