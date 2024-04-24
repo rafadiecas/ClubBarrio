@@ -562,3 +562,62 @@ def inscripciones(request):
 
         return redirect('usuario')
 
+def lista_hijos(request):
+    usuario = request.user
+    tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+    hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+    return render(request, 'lista_hijos.html', {'hijos': hijos})
+
+def crea_hijos(request):
+    usuario = request.user
+    tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+    equipos = Equipo.objects.all()
+    if request.method == 'GET':
+        lista_equipos = Equipo.objects.all()
+        return render(request, 'crear_hijo.html', {'lista_equipos': lista_equipos, 'equipos': equipos,'modo_edicion': False})
+    else:
+        username = request.POST.get('username')
+        rol = 'Jugador'
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+        fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        errors = filtro(email, fecha_nacimiento, rol, username, password, password2)
+        if len(errors) != 0:
+            return render(request, "crear_hijo.html",
+                          {"errores": errors, "username": username, "email": email,
+                           "fecha_nacimiento": fecha_nacimiento, "equipos": equipos})
+        else:
+            new = User.objects.create(username=username, password=make_password(password), email=email, rol=rol,
+                                      fecha_nacimiento=fecha_nacimiento)
+            new.save()
+
+        jugador = Jugador()
+        jugador.nombre = request.POST.get('nombre')
+        jugador.apellidos = request.POST.get('apellidos')
+        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('equipo')))
+        jugador.tutorLegal = tutor
+        jugador.usuario = new
+        jugador.save()
+        return redirect('gestion_familia')
+
+def elimina_hijo(request, id):
+    hijo = Jugador.objects.get(id=id)
+    usuario_id = hijo.usuario_id
+    usuario = User.objects.get(id=usuario_id)
+    usuario.delete()
+
+    return redirect('gestion_familia')
+
+def edita_hijo(request, id):
+    hijo = Jugador.objects.get(id=id)
+    equipos = Equipo.objects.all()
+    fecha_nacimiento = hijo.usuario.fecha_nacimiento
+    if request.method == 'GET':
+        return render(request, 'crear_hijo.html', {'hijo': hijo, 'equipos': equipos,'modo_edicion': True, 'fecha_nacimiento': fecha_nacimiento})
+    else:
+        hijo.nombre = request.POST.get('nombre')
+        hijo.apellidos = request.POST.get('apellidos')
+        hijo.equipo = Equipo.objects.get(id=int(request.POST.get('equipo')))
+        hijo.save()
+        return redirect('gestion_familia')

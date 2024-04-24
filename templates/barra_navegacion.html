@@ -54,7 +54,7 @@
         </li>
       {% if user.is_authenticated and user.rol == "Tutor" %}
           <div class="btn-group">
-          <button type="button" class="btn" style="color: white;font-size: 1.1em;padding: 0.5em 1em;">Gestion</button>
+          <a class="nav-link" href="{% url 'gestion_familia' %}">Gestión</a>
           <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="color: white">
             <span class="visually-hidden">Toggle Dropdown</span>
           </button>
