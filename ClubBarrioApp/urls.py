@@ -68,5 +68,6 @@ urlpatterns = [
 
 
 
+    path('terminos_y_servicios', terminos_y_servicios, name='terminos_y_servicios'),
 
 ]

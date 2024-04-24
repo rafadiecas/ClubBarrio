@@ -843,3 +843,6 @@ def estadisticas_jugador(request, id):
 
     return render(request, 'estadisticas_jugador.html', {'estadisticas_jugador': estadisticas_jugador, 'hijos': hijos ,'jugador': jugador, 'list_noticias': list_noticias})
 
+
+def terminos_y_servicios(request):
+    return render(request, 'terminos_y_servicios.html')
