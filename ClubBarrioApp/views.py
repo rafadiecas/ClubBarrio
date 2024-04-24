@@ -50,15 +50,16 @@ def pagina_noticias(request):
     }
 
     usuario = request.user
-    if usuario.rol == 'Tutor':
-        tutor = TutorLegal.objects.get(usuario_id=usuario.id)
-        hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
-        data = {
-            'entity': list_noticias,
-            'paginator': paginator,
-            'hijos': hijos
-        }
-        return render(request, 'Noticias.html', data)
+    if usuario.is_authenticated:
+        if usuario.rol == 'Tutor':
+            tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+            hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+            data = {
+                'entity': list_noticias,
+                'paginator': paginator,
+                'hijos': hijos
+            }
+            return render(request, 'Noticias.html', data)
 
     return render(request, 'Noticias.html', data)
 
