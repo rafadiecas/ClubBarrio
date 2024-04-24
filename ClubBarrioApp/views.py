@@ -580,33 +580,78 @@ def lista_hijos(request):
 def crea_hijos(request):
     usuario = request.user
     tutor = TutorLegal.objects.get(usuario_id=usuario.id)
-    equipos = Equipo.objects.all()
+    categoria = ""
+    hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+    errors = []
+    hijo = User()
+    jugador = Jugador()
     if request.method == 'GET':
-        lista_equipos = Equipo.objects.all()
-        return render(request, 'crear_hijo.html', {'lista_equipos': lista_equipos, 'equipos': equipos,'modo_edicion': False})
+        return render(request, 'crear_hijo.html', {'modo_edicion': False})
     else:
-        username = request.POST.get('username')
-        rol = 'Jugador'
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        password2 = request.POST.get('password2')
-        fecha_nacimiento = request.POST.get('fecha_nacimiento')
-        errors = filtro(email, fecha_nacimiento, rol, username, password, password2)
-        if len(errors) != 0:
-            return render(request, "crear_hijo.html",
-                          {"errores": errors, "username": username, "email": email,
-                           "fecha_nacimiento": fecha_nacimiento, "equipos": equipos})
-        else:
-            new = User.objects.create(username=username, password=make_password(password), email=email, rol=rol,
-                                      fecha_nacimiento=fecha_nacimiento)
-            new.save()
 
-        jugador = Jugador()
-        jugador.nombre = request.POST.get('nombre')
-        jugador.apellidos = request.POST.get('apellidos')
-        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('equipo')))
+
+        if 'boton' in request.POST and request.POST['boton'] == 'seleccion_datos':
+
+            username = request.POST.get('username')
+            rol = 'Jugador'
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            password2 = request.POST.get('password2')
+            fecha_nacimiento = request.POST.get('fecha_nacimiento')
+            fecha = datetime.strptime(fecha_nacimiento, '%Y-%m-%d')
+            diferencia = datetime.now() - fecha
+            lista_equipos=[]
+            nombre = request.POST.get('nombre')
+            apellidos = request.POST.get('apellidos')
+            errors = filtro(email, fecha_nacimiento, rol, username, password, password2)
+
+            if(len(errors) == 0):
+                hijo.username= username
+                hijo.email = email
+                hijo.fecha_nacimiento = fecha_nacimiento
+                hijo.password = make_password(password)
+
+
+            if diferencia.days < 1825:
+                categoria = 'Prebenjamin'
+            elif diferencia.days < 2920:
+                categoria = 'Benjamin'
+            elif diferencia.days < 4015:
+                categoria = 'Alevin'
+            elif diferencia.days < 5110:
+                categoria = 'Infantil'
+            elif diferencia.days < 6205:
+                categoria = 'Cadete'
+            elif diferencia.days < 7300:
+                categoria = 'Juvenil'
+            else:
+                errors.append("El jugador debe ser menor de 20 años")
+
+
+
+            if (tutor.tarifa == 'BASE' and len(hijos) >= 1) or (tutor.tarifa == 'PLUS' and len(hijos) >= 3) or (
+                    tutor.tarifa == 'PREMIUM' and len(hijos) >= 5):
+                errors.append("No puedes añadir más hijos")
+
+            if len(errors) != 0:
+                return render(request, 'crear_hijo.html',
+                              {'equipos': lista_equipos, 'edicion_equipo': False, 'fecha_nacimiento': fecha_nacimiento,
+                               'password': password, 'email': email, 'username': username, 'errores': errors,
+                               'hijos': hijos, 'nombre': nombre, 'apellidos': apellidos})
+
+            hijo.save()
+
+
+            for equipo in Equipo.objects.all():
+                if categoria in equipo.categoria.tipo:
+                    lista_equipos.append(equipo)
+            return render(request, 'crear_hijo.html', {'equipos': lista_equipos, 'edicion_equipo': True, 'nombre': nombre, 'apellidos': apellidos, 'hijo': hijo})
+
+        jugador.usuario = User.objects.get(id=request.POST.get('hijo'))
+        jugador.nombre = request.POST.get('nombre-jug')
+        jugador.apellidos = request.POST.get('apellidos-jug')
         jugador.tutorLegal = tutor
-        jugador.usuario = new
+        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('tarifa_seleccionada')))
         jugador.save()
         return redirect('gestion_familia')
 

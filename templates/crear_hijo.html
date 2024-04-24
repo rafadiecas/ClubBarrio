@@ -31,30 +31,57 @@
         </div>
         {% endif %}
 
-    <form action="" method="post">
+     <form action="" method="post" id="equipos_form">
 
         {% csrf_token %}
+        
+        
+        {% if edicion_equipo %}
+            
+             <div class="row row-cols-1 row-cols-md-3 mb-3 text-center w-75" id="equipos">
+            {% for e in equipos %}
+                <div class="col d-flex align-items-stretch">
+                    <div class="card mb-4 rounded-3 shadow-sm">
+                        <div class="card-header py-3">
+                            <h4 class="my-0 fw-normal">{{ e.nombre }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mt-3 mb-4">
+                                <li>{{ e.categoria }}</li>
+                                <li><button type="button" class="btn btn-primary mt-3 enviar-equipo" data-equipo-id="{{ e.id }}">Enviar</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <input type="hidden" id="tarifa_seleccionada" name="tarifa_seleccionada">  
+        <input type="hidden" id="nombre-jug" name="nombre-jug" value="{{ nombre }}">
+        <input type="hidden" id="apellidos-jug" name="apellidos-jug" value="{{ apellidos }}">   
+        <input type="hidden" id="hijo" name="hijo" value="{{ hijo.id }}">    
+            
+       {% else %}
     
 
-        <div class="row">
+        <div class="row" id="datos">
             <div class="col-md-4">
                 <label for="username" class="form-label">Username:</label>
-                <input type="text" name="username" id="username" class="form-control" value="{{ hijo.usuario.username }}" required>
+                <input type="text" name="username" id="username" class="form-control" value="{{ username }}" required>
             </div>
             <div class="col-md-4" id="nombreField">
                 <label for="nombre" class="form-label">Nombre:</label>
-                <input type="text" name="nombre" id="nombre" class="form-control" value="{{ hijo.nombre }}">
+                <input type="text" name="nombre" id="nombre" class="form-control" value="{{ nombre }}">
             </div>
             <div class="col-md-4" id="apellidosField">
                 <label for="apellidos" class="form-label">Apellidos:</label>
-                <input type="text" name="apellidos" id="apellidos" class="form-control" value="{{ hijo.apellidos }}">
+                <input type="text" name="apellidos" id="apellidos" class="form-control" value="{{ apellidos }}">
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-4">
                 <label for="email" class="form-label">Email:</label>
-                <input type="email" name="email" id="email" class="form-control" value="{{ hijo.usuario.email }}" required>
+                <input type="email" name="email" id="email" class="form-control" value="{{ email }}" required>
             </div>
             <div class="col-md-4">
                 <label for="password" class="form-label">Contraseña:</label>
@@ -72,32 +99,25 @@
                 <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{{ fecha_nacimiento }}" required>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-md-4 select" id="equipoSelect">
-                <label for="equipo" class="form-label">Equipo:</label>
-                <select id="equipo" name="equipo" class="form-select">
-                    {% for e in equipos %}
-                        <option value="{{ e.id }}{% if e.id == hijo.equipo.id %} selected {% endif %}">{{ e.nombre }}</option>
-                    {% endfor %}
-                </select>
-            </div>
         
-        </div>
 
         <div class="row">
             <div class="col-12 text-center">
-                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                <button name="boton" value="seleccion_datos" type="submit" class="btn btn-primary mt-3">Submit</button>
             </div>
         </div>
 
     </form>
+
+    {% endif %}
 
     <div class="row">
         <div class="col-12 text-center">
             <a href="{% url 'gestion_familia' %}" role="button" class="btn btn-secondary mt-3">Volver</a>
         </div>
     </div>
+        
+        
 </div>
 
 <script>
@@ -117,6 +137,28 @@
         deshabilitarCampos();
     }
 </script>
+
+<script>
+        var enviarBotones = document.querySelectorAll('.enviar-equipo');
+    enviarBotones.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var equipoId = this.getAttribute('data-equipo-id'); // Obtener el ID del equipo
+            document.getElementById('tarifa_seleccionada').value = equipoId; // Asignar el ID al campo oculto
+            document.getElementById('equipos_form').submit(); // Enviar el formulario
+        });
+    });
+</script>
+
+
+<script>
+     var edicion_equipo = {{ edicion_equipo|lower }};
+     
+        if (edicion_equipo) {
+            $('#equipos').show();
+            $('#datos').hide();
+        }
+</script>
+
 </body>
 
 </html>

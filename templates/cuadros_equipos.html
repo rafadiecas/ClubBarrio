@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pagina de Tarifas</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+
+{% include "barra_navegacion.html" %}
+
+<body>
+
+<div class="container-fluid d-flex justify-content-center mt-5">
+    <form action="" method="post" id="equipos_form">
+
+        {% csrf_token %}
+   
+        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center w-75">
+            {% for e in equipos %}
+                <div class="col d-flex align-items-stretch">
+                    <div class="card mb-4 rounded-3 shadow-sm">
+                        <div class="card-header py-3">
+                            <h4 class="my-0 fw-normal">{{ e.nombre }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mt-3 mb-4">
+                                <li>{{ e.categoria }}</li>
+                                <li><button type="button" class="btn btn-primary mt-3 enviar-equipo" data-equipo-id="{{ e.id }}">Enviar</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <input type="hidden" id="tarifa_seleccionada" name="tarifa_seleccionada">    
+    </form>
+</div>
+
+<script>
+    // Capturar clic en botones de enviar equipo
+    var enviarBotones = document.querySelectorAll('.enviar-equipo');
+    enviarBotones.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var equipoId = this.getAttribute('data-equipo-id'); // Obtener el ID del equipo
+            document.getElementById('tarifa_seleccionada').value = equipoId; // Asignar el ID al campo oculto
+            document.getElementById('equipos_form').submit(); // Enviar el formulario
+        });
+    });
+</script>
+    
+</body>
+</html>
