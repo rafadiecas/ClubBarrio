@@ -184,6 +184,8 @@ def logear(request):
 
             elif user.rol == "Usuario" or user.rol == "Tutor":
                 return redirect('usuario')
+            elif user.rol == "Jugador":
+                return redirect('inicio_jugador')
 
             # Redirección tras un login exitoso
             return redirect('inicio')
@@ -560,4 +562,49 @@ def inscripciones(request):
         tutor.save()
 
         return redirect('usuario')
+
+def inicio_jugador(request, id=None):
+    list_noticias = Noticias.objects.all().order_by('-id')
+    list_noticias = list_noticias[0:3]
+    hijos=[]
+
+    if (id is None):
+        usuario = request.user
+        jugador = Jugador.objects.get(usuario_id=usuario.id)
+    else:
+        usuario = request.user
+        tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+        hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+        jugador = Jugador.objects.get(usuario_id=id)
+
+    equipos = Equipo.objects.filter(categoria_id=jugador.equipo.categoria)
+
+    clasificacion = list()
+    for e in equipos:
+        partidos_local = Partido.objects.filter(equipo1=e.id)
+        partidos_visitante = Partido.objects.filter(equipo2=e.id)
+        cont_partidos_ganados = 0
+        cont_partidos_jugados = len(partidos_local) + len(partidos_visitante)
+        dif_puntos = 0
+        for p in partidos_local:
+            dif_puntos += p.puntos_equipo1 - p.puntos_equipo2
+            if p.puntos_equipo1 > p.puntos_equipo2:
+                cont_partidos_ganados+=1
+        for p in partidos_visitante:
+            dif_puntos += p.puntos_equipo2 - p.puntos_equipo1
+            if p.puntos_equipo1 < p.puntos_equipo2:
+                cont_partidos_ganados+=1
+        equipo = {
+            'nombre': e.nombre,
+            'partidos_ganados': cont_partidos_ganados,
+            'partidos_jugados': cont_partidos_jugados,
+            'diferencia_puntos': dif_puntos
+        }
+        clasificacion.append(equipo)
+    clasificacion.sort(key=lambda x:((x['partidos_ganados']), x['partidos_jugados']), reverse=True)
+    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos})
+
+def estadisticas_jugador(request, id):
+    estadisticas_jugador = EstadisticasJugador.objects.get(id=id)
+    return render(request, 'estadisticas_jugador.html', {'estadisticas_jugador': estadisticas_jugador})
 

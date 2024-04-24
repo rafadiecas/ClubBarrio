@@ -55,6 +55,7 @@ urlpatterns = [
     path('usuario/', pagina_usuario, name='usuario'),
     path('tarifas/', tarifas, name='tarifas'),
     path('usuario/inscripcion', inscripciones, name='inscripciones'),
-
-
+    path('inicio_jugador/<int:id>/', inicio_jugador, name='inicio_jugador'),
+    path('inicio_jugador/', inicio_jugador, name='inicio_jugador'),
+    path('inicio_jugador/estadisticas/<int:id>/', estadisticas_jugador, name='estadisticas_jugador'),
 ]
