@@ -6,7 +6,20 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <style>
+        .card {
+            height: 100%;
+        }
+        
+        .card-img-top {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
+        /* Estilo para resaltar el equipo seleccionado */
+        .resaltado {
+            border: 2px solid #006b1b !important;
+        }
     </style>
     
 </head>
@@ -35,30 +48,35 @@
 
         {% csrf_token %}
         
-        
         {% if edicion_equipo %}
             
-             <div class="row row-cols-1 row-cols-md-3 mb-3 text-center w-75" id="equipos">
+        <div class="row rol-cols-md-3 justify-content-center">
             {% for e in equipos %}
-                <div class="col d-flex align-items-stretch">
-                    <div class="card mb-4 rounded-3 shadow-sm">
-                        <div class="card-header py-3">
-                            <h4 class="my-0 fw-normal">{{ e.nombre }}</h4>
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-unstyled mt-3 mb-4">
-                                <li>{{ e.categoria }}</li>
-                                <li><button type="button" class="btn btn-primary mt-3 enviar-equipo" data-equipo-id="{{ e.id }}">Enviar</button></li>
-                            </ul>
-                        </div>
+            <div class="col-md-3 col-sm-6 col-xs-12 mb-4">
+                <div class="card rounded-3 shadow-sm" data-equipo-id="{{ e.id }}">
+                    <img src="{{ e.escudo }}" class="card-img-top " alt="..." style="max-width: 200px">
+                    <div class="card-body text-center">
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li> <b>Categoria:</b> {{ e.categoria }}</li>
+                        </ul>
+                    </div>
+                    <div class="card-header py-3">
+                        <h4 class="my-0 fw-normal">{{ e.nombre }}</h4>
                     </div>
                 </div>
+            </div>
             {% endfor %}
         </div>
         <input type="hidden" id="tarifa_seleccionada" name="tarifa_seleccionada">
         <input type="hidden" id="nombre-jug" name="nombre-jug" value="{{ nombre }}">
         <input type="hidden" id="apellidos-jug" name="apellidos-jug" value="{{ apellidos }}">
         <input type="hidden" id="hijo" name="hijo" value="{{ hijo.id }}">
+            
+        <div class="row">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary mt-3" id="enviar_equipos">Submit</button>
+            </div>
+        </div>
             
        {% else %}
     
@@ -121,34 +139,37 @@
 </div>
 
 <script>
-    // Verificar si estamos en modo edición
     var modoEdicion = {{ modo_edicion|lower }};
     
-    // Función para deshabilitar los campos del formulario
     function deshabilitarCampos() {
         $('#username').prop('disabled', true);
         $('#email').prop('disabled', true);
         $('#password').prop('disabled', true);
         $('#password2').prop('disabled', true);
     }
-
-    // Verificar si estamos en modo edición y deshabilitar campos si es necesario
+    
     if (modoEdicion) {
         deshabilitarCampos();
     }
 </script>
 
 <script>
-        var enviarBotones = document.querySelectorAll('.enviar-equipo');
-    enviarBotones.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            var equipoId = this.getAttribute('data-equipo-id'); // Obtener el ID del equipo
-            document.getElementById('tarifa_seleccionada').value = equipoId; // Asignar el ID al campo oculto
-            document.getElementById('equipos_form').submit(); // Enviar el formulario
-        });
+    $(document).ready(function() {
+    // Resaltar el equipo seleccionado
+    $('.card').on('click', function() {
+        $('.card').removeClass('resaltado');
+        $(this).addClass('resaltado');
     });
-</script>
 
+    // Enviar el ID del equipo seleccionado
+    $('#enviar_equipos').on('click', function(e) {
+        e.preventDefault(); // Evitar el envío del formulario por defecto
+        var equipoId = $('.resaltado').data('equipo-id');
+        $('#tarifa_seleccionada').val(equipoId);
+        $('#equipos_form').submit();
+    });
+});
+</script>
 
 <script>
      var edicion_equipo = {{ edicion_equipo|lower }};
