@@ -1,87 +1,79 @@
 {% load static %}
 {% load bootstrap5 %}
 <head>
-    <style>
-        .footer {
-            display: flex;
-            background-color: #00653d;
-            max-height: 220px;
-            width: 100%;
-            margin-top: auto;
-            padding: 0;
-            position: absolute;
-        }
-        .main{
-            max-height: 220px;
-            padding: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-<footer class="footer text-center text-lg-start text-white">
-
-    <div class="main container p-4">
-
-        <div class="row my-4">
-        <!--Titulo terminos y servicios-->
-            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-                <div class="text-center">
-                    <h5 class="text-uppercase mb-4">TERMINOS Y SERVICIOS</h5>
-                    <p>Si quieres conocer nuestro terminos y condiciones, haz clic en el siguiente enlace.
-                        <a class="text-white px-2" href="{% url 'terminos_y_servicios' %}">Términos y servicios SafaClub</a>
-                    </p>
-                </div>
-            </div>
-
-            <!--Titulo redes sociales-->
-            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-                <div class="text-center">
-                    <h5 class="text-uppercase mb-4">REDES SOCIALES</h5>
+<!-- Footer -->
+<footer
+        class="text-center text-lg-center text-white"
+        style="background-color: #00653d"
+>
+    <!-- Grid container -->
+    <div class="container p-0 pb-2 mb-0">
+        <!-- Section: Links -->
+        <section class="">
+            <!--Grid row-->
+            <div class="row">
+                <!-- Terminos y servicios -->
+                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h6 class="text-uppercase mb-4 font-weight-bold">
+                        TERMINOS Y SERVICIOS
+                    </h6>
+                    <a class="link text-white px-2" href="{% url 'terminos_y_servicios' %}">Términos y servicios SafaClub</a>
                 </div>
 
-                <!--Lista con todas las redes sociales-->
-                <ul class="list-unstyled d-flex flex-row justify-content-center">
-                    <li>
-                        <a class="text-white px-2" href="#!">
-                            <img src="{% static "icons8-facebook-48.png" %}">
-                        </a>
-                    </li>
-                    <li>
-                        <a class="text-white px-2" href="#!">
-                            <img src="{% static "icons8-instagram-48.png" %}">
-                        </a>
-                    </li>
-                    <li>
-                        <a class="text-white ps-2" href="#!">
-                            <img src="{% static 'icons8-twitter-48.png' %}">
-                        </a>
-                    </li>
-                    <li>
-                        <a class="text-white ps-2" href="#!">
-                            <img src="{% static 'icons8-tik-tok-48.png' %}">
-                        </a>
-                    </li>
-                </ul>
-            </div>
+                <!-- Separador responsive -->
+                <hr class="w-100 clearfix d-md-none mt-2"/>
 
-            <!--Titulo contactanos-->
-            <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-                <div class="text-center">
-                    <h5 class="text-uppercase mb-4">CONTACTANOS</h5>
+                <!-- Redes sociales -->
+                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
+                    <h6 class="text-uppercase mb-4 font-weight-bold">REDES SOCIALES</h6>
+
+                    <!-- Facebook -->
+                    <a
+                            class="btn btn-primary btn-floating m-1"
+                            style="background-color: #3b5998"
+                            href="https://www.facebook.com/"
+                            role="button"
+                    ><i class="bi bi-facebook"></i>
+                    </a>
+
+                    <!-- Twitter -->
+                    <a
+                            class="btn btn-primary btn-floating m-1"
+                            style="background-color: #55acee"
+                            href="https://twitter.com/"
+                            role="button"
+                    ><i class="bi bi-twitter"></i>
+                    </a>
+                    <!-- Instagram -->
+                    <a
+                            class="btn btn-primary btn-floating m-1"
+                            style="background-color: #ac2bac"
+                            href="https://www.instagram.com/"
+                            role="button"
+                    ><i class="bi bi-instagram"></i>
+                    </a>
+                    <!-- Tiktok -->
+                    <a
+                            class="btn btn-primary btn-floating m-1"
+                            style="background-color: #333333"
+                            href="https://www.tiktok.com/"
+                            role="button"
+                    ><i class="bi bi-tiktok"></i>
+                    </a>
                 </div>
 
-                <!--Información de contacto-->
-                <ul class="list-unstyled text-center">
-                    <li>
-                        <p><i class="fas fa-map-marker-alt pe-2"></i>C. Calatrava, 38, Casco Antiguo, 41002 Sevilla</p>
-                    </li>
-                    <li>
-                        <p><i class="fas fa-phone pe-2"></i>+34 954 25 89 71</p>
-                    </li>
-                    <li>
-                        <p><i class="fas fa-envelope pe-2 mb-0"></i>clubdebarrio@gmail.com</p>
-                    </li>
-                </ul>
+                <!-- Separador responsive -->
+                <hr class="w-100 clearfix d-md-none mt-2"/>
+
+                <!-- Información de contacto -->
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h6 class="text-uppercase mb-4 font-weight-bold">CONTACTANOS</h6>
+                    <p><a class="link-light" href="#">Enlace de Contacto</a></p>
+                </div>
             </div>
-        </div>
+        </section>
     </div>
+
 </footer>
