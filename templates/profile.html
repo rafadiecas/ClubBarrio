@@ -36,7 +36,7 @@
         <div class="row gy-4">
           <div class="col-12">
             <div class="card widget-card border-light shadow-sm">
-              <div class="card-header text-bg-primary">Bienvenido, {{ perfil.nombre }}</div>
+              <div class="card-header text-bg-primary">Bienvenido {{ perfil.usuario.username }}</div>
               <div class="card-body">
                 <div class="text-center mb-3">
                   <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" class="img-fluid rounded-circle" alt="INTRODUCE FOTO">
@@ -56,15 +56,21 @@
         <div class="card widget-card border-light shadow-sm">
           <div class="card-body p-4">
             <ul class="nav nav-tabs" id="profileTab" role="tablist">
+
                 <li class="nav-item" role="presentation">
                     <button class="nav-link {% if not error_en_cambio_de_contraseña %}active{% endif %}" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview-tab-pane" type="button" role="tab" aria-controls="overview-tab-pane" aria-selected="true">General</button>
                 </li>
+
+                {% if perfil.usuario.rol == 'Tutor' or perfil.usuario.rol == 'Jugador' or perfil.usuario.rol == 'Entrenador' %}
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Cambiar Perfil</button>
                 </li>
+                {% endif %}
+                {% if perfil.usuario.rol == 'Tutor' or perfil.usuario.rol == 'Jugador' or perfil.usuario.rol == 'Entrenador' %}
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="email-tab" data-bs-toggle="tab" data-bs-target="#email-tab-pane" type="button" role="tab" aria-controls="email-tab-pane" aria-selected="false">Notificaciones</button>
                 </li>
+                {% endif %}
                 <li class="nav-item" role="presentation">
                     <button class="nav-link {% if error_en_cambio_de_contraseña %}active{% endif %}" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">Password</button>
                 </li>
@@ -72,6 +78,7 @@
             <div class="tab-content pt-4" id="profileTabContent">
               <div class="tab-pane fade show active" id="overview-tab-pane" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
                 <h5 class="mb-3">Perfil</h5>
+                {% if perfil.usuario.rol == 'Tutor' or perfil.usuario.rol == 'Jugador' or perfil.usuario.rol == 'Entrenador' %}
                 <div class="row g-0">
                     <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
                     <div class="p-2">Username</div>
@@ -137,9 +144,18 @@
                     <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
                         <div class="p-2">{{ perfil.equipo.nombre }}</div>
                     </div>
+
+              {% endif %}
+                {% else %}
+                    <div class="row g-0">
+                        <div class="col-12">
+                            <div class="p-2">¡INSCRÍBETE PARA GESTIONAR TU PERFIL!</div>
+                        </div>
+                    </div>
                 {% endif %}
-                </div>
+
               </div>
+
               <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                 <form action="{% url 'perfil' %}" method="post" class="row gy-3 gy-xxl-4">
                     {% csrf_token %}

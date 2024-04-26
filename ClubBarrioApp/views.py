@@ -72,6 +72,7 @@ def perfil(request):
         'Tutor': TutorLegal,
         'Jugador': Jugador,
         'Entrenador': Entrenador
+
     }
 
     if usuario.rol in roles_map:
