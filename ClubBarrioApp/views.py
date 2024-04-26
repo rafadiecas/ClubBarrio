@@ -7,7 +7,10 @@ import re
 from .models import *
 from django.core.paginator import Paginator
 from django.http import Http404
+from django.http import JsonResponse
 from .decorator import user_required, rol_requerido
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 
 
 # Create your views here.
@@ -35,15 +38,16 @@ def pagina_noticias(request):
     }
 
     usuario = request.user
-    if usuario.rol == 'Tutor':
-        tutor = TutorLegal.objects.get(usuario_id=usuario.id)
-        hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
-        data = {
-            'entity': list_noticias,
-            'paginator': paginator,
-            'hijos': hijos
-        }
-        return render(request, 'Noticias.html', data, {'jugador': jugador})
+    if usuario.is_authenticated:
+        if usuario.rol == 'Tutor':
+            tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+            hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+            data = {
+                'entity': list_noticias,
+                'paginator': paginator,
+                'hijos': hijos
+            }
+            return render(request, 'Noticias.html', data)
 
     return render(request, 'Noticias.html', data)
 
@@ -55,6 +59,63 @@ def administrador(request):
 def usuarios(request):
     lista_usuarios = User.objects.all()
     return render(request, 'lista_usuarios.html', {'usuarios': lista_usuarios})
+
+def validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirmacion_contraseña):
+    errores = []
+    if not usuario.check_password(contraseña_actual):
+        errores.append("La contraseña actual es incorrecta")
+    if nueva_contraseña != confirmacion_contraseña:
+        errores.append("Las contraseñas no coinciden")
+    return errores
+
+def perfil(request):
+    usuario = User.objects.get(id=request.user.id)
+    roles_map = {
+        'Tutor': TutorLegal,
+        'Jugador': Jugador,
+        'Entrenador': Entrenador
+
+    }
+
+    if usuario.rol in roles_map:
+        perfil = roles_map[usuario.rol].objects.get(usuario_id=usuario.id)
+
+        if request.method == 'POST':
+            perfil.nombre = request.POST.get('nombre')
+            perfil.apellidos = request.POST.get('apellidos')
+            perfil.save()
+
+        if usuario.rol == 'Jugador':
+            equipo = perfil.equipo  # Obtén el equipo asociado al perfil si el usuario es un jugador
+            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo})
+
+        return render(request, 'profile.html', {'perfil': perfil})
+
+    return render(request, 'profile.html')
+
+def perfil_pass(request):
+    usuario = request.user
+    error_en_cambio_de_contraseña = False
+
+    if request.method == 'POST':
+        contraseña_actual = request.POST.get('password_actual')
+        nueva_contraseña = request.POST.get('new_password')
+        confirmacion_contraseña = request.POST.get('confirmacion_password')
+
+        errores = validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirmacion_contraseña)
+        if errores:
+            error_en_cambio_de_contraseña = True
+            return JsonResponse({'errores': errores}, status=400)
+
+        usuario.password = make_password(nueva_contraseña)
+        usuario.save()  # Guarda el usuario después de cambiar la contraseña
+        update_session_auth_hash(request, usuario)  # Actualiza la sesión del usuario
+
+        return JsonResponse({'success': 'Contraseña cambiada con éxito'})
+
+    return render(request, 'profile.html', {'error_en_cambio_de_contraseña': error_en_cambio_de_contraseña})
+
+
 
 def new_user(request):
     Users = User.objects.all()
@@ -288,6 +349,10 @@ def crear_equipo(request):
         equipo_nuevo= Equipo()
         equipo_nuevo.nombre= request.POST.get('nombre')
         equipo_nuevo.escudo = request.POST.get('escudo')
+        if request.POST.get('is_safa') == 'on':
+            equipo_nuevo.es_safa = True
+        else:
+            equipo_nuevo.es_safa = False
         equipo_nuevo.categoria= categoria.objects.get(id=int(request.POST.get('categoria')))
         equipo_nuevo.save()
 
@@ -303,11 +368,16 @@ def editar_equipo(request, id):
         lista_categorias = categoria.objects.all()
         entrenadores = Entrenador.objects.all()
         id_entrenadores = equipo.entrenadores.values_list('id', flat=True)
-        return render(request, 'crear_equipo.html', {'equipo':equipo, 'id_entrenadores':id_entrenadores, 'lista_categorias': lista_categorias, 'entrenadores': entrenadores})
+        es_safa = equipo.es_safa
+        return render(request, 'crear_equipo.html', {'equipo':equipo, 'id_entrenadores':id_entrenadores, 'lista_categorias': lista_categorias, 'entrenadores': entrenadores, 'es_safa': es_safa})
     else:
         equipo.nombre = request.POST.get('nombre')
         equipo.escudo = request.POST.get('escudo')
         equipo.categoria = categoria.objects.get(id=int(request.POST.get('categoria')))
+        if request.POST.get('is_safa') == 'on':
+            equipo.es_safa = True
+        else:
+            equipo.es_safa = False
         equipo.save()
 
         lista_entrenadores = request.POST.getlist('entrenadores')
@@ -564,6 +634,153 @@ def inscripciones(request):
         tutor.save()
 
         return redirect('usuario')
+
+def lista_hijos(request):
+    usuario = request.user
+    tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+    hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+    return render(request, 'lista_hijos.html', {'hijos': hijos})
+
+def crea_hijos(request):
+    usuario = request.user
+    tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+    categoria = ""
+    hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+    errors = []
+    hijo = User()
+    jugador = Jugador()
+    if request.method == 'GET':
+        return render(request, 'crear_hijo.html', {'modo_edicion': False})
+    else:
+
+
+        if 'boton' in request.POST and request.POST['boton'] == 'seleccion_datos':
+
+            username = request.POST.get('username')
+            rol = 'Jugador'
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            password2 = request.POST.get('password2')
+            fecha_nacimiento = request.POST.get('fecha_nacimiento')
+            fecha = datetime.strptime(fecha_nacimiento, '%Y-%m-%d')
+            diferencia = datetime.now() - fecha
+            lista_equipos=[]
+            nombre = request.POST.get('nombre')
+            apellidos = request.POST.get('apellidos')
+            errors = filtro(email, fecha_nacimiento, rol, username, password, password2)
+
+            if(len(errors) == 0):
+                hijo.username= username
+                hijo.email = email
+                hijo.fecha_nacimiento = fecha_nacimiento
+                hijo.password = make_password(password)
+
+
+            if diferencia.days < 1825:
+                categoria = 'Prebenjamin'
+            elif diferencia.days < 2920:
+                categoria = 'Benjamin'
+            elif diferencia.days < 4015:
+                categoria = 'Alevin'
+            elif diferencia.days < 5110:
+                categoria = 'Infantil'
+            elif diferencia.days < 6205:
+                categoria = 'Cadete'
+            elif diferencia.days < 7300:
+                categoria = 'Juvenil'
+            else:
+                errors.append("El jugador debe ser menor de 20 años")
+
+
+
+            if (tutor.tarifa == 'BASE' and len(hijos) >= 1) or (tutor.tarifa == 'PLUS' and len(hijos) >= 3) or (
+                    tutor.tarifa == 'PREMIUM' and len(hijos) >= 5):
+                errors.append("No puedes añadir más hijos")
+
+            for equipo in Equipo.objects.all():
+                if categoria in equipo.categoria.tipo and equipo.es_safa:
+                    plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
+                    if plazas_libres > 0:
+                        dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
+                        lista_equipos.append(dict)
+            if len(lista_equipos) == 0:
+                errors.append("No hay plazas disponibles en ningún equipo")
+
+            if len(errors) != 0:
+                return render(request, 'crear_hijo.html',
+                              {'equipos': lista_equipos, 'edicion_equipo': False, 'fecha_nacimiento': fecha_nacimiento,
+                               'password': password, 'email': email, 'username': username, 'errores': errors,
+                               'hijos': hijos, 'nombre': nombre, 'apellidos': apellidos})
+
+            hijo.save()
+
+
+            return render(request, 'crear_hijo.html', {'equipos': lista_equipos, 'edicion_equipo': True, 'nombre': nombre, 'apellidos': apellidos, 'hijo': hijo})
+
+        jugador.usuario = User.objects.get(id=request.POST.get('hijo'))
+        jugador.nombre = request.POST.get('nombre-jug')
+        jugador.apellidos = request.POST.get('apellidos-jug')
+        jugador.tutorLegal = tutor
+        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('tarifa_seleccionada')))
+        jugador.save()
+        return redirect('gestion_familia')
+
+def elimina_hijo(request, id):
+    hijo = Jugador.objects.get(id=id)
+    usuario_id = hijo.usuario_id
+    usuario = User.objects.get(id=usuario_id)
+    usuario.delete()
+
+    return redirect('gestion_familia')
+
+def edita_hijo(request, id):
+    jugador = Jugador.objects.get(id=id)
+    equipos = Equipo.objects.all()
+    fecha_nacimiento = jugador.usuario.fecha_nacimiento
+    errors = []
+    if request.method == 'GET':
+        return render(request, 'crear_hijo.html', {'jugador': jugador, 'equipos': equipos,'modo_edicion': True, 'fecha_nacimiento': fecha_nacimiento})
+    else:
+        if 'boton' in request.POST and request.POST['boton'] == 'seleccion_datos':
+
+            jugador.nombre = (request.POST.get('nombre'))
+            jugador.apellidos = request.POST.get('apellidos')
+            jugador.usuario.fecha_nacimiento = request.POST.get('fecha_nacimiento')
+            diferencia = datetime.now() - datetime.strptime(request.POST.get('fecha_nacimiento'), '%Y-%m-%d')
+            lista_equipos = []
+
+
+            if diferencia.days < 1825:
+                categoria = 'Prebenjamin'
+            elif diferencia.days < 2920:
+                categoria = 'Benjamin'
+            elif diferencia.days < 4015:
+                categoria = 'Alevin'
+            elif diferencia.days < 5110:
+                categoria = 'Infantil'
+            elif diferencia.days < 6205:
+                categoria = 'Cadete'
+            elif diferencia.days < 7300:
+                categoria = 'Juvenil'
+            else:
+                errors.append("El jugador debe ser menor de 20 años")
+
+            if len(errors) != 0:
+                return render(request, 'crear_hijo.html', {'jugador': jugador,'modo_edicion': True, 'fecha_nacimiento': fecha_nacimiento,'errores': errors, 'edicion_equipo': False})
+
+            jugador.save()
+
+            for equipo in Equipo.objects.all():
+                if categoria in equipo.categoria.tipo and equipo.es_safa:
+                    plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
+                    dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
+                    lista_equipos.append(dict)
+            return render(request, 'crear_hijo.html',
+                          {'equipos': lista_equipos, 'edicion_equipo': True,'jugador': jugador})
+
+        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('tarifa_seleccionada')))
+        jugador.save()
+        return redirect('gestion_familia')
 
 def inicio_jugador(request, id=None):
     list_noticias = Noticias.objects.all().order_by('-id')

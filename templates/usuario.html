@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Pagina de Inicio</title>
+    <title>Pagina de Usuario</title>
 
     <style>
         .carousel-inner {
@@ -81,7 +81,8 @@
     <div class="container-fluid" id="contenedor">
         <div class="row row-cols-md-2 row-cols-lg-2 row-cols-sm-1 row-cols-1 mb-3">
             <div class="col d-flex flex-column text-center px-5">
-                <h1 class="mb-5">Inscríbete</h1>
+                <h1 class="mb-5">{% if user.is_authenticated and user.rol == "Tutor" %}Inscríbete a nuestro campus de verano{% else %}Inscríbete{% endif %}</h1>
+                {% if user.is_authenticated and user.rol == "Usuario" %}
                 <p>
                     ¡Únete a nuestro equipo de baloncesto infantil y experimenta la emoción del juego en su 
                     máximo esplendor! 
@@ -103,6 +104,25 @@
                     ahora y descubre el apasionante mundo del baloncesto junto a nosotros!
                 </p>
                   <a class="btn btn-outline-success btn-custom align-self-center mt-3" role="button" href="{% url 'inscripciones' %}" >Inscripción</a>
+            {% else %}
+                <p>
+                    ¡Únete al emocionante mundo del baloncesto este verano con SAFA Club! 🏀 Sumérgete en un 
+                     ambiente lleno de diversión, aprendizaje y amistad mientras mejoras tus habilidades en la cancha. 
+                </p>
+                <br>
+                <p>
+                    Nuestro campus de verano ofrece una experiencia única donde podrás desarrollar tu talento bajo 
+                    la tutela de entrenadores expertos y conocer a otros apasionados del deporte. 
+                </p>    
+                <br>
+                <p>
+                    ¡No pierdas la oportunidad de vivir un verano inolvidable con SAFA Club! 
+                     ¡Inscripciones abiertas en Junio! 
+                </p>
+                <div class="container-fluid d-flex justify-content-center">   
+                <img class="img-fluid" src="{% static 'juegos-de-piscina-destacada.jpg' %}" alt="campus_verano" style="max-width: 300px; min-width: 200px" id="foto_carrusel">    
+                </div>     
+            {% endif %}
             </div>
             <div class="col d-flex flex-column text-center px-7 mt-5 mt-sm-0" id="derecha">
                 <h1 class="mb-5 mt-md-0 mt-sm-4">Próximos partidos</h1>
@@ -156,7 +176,7 @@ $(document).ready(function() {
             {% for p in partidos %}
             {
                 title: '{{ p.equipo1 }} vs {{ p.equipo2 }} horario: {{ p.hora }}',
-                start: '{{ p.fecha }}',
+                start: '{{ p.fecha|date:"Y-m-d" }}',
                 allDay: true
             },
             {% endfor %}

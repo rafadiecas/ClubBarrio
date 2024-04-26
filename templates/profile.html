@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil</title>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+</head>
+
+<style>
+    .text-bg-primary {
+        background-color: #00653D !important; /* Cambia este valor al color que desees */
+    }
+    .btn-primary {
+        background-color: #00653D !important; /* Cambia este valor al color que desees */
+        border-color: #00653D !important; /* Cambia este valor al color que desees */
+    }
+    .nav-item .nav-link.active {
+        background-color: #00653D !important; /* Cambia este valor al color que desees */
+        color: #fff !important; /* Cambia este valor al color que desees */
+    }
+    .nav-item .nav-link {
+        color: #00653D !important; /* Cambia este valor al color que desees */
+    }
+</style>
+<body>
+{% include "barra_navegacion.html" %}
+
+<!-- Profile 1 - Bootstrap Brain Component -->
+<section class="bg-light py-3 py-md-5 py-xl-8">
+
+
+  <div class="container">
+    <div class="row gy-4 gy-lg-0">
+      <div class="col-12 col-lg-4 col-xl-3">
+        <div class="row gy-4">
+          <div class="col-12">
+            <div class="card widget-card border-light shadow-sm">
+              <div class="card-header text-bg-primary">Bienvenido {{ perfil.usuario.username }}</div>
+              <div class="card-body">
+                <div class="text-center mb-3">
+                  <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" class="img-fluid rounded-circle" alt="INTRODUCE FOTO">
+                </div>
+                <h5 class="text-center mb-1">{{perfil.nombre}} {{ perfil.apellidos }}</h5>
+                <p class="text-center text-secondary mb-4">Project Manager</p>
+
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+      </div>
+      <div class="col-12 col-lg-8 col-xl-9">
+        <div class="card widget-card border-light shadow-sm">
+          <div class="card-body p-4">
+            <ul class="nav nav-tabs" id="profileTab" role="tablist">
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if not error_en_cambio_de_contraseña %}active{% endif %}" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview-tab-pane" type="button" role="tab" aria-controls="overview-tab-pane" aria-selected="true">General</button>
+                </li>
+
+                {% if perfil.usuario.rol == 'Tutor' or perfil.usuario.rol == 'Jugador' or perfil.usuario.rol == 'Entrenador' %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Cambiar Perfil</button>
+                </li>
+                {% endif %}
+                {% if perfil.usuario.rol == 'Tutor' or perfil.usuario.rol == 'Jugador' or perfil.usuario.rol == 'Entrenador' %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="email-tab" data-bs-toggle="tab" data-bs-target="#email-tab-pane" type="button" role="tab" aria-controls="email-tab-pane" aria-selected="false">Notificaciones</button>
+                </li>
+                {% endif %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if error_en_cambio_de_contraseña %}active{% endif %}" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">Password</button>
+                </li>
+            </ul>
+            <div class="tab-content pt-4" id="profileTabContent">
+              <div class="tab-pane fade show active" id="overview-tab-pane" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
+                <h5 class="mb-3">Perfil</h5>
+                {% if perfil.usuario.rol == 'Tutor' or perfil.usuario.rol == 'Jugador' or perfil.usuario.rol == 'Entrenador' %}
+                <div class="row g-0">
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                    <div class="p-2">Username</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.usuario.username }}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Nombre</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.nombre }}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Apellidos</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.apellidos }}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Fecha de Nacimiento</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.usuario.fecha_nacimiento }}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Email</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.usuario.email }}</div>
+                    </div>
+
+                    {% if perfil.usuario.rol == 'Tutor' %}
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Tarifa</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.tarifa.capitalize }}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Suscripcion</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{% if perfil.es_activo == 1 %}Activo{% else %}Inactivo{% endif %}</div>
+                    </div>
+                {% elif perfil.usuario.rol == 'Jugador' %}
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Suscripcion</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{% if perfil.es_activo == 1 %}Activo{% else %}Inactivo{% endif %}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Tutor</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.tutorLegal.nombre}} {{ perfil.tutorLegal.apellidos }}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Equipo</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.equipo.nombre }}</div>
+                    </div>
+
+              {% endif %}
+              </div>
+              {% else %}
+                    <div class="row g-0">
+                        <div class="col-12">
+                            <div class="p-2">¡INSCRÍBETE PARA GESTIONAR TU PERFIL!</div>
+                        </div>
+                    </div>
+                {% endif %}
+              </div>
+
+              <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                <form action="{% url 'perfil' %}" method="post" class="row gy-3 gy-xxl-4">
+                    {% csrf_token %}
+                    <div class="col-12">
+                        <div class="row gy-2">
+                            <label class="col-12 form-label m-0">Profile Image</label>
+                            <div class="col-12">
+                                <img src="{{ tutor.usuario.profile_image_url }}" class="img-fluid" alt="{{ perfil.nombre }}">
+                            </div>
+                            <div class="col-12">
+                                <a href="#!" class="d-inline-block bg-primary link-light lh-1 p-2 rounded">
+                                    <i class="bi bi-upload"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="inputFirstName" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="inputNombre" name="nombre" value="{{ perfil.nombre }}">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="inputLastName" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="inputApellidos" name="apellidos" value="{{ perfil.apellidos }}">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+              <div class="tab-pane fade" id="email-tab-pane" role="tabpanel" aria-labelledby="email-tab" tabindex="0">
+                <form action="#!">
+                  <fieldset class="row gy-3 gy-md-0">
+                    <legend class="col-form-label col-12 col-md-3 col-xl-2">Email Alerts</legend>
+                    <div class="col-12 col-md-9 col-xl-10">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="emailChange">
+                        <label class="form-check-label" for="emailChange">
+                          Email Changed
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="passwordChange">
+                        <label class="form-check-label" for="passwordChange">
+                          Password Changed
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="weeklyNewsletter">
+                        <label class="form-check-label" for="weeklyNewsletter">
+                          Weekly Newsletter
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="productPromotions">
+                        <label class="form-check-label" for="productPromotions">
+                          Product Promotions
+                        </label>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <div class="row">
+                    <div class="col-12">
+                      <button type="submit" class="btn btn-primary mt-4">Save Changes</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
+                <form action="{% url 'perfil_pass' %}" method="post" class="row gy-3 gy-xxl-4" id="form-id">
+                    {% csrf_token %}
+                    <div class="row gy-3 gy-xxl-4">
+                        <div class="col-12">
+                            <label for="currentPassword" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="currentPassword" name="password_actual">
+                        </div>
+                        <div class="col-12">
+                            <label for="newPassword" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" name="new_password">
+                        </div>
+                        <div class="col-12">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmacion_password">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Change Password</button>
+                        </div>
+                        <div id="error-messages">
+                            {% for e in errores %}
+                            <p>{{ e }}</p>
+                        {% endfor %}
+                        </div>
+                        <div id="success-messages"></div>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+<script src="https://unpkg.com/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(function() {
+    // Guarda la última pestaña activa en el almacenamiento local del navegador
+    $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+        localStorage.setItem('lastTab', $(this).attr('href'));
+    });
+
+    // Recupera la última pestaña activa del almacenamiento local
+    var lastTab = localStorage.getItem('lastTab');
+    if (lastTab) {
+        var tab = new bootstrap.Tab(document.querySelector('[href="' + lastTab + '"]'));
+        tab.show();
+    }
+});
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $('#form-id').on('submit', function(e) {
+    e.preventDefault();
+
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(data) {
+            // Si la contraseña se cambió con éxito, redirige al usuario a profile.html
+            window.location.href = "{% url 'perfil' %}";
+            // Muestra el mensaje de éxito en la página
+            $('#success-messages').html('<p>' + data.success + '</p>');
+            // Muestra un pop-up con el mensaje de éxito
+            alert(data.success);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            if (jqXHR.status === 400) {
+                var errores = jqXHR.responseJSON.errores;
+                // Muestra los errores en la página
+                $('#error-messages').html('');
+                errores.forEach(function(error) {
+                    $('#error-messages').append('<p>' + error + '</p>');
+                });
+            }
+        }
+    });
+});
+</script>
+
+</body>
+</html>
