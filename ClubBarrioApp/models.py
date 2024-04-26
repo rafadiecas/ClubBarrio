@@ -175,6 +175,7 @@ class Equipo(models.Model):
     escudo = models.CharField(max_length=500)
     categoria = models.ForeignKey(categoria, on_delete=models.DO_NOTHING)
     entrenadores = models.ManyToManyField(Entrenador)
+    es_safa = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nombre
