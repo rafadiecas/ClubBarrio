@@ -115,7 +115,7 @@
         <div class="row">
             <div class="col-md-4">
                 <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento:</label>
-                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{% if modo_edicion %} {{ jugador.usuario.fecha_nacimiento|date:'Y-m-d' }} {% else %} {{ fecha_nacimiento }} {% endif %}" required>
+                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{% if modo_edicion %}{{ jugador.usuario.fecha_nacimiento|date:'Y-m-d' }}{% else %}{{ fecha_nacimiento }}{% endif %}" required>
             </div>
         </div>
         
