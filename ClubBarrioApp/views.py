@@ -66,47 +66,50 @@ def validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirma
     return errores
 
 def perfil(request):
-    usuario = request.user
-    if usuario.rol == 'Tutor':
-        usuario = User.objects.get(id=usuario.id)
-        tutor = TutorLegal.objects.get(usuario_id=usuario.id)
-        jugadores = Jugador.objects.filter(tutorLegal_id=tutor.id)
+    usuario = User.objects.get(id=request.user.id)
+    roles_map = {
+        'Tutor': TutorLegal,
+        'Jugador': Jugador,
+        'Entrenador': Entrenador
+    }
+
+    if usuario.rol in roles_map:
+        perfil = roles_map[usuario.rol].objects.get(usuario_id=usuario.id)
 
         if request.method == 'POST':
-            tutor.nombre = request.POST.get('nombre')
-            tutor.apellidos = request.POST.get('apellidos')
-            tutor.save()
+            perfil.nombre = request.POST.get('nombre')
+            perfil.apellidos = request.POST.get('apellidos')
+            perfil.save()
 
-        return render(request, 'profile.html', {'tutor': tutor, 'jugadores': jugadores})
+        if usuario.rol == 'Jugador':
+            equipo = perfil.equipo  # Obtén el equipo asociado al perfil si el usuario es un jugador
+            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo})
+
+        return render(request, 'profile.html', {'perfil': perfil})
 
     return render(request, 'profile.html')
 
 def perfil_pass(request):
     usuario = request.user
     error_en_cambio_de_contraseña = False
-    if usuario.rol == 'Tutor':
-        usuario = User.objects.get(id=usuario.id)
-        tutor = TutorLegal.objects.get(usuario_id=usuario.id)
 
-        if request.method == 'POST':
-            contraseña_actual = request.POST.get('password_actual')
-            nueva_contraseña = request.POST.get('new_password')
-            confirmacion_contraseña = request.POST.get('confirmacion_password')
+    if request.method == 'POST':
+        contraseña_actual = request.POST.get('password_actual')
+        nueva_contraseña = request.POST.get('new_password')
+        confirmacion_contraseña = request.POST.get('confirmacion_password')
 
-            errores = validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirmacion_contraseña)
-            if errores:
-                error_en_cambio_de_contraseña = True
-                return JsonResponse({'errores': errores}, status=400)
+        errores = validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirmacion_contraseña)
+        if errores:
+            error_en_cambio_de_contraseña = True
+            return JsonResponse({'errores': errores}, status=400)
 
-            usuario.password = make_password(nueva_contraseña)
-            usuario.save()  # Guarda el usuario después de cambiar la contraseña
-            update_session_auth_hash(request, usuario)  # Actualiza la sesión del usuario
+        usuario.password = make_password(nueva_contraseña)
+        usuario.save()  # Guarda el usuario después de cambiar la contraseña
+        update_session_auth_hash(request, usuario)  # Actualiza la sesión del usuario
 
-            return JsonResponse({'success': 'Contraseña cambiada con éxito'})
+        return JsonResponse({'success': 'Contraseña cambiada con éxito'})
 
-        return render(request, 'profile.html', {'tutor': tutor, 'error_en_cambio_de_contraseña': error_en_cambio_de_contraseña})
-
-    return render(request, 'profile.html')
+    return render(request, 'profile.html', {'error_en_cambio_de_contraseña': error_en_cambio_de_contraseña})
 
 
 

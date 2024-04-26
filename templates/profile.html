@@ -36,12 +36,12 @@
         <div class="row gy-4">
           <div class="col-12">
             <div class="card widget-card border-light shadow-sm">
-              <div class="card-header text-bg-primary">Bienvenido, {{ tutor.nombre }}</div>
+              <div class="card-header text-bg-primary">Bienvenido, {{ perfil.nombre }}</div>
               <div class="card-body">
                 <div class="text-center mb-3">
                   <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" class="img-fluid rounded-circle" alt="INTRODUCE FOTO">
                 </div>
-                <h5 class="text-center mb-1">{{tutor.nombre}} {{ tutor.apellidos }}</h5>
+                <h5 class="text-center mb-1">{{perfil.nombre}} {{ perfil.apellidos }}</h5>
                 <p class="text-center text-secondary mb-4">Project Manager</p>
 
               </div>
@@ -75,49 +75,69 @@
                 <div class="row g-0">
                     <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
                     <div class="p-2">Username</div>
-                  </div>
-                  <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
-                    <div class="p-2">{{ tutor.usuario.username}}</div>
-                  </div>
-                  <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
-                    <div class="p-2">Nombre</div>
-                  </div>
-                  <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
-                    <div class="p-2">{{ tutor.nombre }}</div>
-                  </div>
-                  <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
-                    <div class="p-2">Apellidos</div>
-                  </div>
-                  <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
-                    <div class="p-2">{{ tutor.apellidos }}</div>
-                  </div>
-                <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
-                    <div class="p-2">Fecha de Nacimiento</div>
-                  </div>
-                  <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
-                    <div class="p-2">{{ tutor.usuario.fecha_nacimiento }}</div>
-                  </div>
-
-                  <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
-                    <div class="p-2">Tarifa</div>
-                  </div>
-                  <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
-                    <div class="p-2">{{ tutor.tarifa.capitalize}}</div>
-                  </div>
-                  <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
-                    <div class="p-2">Suscripcion</div>
-                  </div>
-                  <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
-                    <div class="p-2">{% if tutor.es_activo == 1 %}Activo{% else %}Inactivo{% endif %}</div>
-                  </div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.usuario.username }}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Nombre</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.nombre }}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Apellidos</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.apellidos }}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Fecha de Nacimiento</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.usuario.fecha_nacimiento }}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Email</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.usuario.email }}</div>
+                    </div>
 
 
-                  <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
-                    <div class="p-2">Email</div>
-                  </div>
-                  <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
-                    <div class="p-2">{{ tutor.usuario.email }}</div>
-                  </div>
+                  {% if perfil.usuario.rol == 'Tutor' %}
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Tarifa</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.tarifa.capitalize }}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Suscripcion</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{% if perfil.es_activo == 1 %}Activo{% else %}Inactivo{% endif %}</div>
+                    </div>
+                {% elif perfil.usuario.rol == 'Jugador' %}
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Suscripcion</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{% if perfil.es_activo == 1 %}Activo{% else %}Inactivo{% endif %}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Tutor</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.tutorLegal.nombre}} {{ perfil.tutorLegal.apellidos }}</div>
+                    </div>
+                    <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
+                        <div class="p-2">Equipo</div>
+                    </div>
+                    <div class="col-7 col-md-9 bg-light border-start border-bottom border-white border-3">
+                        <div class="p-2">{{ perfil.equipo.nombre }}</div>
+                    </div>
+                {% endif %}
                 </div>
               </div>
               <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
@@ -127,7 +147,7 @@
                         <div class="row gy-2">
                             <label class="col-12 form-label m-0">Profile Image</label>
                             <div class="col-12">
-                                <img src="{{ tutor.usuario.profile_image_url }}" class="img-fluid" alt="{{ tutor.nombre }}">
+                                <img src="{{ tutor.usuario.profile_image_url }}" class="img-fluid" alt="{{ perfil.nombre }}">
                             </div>
                             <div class="col-12">
                                 <a href="#!" class="d-inline-block bg-primary link-light lh-1 p-2 rounded">
@@ -138,11 +158,11 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <label for="inputFirstName" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="inputNombre" name="nombre" value="{{ tutor.nombre }}">
+                        <input type="text" class="form-control" id="inputNombre" name="nombre" value="{{ perfil.nombre }}">
                     </div>
                     <div class="col-12 col-md-6">
                         <label for="inputLastName" class="form-label">Apellidos</label>
-                        <input type="text" class="form-control" id="inputApellidos" name="apellidos" value="{{ tutor.apellidos }}">
+                        <input type="text" class="form-control" id="inputApellidos" name="apellidos" value="{{ perfil.apellidos }}">
                     </div>
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
