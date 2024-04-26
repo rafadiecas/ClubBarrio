@@ -75,8 +75,12 @@
         </a>
       {% if user.is_authenticated and user.rol == "Jugador" %}
           <li class="nav-item">
-          <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.usuario.id %}">Estadísticas</a>
-        </li>
+          <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
+          </li>
+      {% elif user.is_authenticated and user.rol == "Tutor" and jugador != none %}
+           <li class="nav-item">
+          <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
+          </li>
       {% else %}
           <li class="nav-item">
           <a class="nav-link" href="#">Tienda</a>

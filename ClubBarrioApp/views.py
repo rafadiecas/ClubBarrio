@@ -20,6 +20,8 @@ def pagina_inicio(request):
 def pagina_noticias(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     page = request.GET.get('page', 1)
+    usuario = request.user
+    jugador = Jugador.objects.get(usario=usuario)
 
     try:
         paginator = Paginator(list_noticias, 3)
@@ -41,7 +43,7 @@ def pagina_noticias(request):
             'paginator': paginator,
             'hijos': hijos
         }
-        return render(request, 'Noticias.html', data)
+        return render(request, 'Noticias.html', data, {'jugador': jugador})
 
     return render(request, 'Noticias.html', data)
 
@@ -567,12 +569,11 @@ def inicio_jugador(request, id=None):
     list_noticias = Noticias.objects.all().order_by('-id')
     list_noticias = list_noticias[0:3]
     hijos=[]
+    usuario = request.user
 
-    if (id is None):
-        usuario = request.user
+    if (usuario.rol == 'Jugador'):
         jugador = Jugador.objects.get(usuario_id=usuario.id)
     else:
-        usuario = request.user
         tutor = TutorLegal.objects.get(usuario_id=usuario.id)
         hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
         jugador = Jugador.objects.get(usuario_id=id)
@@ -605,6 +606,15 @@ def inicio_jugador(request, id=None):
     return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos})
 
 def estadisticas_jugador(request, id):
-    estadisticas_jugador = EstadisticasJugador.objects.get(id=id)
-    return render(request, 'estadisticas_jugador.html', {'estadisticas_jugador': estadisticas_jugador})
+    usuario = request.user
+    hijos=[]
+    list_noticias = Noticias.objects.all().order_by('-id')
+    list_noticias = list_noticias[0:3]
+    if usuario.rol == 'Tutor':
+        tutor = TutorLegal.objects.get(usuario_id=usuario.id)
+        hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+    jugador = Jugador.objects.get(id=id)
+    estadisticas_jugador = EstadisticasJugador.objects.filter(jugador=jugador)
+
+    return render(request, 'estadisticas_jugador.html', {'estadisticas_jugador': estadisticas_jugador, 'hijos': hijos ,'jugador': jugador, 'list_noticias': list_noticias})
 
