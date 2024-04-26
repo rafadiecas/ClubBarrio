@@ -59,6 +59,13 @@
             z-index: 9999;
             background-color:  #00653d;
         }
+        .nav-item .nav-link.active {
+        background-color: #00653D !important; /* Cambia este valor al color que desees */
+        color: #fff !important; /* Cambia este valor al color que desees */
+    }
+        .nav-item .nav-link {
+            color: #00653D !important; /* Cambia este valor al color que desees */
+        }
         
     </style>
      <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
@@ -83,10 +90,10 @@
             <div class="col d-flex flex-column text-center px-5">
     <ul class="nav nav-tabs d-flex " id="myTab" role="tablist">
         <li class="nav-item flex-grow-1" role="presentation">
-            <button class="nav-link active w-100 py-3" id="inscripcion-tab" data-bs-toggle="tab" data-bs-target="#inscripcion" type="button" role="tab" aria-controls="inscripcion" aria-selected="true">Inscripción</button>
+            <button class="nav-link active w-100 py-4" id="inscripcion-tab" data-bs-toggle="tab" data-bs-target="#inscripcion" type="button" role="tab" aria-controls="inscripcion" aria-selected="true">Inscripción</button>
         </li>
         <li class="nav-item flex-grow-1" role="presentation">
-            <button class="nav-link w-100 py-3" id="equipos-tab" data-bs-toggle="tab" data-bs-target="#equipos" type="button" role="tab" aria-controls="equipos" aria-selected="false">Equipos disponibles</button>
+            <button class="nav-link w-100 py-4" id="equipos-tab" data-bs-toggle="tab" data-bs-target="#equipos" type="button" role="tab" aria-controls="equipos" aria-selected="false">Equipos disponibles</button>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
