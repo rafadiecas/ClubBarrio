@@ -132,7 +132,7 @@
 
     <div class="row">
         <div class="col-12 text-center">
-            <a href="{% url 'gestion_familia' %}" role="button" class="btn btn-secondary mt-3">Volver</a>
+            <a href="{% url 'gestion_familia' %}" role="button" class="btn btn-secondary mt-3 {% if edicion_equipo %}d-none{% endif %}">Volver</a>
         </div>
     </div>
         

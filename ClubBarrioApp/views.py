@@ -710,7 +710,6 @@ def crea_hijos(request):
 
             hijo.save()
 
-
             return render(request, 'crear_hijo.html', {'equipos': lista_equipos, 'edicion_equipo': True, 'nombre': nombre, 'apellidos': apellidos, 'hijo': hijo})
 
         jugador.usuario = User.objects.get(id=request.POST.get('hijo'))
@@ -782,3 +781,9 @@ def edita_hijo(request, id):
         jugador.equipo = Equipo.objects.get(id=int(request.POST.get('tarifa_seleccionada')))
         jugador.save()
         return redirect('gestion_familia')
+
+def elimina_hijo_atras(request, id):
+    usuario = User.objects.get(id=id)
+    usuario.delete()
+
+    return redirect('crear_hijo')
