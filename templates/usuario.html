@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+{% include "barra_navegacion.html" %}
 <head>
     <title>Pagina de Usuario</title>
 
@@ -62,14 +63,12 @@
         
     </style>
      <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/locale/es.js'></script>
 
 </head>
 
-{% include "barra_navegacion.html" %}
+
 
 <body>
      <div id="widget_tiempo" class="py-2 rounded-start d-none d-sm-block">

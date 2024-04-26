@@ -711,7 +711,7 @@ def crea_hijos(request):
             hijo.save()
 
 
-            return render(request, 'crear_hijo.html', {'equipos': lista_equipos, 'edicion_equipo': True, 'nombre': nombre, 'apellidos': apellidos, 'hijo': hijo,})
+            return render(request, 'crear_hijo.html', {'equipos': lista_equipos, 'edicion_equipo': True, 'nombre': nombre, 'apellidos': apellidos, 'hijo': hijo})
 
         jugador.usuario = User.objects.get(id=request.POST.get('hijo'))
         jugador.nombre = request.POST.get('nombre-jug')
