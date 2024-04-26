@@ -22,10 +22,11 @@
     background-color: #00653D;
 }
 .navbar .navbar-nav .nav-link {
-  color: #fff;
+  color: #fff !important;
   font-size: 1.1em;
   padding: 0.5em 1em;
 }
+
 @media screen and (min-width: 768px) {
   .navbar-brand img {
     width: 100px;
@@ -75,10 +76,14 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Tienda</a>
         </li>
-          {% if user.is_authenticated %} 
+          {% if user.is_authenticated %}
+              <li class="nav-item">
+              <a class="nav-link" href="{% url 'perfil' %}" >Mi perfil</a>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'desloguear' %}" >Salir</a>
             </li>
+
+
           {% else %}
               <li class="nav-item">
                   <a class="nav-link" href="{% url 'login' %}" >Login</a>
