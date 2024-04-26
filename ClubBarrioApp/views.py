@@ -7,7 +7,10 @@ import re
 from .models import *
 from django.core.paginator import Paginator
 from django.http import Http404
+from django.http import JsonResponse
 from .decorator import user_required, rol_requerido
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 
 
 # Create your views here.
@@ -55,14 +58,61 @@ def usuarios(request):
     lista_usuarios = User.objects.all()
     return render(request, 'lista_usuarios.html', {'usuarios': lista_usuarios})
 
+def validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirmacion_contraseña):
+    errores = []
+    if not usuario.check_password(contraseña_actual):
+        errores.append("La contraseña actual es incorrecta")
+    if nueva_contraseña != confirmacion_contraseña:
+        errores.append("Las contraseñas no coinciden")
+    return errores
+
 def perfil(request):
-    usuario = request.user
-    if usuario.rol == 'Tutor':
-        usuario = User.objects.get(id=usuario.id)
-        tutor = TutorLegal.objects.get(usuario_id=usuario.id)
-        jugadores = Jugador.objects.filter(tutorLegal_id=tutor.id)
-        return render(request, 'profile.html', {'tutor': tutor, 'jugadores': jugadores})
+    usuario = User.objects.get(id=request.user.id)
+    roles_map = {
+        'Tutor': TutorLegal,
+        'Jugador': Jugador,
+        'Entrenador': Entrenador
+    }
+
+    if usuario.rol in roles_map:
+        perfil = roles_map[usuario.rol].objects.get(usuario_id=usuario.id)
+
+        if request.method == 'POST':
+            perfil.nombre = request.POST.get('nombre')
+            perfil.apellidos = request.POST.get('apellidos')
+            perfil.save()
+
+        if usuario.rol == 'Jugador':
+            equipo = perfil.equipo  # Obtén el equipo asociado al perfil si el usuario es un jugador
+            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo})
+
+        return render(request, 'profile.html', {'perfil': perfil})
+
     return render(request, 'profile.html')
+
+def perfil_pass(request):
+    usuario = request.user
+    error_en_cambio_de_contraseña = False
+
+    if request.method == 'POST':
+        contraseña_actual = request.POST.get('password_actual')
+        nueva_contraseña = request.POST.get('new_password')
+        confirmacion_contraseña = request.POST.get('confirmacion_password')
+
+        errores = validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirmacion_contraseña)
+        if errores:
+            error_en_cambio_de_contraseña = True
+            return JsonResponse({'errores': errores}, status=400)
+
+        usuario.password = make_password(nueva_contraseña)
+        usuario.save()  # Guarda el usuario después de cambiar la contraseña
+        update_session_auth_hash(request, usuario)  # Actualiza la sesión del usuario
+
+        return JsonResponse({'success': 'Contraseña cambiada con éxito'})
+
+    return render(request, 'profile.html', {'error_en_cambio_de_contraseña': error_en_cambio_de_contraseña})
+
+
 
 def new_user(request):
     Users = User.objects.all()
