@@ -23,8 +23,7 @@ def pagina_inicio(request):
 def pagina_noticias(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     page = request.GET.get('page', 1)
-    usuario = request.user
-    jugador = Jugador.objects.get(usario=usuario)
+
 
     try:
         paginator = Paginator(list_noticias, 3)
@@ -42,13 +41,10 @@ def pagina_noticias(request):
         if usuario.rol == 'Tutor':
             tutor = TutorLegal.objects.get(usuario_id=usuario.id)
             hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
-            data = {
-                'entity': list_noticias,
-                'paginator': paginator,
-                'hijos': hijos
-            }
-            return render(request, 'Noticias.html', data)
-
+            data['hijos'] = hijos
+        elif usuario.rol == 'Jugador':
+            jugador = Jugador.objects.get(usuario_id=usuario.id)
+            data['jugador'] = jugador
     return render(request, 'Noticias.html', data)
 
 #@user_required
@@ -87,7 +83,8 @@ def perfil(request):
 
         if usuario.rol == 'Jugador':
             equipo = perfil.equipo  # Obtén el equipo asociado al perfil si el usuario es un jugador
-            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo})
+            jugador = Jugador.objects.get(usuario_id=usuario.id)
+            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo, 'jugador':jugador})
 
         return render(request, 'profile.html', {'perfil': perfil})
 
@@ -787,8 +784,7 @@ def inicio_jugador(request, id=None):
     list_noticias = list_noticias[0:3]
     hijos=[]
     usuario = request.user
-
-    if (usuario.rol == 'Jugador'):
+    if usuario.rol == 'Jugador':
         jugador = Jugador.objects.get(usuario_id=usuario.id)
     else:
         tutor = TutorLegal.objects.get(usuario_id=usuario.id)

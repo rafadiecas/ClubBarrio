@@ -64,7 +64,15 @@
               {% endfor %}
           </ul>
           </div>
+          {% if  jugador != none %}
+           <li class="nav-item">
+          <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
+          </li>
+              {% endif %}
       {% elif  user.is_authenticated and user.rol == "Jugador"%}
+          <li class="nav-item">
+          <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
+          </li>
       {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'tarifas' %}">Tarifas</a>
@@ -73,14 +81,8 @@
         <a class="navbar-brand d-none d-md-block" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% elif user.rol == "Jugador" %} {% url 'inicio_jugador' %} {% else %} {% url 'inicio' %} {% endif %} ">
           <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="">
         </a>
+
       {% if user.is_authenticated and user.rol == "Jugador" %}
-          <li class="nav-item">
-          <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
-          </li>
-      {% elif user.is_authenticated and user.rol == "Tutor" and jugador != none %}
-           <li class="nav-item">
-          <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
-          </li>
       {% else %}
           <li class="nav-item">
           <a class="nav-link" href="#">Tienda</a>
