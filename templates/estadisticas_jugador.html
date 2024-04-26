@@ -1,7 +1,7 @@
 {% load static %}
 {% include 'barra_navegacion.html' %}
 <head>
-    <title>Lista Hijos</title>
+    <title>Lista Estadisticas jugador</title>
     <style>
     .btn-custom {
         color: #00653d; /* Color del texto azul */
@@ -11,14 +11,14 @@
         overflow-y: auto; /* Agrega un scroll vertical */
     }
     </style>
-    
+
 </head>
 <div class="container-fluid d-flex flex-column align-items-center">
     <div class="container w-75 d-flex justify-content-start ">
-        <h1>Lista Jugadores:</h1>
+        <h1>Lista de estadísticas jugadores:</h1>
     </div>
     <div class="container w-75 d-flex justify-content-between align-items-center ">
-        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_hijo' %}" >Registrar Jugador</a>
+        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_estadisticas_jugador' %}" >Crear estadística</a>
 
         <div class="input-group w-25 h-50 ">
           <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;" id="inputBuscar">
@@ -32,25 +32,28 @@
             <table class="table" id="tabla">
                 <thead>
                 <tr>
-                    <th scope="col">Usuario</th>
-                   <th scope="col">Nombre</th>
-                  <th scope="col">Apellidos</th>
-                  <th scope="col">Equipo</th>
-                    <th scope="col">Categoria</th>
-                  <th></th>
+                  <th scope="col">Jornada</th>
+                  <th scope="col">Jugador</th>
+                  <th scope="col">Minutos</th>
+                  <th scope="col">Puntos</th>
+                  <th scope="col">Asistencias</th>
+                  <th scope="col">Rebotes</th>
+                  <th scope="col">Faltas</th>
+                  <th scope="col">Partido</th>
+
                 </tr>
               </thead>
               <tbody >
-              {% for h in hijos %}
+              {% for ej in estadisticas_jugador %}
                 <tr>
-                    <th scope="row">{{ h.usuario.username }}</th>
-                  <td>{{ h.nombre }}</td>
-                    <td>{{ h.apellidos }}</td>
-                    <td>{{ h.equipo.nombre }}</td>
-                    <td>{{ h.equipo.categoria }}</td>
-                    <td>
-                        <a href="{% url 'edita_hijo' id=h.id %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>
-                        <a href="{% url 'elimina_hijo' id=h.id %}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>
+                  <th scope="row">{{ ej.partido.jornada }}</th>
+                  <td>{{ ej.jugador }}</td>
+                  <td>{{ ej.minutos }}</td>
+                  <td>{{ ej.puntos }}</td>
+                  <td>{{ ej.asistencias    }}</td>
+                  <td>{{ ej.rebotes}}</td>
+                  <td>{{ ej.faltas}}</td>
+                  <td>{{ ej.partido.equipo1}} vs {{ lej.partido.equipo2}}</td>
                 </tr>
               {% endfor %}
               </tbody>

@@ -1,9 +1,8 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-{% include "barra_navegacion.html" %}
 <head>
-    <title>Pagina de Usuario</title>
+    <title>Pagina de Inicio</title>
 
     <style>
         .carousel-inner {
@@ -63,12 +62,14 @@
         
     </style>
      <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/locale/es.js'></script>
 
 </head>
 
-
+{% include "barra_navegacion.html" %}
 
 <body>
      <div id="widget_tiempo" class="py-2 rounded-start d-none d-sm-block">
@@ -78,50 +79,36 @@
          <img src="{% static '6207a0fe26ab99000460a356.png' %}" alt="weather" style="display: none;max-width: 90px; padding-inline: 10px"/>
     </div>
     <div class="container-fluid" id="contenedor">
-        <div class="row row-cols-md-2 row-cols-lg-2 row-cols-sm-1 row-cols-1 mb-3">
+        <div class="row row-cols-md-2 row-cols-lg-2 row-cols-sm-1 row-cols-1 mb-3 d-flex align-items-start">
             <div class="col d-flex flex-column text-center px-5">
-                <h1 class="mb-5">{% if user.is_authenticated and user.rol == "Tutor" %}Inscríbete a nuestro campus de verano{% else %}Inscríbete{% endif %}</h1>
-                {% if user.is_authenticated and user.rol == "Usuario" %}
-                <p>
-                    ¡Únete a nuestro equipo de baloncesto infantil y experimenta la emoción del juego en su 
-                    máximo esplendor! 
-                </p>
-                <br>
-                <p>
-                    En nuestra familia deportiva, no solo aprenderás las habilidades fundamentales 
-                    del baloncesto, sino que también cultivarás la camaradería, el trabajo en equipo y la determinación.
-                </p>
-                <br>
-                <p>
-                    Nuestros entrenadores están comprometidos a ayudarte a crecer como jugador y como persona, mientras te 
-                    diviertes y alcanzas tus metas en la cancha. 
-                </p>
-                <br>
-                <p>
-                    ¡Ven y forma parte de esta aventura donde cada pase, cada 
-                    tiro y cada victoria son momentos inolvidables que compartirás con tus compañeros de equipo! ¡Inscríbete 
-                    ahora y descubre el apasionante mundo del baloncesto junto a nosotros!
-                </p>
-                  <a class="btn btn-outline-success btn-custom align-self-center mt-3" role="button" href="{% url 'inscripciones' %}" >Inscripción</a>
-            {% else %}
-                <p>
-                    ¡Únete al emocionante mundo del baloncesto este verano con SAFA Club! 🏀 Sumérgete en un 
-                     ambiente lleno de diversión, aprendizaje y amistad mientras mejoras tus habilidades en la cancha. 
-                </p>
-                <br>
-                <p>
-                    Nuestro campus de verano ofrece una experiencia única donde podrás desarrollar tu talento bajo 
-                    la tutela de entrenadores expertos y conocer a otros apasionados del deporte. 
-                </p>    
-                <br>
-                <p>
-                    ¡No pierdas la oportunidad de vivir un verano inolvidable con SAFA Club! 
-                     ¡Inscripciones abiertas en Junio! 
-                </p>
-                <div class="container-fluid d-flex justify-content-center">   
-                <img class="img-fluid" src="{% static 'juegos-de-piscina-destacada.jpg' %}" alt="campus_verano" style="max-width: 300px; min-width: 200px" id="foto_carrusel">    
-                </div>     
-            {% endif %}
+            <h1 class="mb-5 mt-md-0 mt-sm-4" >Clasificación</h1>
+                <div class="table-responsive">
+                <table class="table" id="tabla" >
+                    <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Nombre equipo</th>
+                      <th scope="col">PG</th>
+                      <th scope="col">PJ</th>
+                      <th scope="col">Total puntos</th>
+
+                    </tr>
+                  </thead>
+                  <tbody >
+                  {% for e in clasificacion %}
+                    <tr>
+                        <td {% if e.nombre == jugador.equipo.nombre %} style="font-weight: 700" {% endif %} >{{ e.nombre}}</td>
+                        <td>{{ e.partidos_ganados }}</td>
+                      <td>{{ e.partidos_jugados }}</td>
+                      <td>{{ e.diferencia_puntos }}</td>
+
+
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+
+            </div>
             </div>
             <div class="col d-flex flex-column text-center px-7 mt-5 mt-sm-0" id="derecha">
                 <h1 class="mb-5 mt-md-0 mt-sm-4">Próximos partidos</h1>
@@ -175,7 +162,7 @@ $(document).ready(function() {
             {% for p in partidos %}
             {
                 title: '{{ p.equipo1 }} vs {{ p.equipo2 }} horario: {{ p.hora }}',
-                start: '{{ p.fecha|date:"Y-m-d" }}',
+                start: '{{ p.fecha }}',
                 allDay: true
             },
             {% endfor %}
@@ -194,6 +181,21 @@ $(document).ready(function() {
         widgetTiempo.children[1].style.display = widgetTiempo.children[1].style.display === 'none' ? 'block' : 'none';
     }
 </script>
+<script>
+    // Función para agregar números de línea a cada fila
+    function agregarNumerosLinea() {
+        var tabla = document.getElementById("tabla");
+        var filas = tabla.getElementsByTagName("tr");
 
+        for (var i = 1; i < filas.length; i++) {
+            var celdaNumeroLinea = document.createElement("td");
+            celdaNumeroLinea.textContent = i; // El número de línea comienza desde 0
+            filas[i].insertBefore(celdaNumeroLinea, filas[i].firstChild);// Insertar celda al inicio de la fila
+        }
+    }
+
+    // Llamar a la función al cargar la página
+    window.onload = agregarNumerosLinea;
+</script>
 </body>
 </html>

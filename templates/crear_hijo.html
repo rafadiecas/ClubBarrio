@@ -53,15 +53,16 @@
         <div class="row rol-cols-md-3 justify-content-center">
             {% for e in equipos %}
             <div class="col-md-3 col-sm-6 col-xs-12 mb-4">
-                <div class="card rounded-3 shadow-sm" data-equipo-id="{{ e.id }}">
-                    <img src="{{ e.escudo }}" class="card-img-top " alt="..." style="max-width: 200px">
+                <div class="card rounded-3 shadow-sm" data-equipo-id="{{ e.equipo.id }}">
+                    <img src="{{ e.equipo.escudo }}" class="card-img-top mt-3 " alt="..." style="max-width: 200px">
                     <div class="card-body text-center">
                         <ul class="list-unstyled mt-3 mb-4">
-                            <li> <b>Categoria:</b> {{ e.categoria }}</li>
+                            <li> <b>Categoria:</b> {{ e.equipo.categoria }}</li>
+                             <li> <b>Plazas disponibles:</b> {{ e.plazas_libres }}</li>
                         </ul>
                     </div>
                     <div class="card-header py-3">
-                        <h4 class="my-0 fw-normal">{{ e.nombre }}</h4>
+                        <h4 class="my-0 fw-normal">{{ e.equipo.nombre }}</h4>
                     </div>
                 </div>
             </div>
@@ -92,7 +93,7 @@
             </div>
             <div class="col-md-4" id="apellidosField">
                 <label for="apellidos" class="form-label">Apellidos:</label>
-                <input type="text" name="apellidos" id="apellidos" class="form-control" value="{% if modo_edicion %} {{ jugador.apellidos }} {% else %} {{ apellidos }} {% endif %}">
+                <input type="text" name="apellidos" id="apellidos" class="form-control" value="{% if modo_edicion %}{{ jugador.apellidos }}{% else %}{{ apellidos }}{% endif %}">
             </div>
         </div>
 
@@ -114,7 +115,7 @@
         <div class="row">
             <div class="col-md-4">
                 <label for="fecha_nacimiento" class="form-label">Fecha de nacimiento:</label>
-                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{% if modo_edicion %} {{ jugador.usuario.fecha_nacimiento|date:'Y-m-d' }} {% else %} {{ fecha_nacimiento }} {% endif %}" required>
+                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{% if modo_edicion %}{{ jugador.usuario.fecha_nacimiento|date:'Y-m-d' }}{% else %}{{ fecha_nacimiento }}{% endif %}" required>
             </div>
         </div>
         
@@ -131,7 +132,7 @@
 
     <div class="row">
         <div class="col-12 text-center">
-            <a href="{% url 'gestion_familia' %}" role="button" class="btn btn-secondary mt-3">Volver</a>
+            <a href="{% url 'gestion_familia' %}" role="button" class="btn btn-secondary mt-3 {% if edicion_equipo %}d-none{% endif %}">Volver</a>
         </div>
     </div>
         
