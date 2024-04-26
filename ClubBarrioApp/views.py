@@ -693,6 +693,15 @@ def crea_hijos(request):
                     tutor.tarifa == 'PREMIUM' and len(hijos) >= 5):
                 errors.append("No puedes añadir más hijos")
 
+            for equipo in Equipo.objects.all():
+                if categoria in equipo.categoria.tipo and equipo.es_safa:
+                    plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
+                    if plazas_libres > 0:
+                        dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
+                        lista_equipos.append(dict)
+            if len(lista_equipos) == 0:
+                errors.append("No hay plazas disponibles en ningún equipo")
+
             if len(errors) != 0:
                 return render(request, 'crear_hijo.html',
                               {'equipos': lista_equipos, 'edicion_equipo': False, 'fecha_nacimiento': fecha_nacimiento,
@@ -702,9 +711,6 @@ def crea_hijos(request):
             hijo.save()
 
 
-            for equipo in Equipo.objects.all():
-                if categoria in equipo.categoria.tipo:
-                    lista_equipos.append(equipo)
             return render(request, 'crear_hijo.html', {'equipos': lista_equipos, 'edicion_equipo': True, 'nombre': nombre, 'apellidos': apellidos, 'hijo': hijo})
 
         jugador.usuario = User.objects.get(id=request.POST.get('hijo'))
@@ -762,7 +768,9 @@ def edita_hijo(request, id):
 
             for equipo in Equipo.objects.all():
                 if categoria in equipo.categoria.tipo and equipo.es_safa:
-                    lista_equipos.append(equipo)
+                    plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
+                    dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
+                    lista_equipos.append(dict)
             return render(request, 'crear_hijo.html',
                           {'equipos': lista_equipos, 'edicion_equipo': True,'jugador': jugador})
 
