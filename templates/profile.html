@@ -111,8 +111,7 @@
                         <div class="p-2">{{ perfil.usuario.email }}</div>
                     </div>
 
-
-                  {% if perfil.usuario.rol == 'Tutor' %}
+                    {% if perfil.usuario.rol == 'Tutor' %}
                     <div class="col-5 col-md-3 bg-light border-bottom border-white border-3">
                         <div class="p-2">Tarifa</div>
                     </div>
@@ -146,14 +145,14 @@
                     </div>
 
               {% endif %}
-                {% else %}
+              </div>
+              {% else %}
                     <div class="row g-0">
                         <div class="col-12">
                             <div class="p-2">¡INSCRÍBETE PARA GESTIONAR TU PERFIL!</div>
                         </div>
                     </div>
                 {% endif %}
-
               </div>
 
               <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
