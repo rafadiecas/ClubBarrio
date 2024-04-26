@@ -345,7 +345,10 @@ def crear_equipo(request):
         equipo_nuevo= Equipo()
         equipo_nuevo.nombre= request.POST.get('nombre')
         equipo_nuevo.escudo = request.POST.get('escudo')
-        equipo_nuevo.es_safa = request.POST.get('is_safa')
+        if request.POST.get('is_safa') == 'on':
+            equipo_nuevo.es_safa = True
+        else:
+            equipo_nuevo.es_safa = False
         equipo_nuevo.categoria= categoria.objects.get(id=int(request.POST.get('categoria')))
         equipo_nuevo.save()
 
@@ -361,11 +364,16 @@ def editar_equipo(request, id):
         lista_categorias = categoria.objects.all()
         entrenadores = Entrenador.objects.all()
         id_entrenadores = equipo.entrenadores.values_list('id', flat=True)
-        return render(request, 'crear_equipo.html', {'equipo':equipo, 'id_entrenadores':id_entrenadores, 'lista_categorias': lista_categorias, 'entrenadores': entrenadores})
+        es_safa = equipo.es_safa
+        return render(request, 'crear_equipo.html', {'equipo':equipo, 'id_entrenadores':id_entrenadores, 'lista_categorias': lista_categorias, 'entrenadores': entrenadores, 'es_safa': es_safa})
     else:
         equipo.nombre = request.POST.get('nombre')
         equipo.escudo = request.POST.get('escudo')
         equipo.categoria = categoria.objects.get(id=int(request.POST.get('categoria')))
+        if request.POST.get('is_safa') == 'on':
+            equipo.es_safa = True
+        else:
+            equipo.es_safa = False
         equipo.save()
 
         lista_entrenadores = request.POST.getlist('entrenadores')
@@ -753,7 +761,7 @@ def edita_hijo(request, id):
             jugador.save()
 
             for equipo in Equipo.objects.all():
-                if categoria in equipo.categoria.tipo:
+                if categoria in equipo.categoria.tipo and equipo.es_safa:
                     lista_equipos.append(equipo)
             return render(request, 'crear_hijo.html',
                           {'equipos': lista_equipos, 'edicion_equipo': True,'jugador': jugador})
