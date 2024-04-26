@@ -761,16 +761,21 @@ def edita_hijo(request, id):
             else:
                 errors.append("El jugador debe ser menor de 20 años")
 
+            for equipo in Equipo.objects.all():
+                if categoria in equipo.categoria.tipo and equipo.es_safa:
+                    plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
+                    if plazas_libres > 0:
+                        dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
+                        lista_equipos.append(dict)
+            if len(lista_equipos) == 0:
+                errors.append("No hay plazas disponibles en ningún equipo")
+
             if len(errors) != 0:
                 return render(request, 'crear_hijo.html', {'jugador': jugador,'modo_edicion': True, 'fecha_nacimiento': fecha_nacimiento,'errores': errors, 'edicion_equipo': False})
 
             jugador.save()
 
-            for equipo in Equipo.objects.all():
-                if categoria in equipo.categoria.tipo and equipo.es_safa:
-                    plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
-                    dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
-                    lista_equipos.append(dict)
+
             return render(request, 'crear_hijo.html',
                           {'equipos': lista_equipos, 'edicion_equipo': True,'jugador': jugador})
 
