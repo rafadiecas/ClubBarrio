@@ -64,6 +64,8 @@ urlpatterns = [
     path('usuario/gestion_familia/editar/<int:id>/', edita_hijo, name='edita_hijo'),
     path('usuario/perfil/', perfil, name='perfil'),
     path('usuario/perfil/pass/', perfil_pass, name='perfil_pass'),
+    path('usuario/gestion_familia/eliminar_atras/<int:id>/', elimina_hijo_atras, name='elimina_hijo_atras'),
+
 
 
 ]

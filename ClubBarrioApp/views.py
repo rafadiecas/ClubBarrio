@@ -24,7 +24,6 @@ def pagina_noticias(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     page = request.GET.get('page', 1)
 
-
     try:
         paginator = Paginator(list_noticias, 3)
         list_noticias = paginator.page(page)
@@ -244,8 +243,6 @@ def logear(request):
 
             elif user.rol == "Usuario" or user.rol == "Tutor":
                 return redirect('usuario')
-            elif user.rol == "Jugador":
-                return redirect('inicio_jugador')
 
             # Redirección tras un login exitoso
             return redirect('inicio')
