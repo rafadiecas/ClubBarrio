@@ -362,6 +362,7 @@ def crear_equipo(request):
         equipo_nuevo= Equipo()
         equipo_nuevo.nombre= request.POST.get('nombre')
         equipo_nuevo.escudo = request.POST.get('escudo')
+        equipo_nuevo.es_safa = request.POST.get('is_safa')
         equipo_nuevo.categoria= categoria.objects.get(id=int(request.POST.get('categoria')))
         equipo_nuevo.save()
 
