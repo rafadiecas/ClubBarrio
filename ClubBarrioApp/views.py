@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.hashers import make_password
+from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
 import re
@@ -18,6 +19,8 @@ from django.contrib.auth import update_session_auth_hash
 def pagina_inicio(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     list_noticias = list_noticias[0:3]
+    #mail = EmailMessage('Asunto', 'Cuerpo del mensaje', to=['safaclubbasket@gmail.com'])
+    #mail.send()
     return render(request, 'inicio.html', {'noticias': list_noticias})
 
 def pagina_noticias(request):
