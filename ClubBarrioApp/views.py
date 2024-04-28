@@ -641,9 +641,7 @@ def lista_hijos(request):
 def crea_hijos(request):
     usuario = request.user
     tutor = TutorLegal.objects.get(usuario_id=usuario.id)
-    categoria = ""
     hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
-    errors = []
     hijo = User()
     jugador = Jugador()
     if request.method == 'GET':
@@ -674,8 +672,6 @@ def crea_hijos(request):
                 hijo.password = make_password(password)
 
             categoria = calculador_categoria(diferencia, errors)
-
-
 
             if (tutor.tarifa == 'BASE' and len(hijos) >= 1) or (tutor.tarifa == 'PLUS' and len(hijos) >= 3) or (
                     tutor.tarifa == 'PREMIUM' and len(hijos) >= 5):
@@ -740,14 +736,7 @@ def edita_hijo(request, id):
 
             categoria = calculador_categoria(diferencia, errors)
 
-            for equipo in Equipo.objects.all():
-                if categoria in equipo.categoria.tipo and equipo.es_safa:
-                    plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
-                    if plazas_libres > 0:
-                        dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
-                        lista_equipos.append(dict)
-            if len(lista_equipos) == 0:
-                errors.append("No hay plazas disponibles en ningún equipo")
+            filtro_equipos_plaza(categoria, errors, lista_equipos)
 
             if len(errors) != 0:
                 return render(request, 'crear_hijo.html', {'jugador': jugador,'modo_edicion': True, 'fecha_nacimiento': fecha_nacimiento,'errores': errors, 'edicion_equipo': False})
