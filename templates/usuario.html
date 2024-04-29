@@ -98,14 +98,25 @@
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="inscripcion" role="tabpanel" aria-labelledby="inscripcion-tab">
-            <h1 class="mb-5">Inscríbete</h1>
-            <p>¡Únete a nuestro equipo de baloncesto infantil y experimenta la emoción del juego en su máximo esplendor!   En nuestra familia deportiva, no solo aprenderás las habilidades fundamentales del baloncesto, sino que también cultivarás la camaradería, el trabajo en equipo y la determinación.   Nuestros entrenadores están comprometidos a ayudarte a crecer como jugador y como persona, mientras te diviertes y alcanzas tus metas en la cancha.   ¡Ven y forma parte de esta aventura donde cada pase, cada tiro y cada victoria son momentos inolvidables que compartirás con tus compañeros de equipo! ¡Inscríbete ahora y descubre el apasionante mundo del baloncesto junto a nosotros!</p>
-            <!-- Resto del contenido de la inscripción aquí... -->
+            <h1 class="mb-3 mt-5">Inscríbete</h1>
+            <p>¡Únete a nuestro equipo de baloncesto infantil y experimenta la emoción del juego en su máximo esplendor! </p><br>
+            <p>En nuestra familia deportiva, no solo aprenderás las habilidades fundamentales del baloncesto, sino que también cultivarás la camaradería, el trabajo en equipo y la determinación. </p><br>
+            <p>Nuestros entrenadores están comprometidos a ayudarte a crecer como jugador y como persona, mientras te diviertes y alcanzas tus metas en la cancha.</p><br>
+            <p>¡Ven y forma parte de esta aventura donde cada pase, cada tiro y cada victoria son momentos inolvidables que compartirás con tus compañeros de equipo! ¡Inscríbete ahora y descubre el apasionante mundo del baloncesto junto a nosotros!</p>
+      
             <a class="btn btn-outline-success btn-custom align-self-center mt-3" role="button" href="{% url 'inscripciones' %}" >Inscripción</a>
         </div>
         <div class="tab-pane fade" id="equipos" role="tabpanel" aria-labelledby="equipos-tab">
-            <h1 class="mb-5">Próximos partidos</h1>
-            <p>PROXIMAMENTE</p>
+            <h1 class="mb-3 mt-5">Equipos con plazas</h1>
+                {% for categoria, equipos in equipos_por_categoria.items %}
+                    <h3 class="mb-3">{{ categoria }}</h3>
+                        {% for equipo_info in equipos %}
+                            <div class="row">
+                            <p><b>{{ equipo_info.equipo.nombre }}</b>:
+                            {{ equipo_info.plazas_libres }} plazas libres</p>
+                            </div>
+                        {% endfor %}
+                {% endfor %}
         </div>
     </div>
 </div>

@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.hashers import make_password
 from django.core.mail import EmailMessage
+from django.db.models import Count
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
 import re
@@ -609,12 +610,25 @@ def pagina_usuario(request):
     list_noticias = list_noticias[0:3]
     list_partidos = Partido.objects.all()
     usuario = request.user
+
     if usuario.rol == 'Tutor':
         tutor = TutorLegal.objects.get(usuario_id=usuario.id)
         hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
         return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijos': hijos})
     else:
-        return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos})
+        equipos_por_categoria = {}
+
+        for equipo in Equipo.objects.all():
+            if equipo.es_safa:
+                plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
+                if plazas_libres > 0:
+                    equipo_info = {'equipo': equipo, 'plazas_libres': plazas_libres}
+                    categoria_equipo = equipo.categoria.tipo
+                    if categoria_equipo in equipos_por_categoria:
+                        equipos_por_categoria[categoria_equipo].append(equipo_info)
+                    else:
+                        equipos_por_categoria[categoria_equipo] = [equipo_info]
+        return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos,'equipos_por_categoria': equipos_por_categoria})
 
 def tarifas(request):
     return render(request, 'tarifas.html')
