@@ -175,7 +175,7 @@ $(document).ready(function() {
             {% for p in partidos %}
             {
                 title: '{{ p.equipo1 }} vs {{ p.equipo2 }} horario: {{ p.hora }}',
-                start: '{{ p.fecha|date:"Y-m-d" }}',
+                start: '{{ p.fecha }}',
                 allDay: true
             },
             {% endfor %}
