@@ -11,6 +11,13 @@
         {% bootstrap_javascript %}
     {% endif %}
     {% block bootstrap5_extra_head %}{% endblock %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.15/sorting/datetime-moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/es.js"></script> <!-- Carga el archivo de idioma español -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css">
 <style>
     .navbar-brand img {
   width: 80px;
@@ -26,7 +33,6 @@
   font-size: 1.1em;
   padding: 0.5em 1em;
 }
-
 @media screen and (min-width: 768px) {
   .navbar-brand img {
     width: 100px;
@@ -36,6 +42,12 @@
     padding: 0 1em;
   }
 }
+    {% if not modo_edicion %}  
+.form-control {
+            background-color: white !important;
+            color: black !important;
+        } 
+    {% endif %}  
 </style>
 </head>
 
@@ -55,35 +67,46 @@
         </li>
       {% if user.is_authenticated and user.rol == "Tutor" %}
           <div class="btn-group">
-          <button type="button" class="btn" style="color: white;font-size: 1.1em;padding: 0.5em 1em;">Gestion</button>
+          <a class="nav-link" aria-current="page" href="{% url 'gestion_familia' %}" role="button">Gestión</a>
           <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="color: white">
             <span class="visually-hidden">Toggle Dropdown</span>
           </button>
           <ul class="dropdown-menu">
               {% for h in hijos %}
-              <li><a class="dropdown-item" href="{% url 'noticias' %}">{{ h.nombre }} {{ h.apellidos }}</a></li>
+              <li><a class="dropdown-item" href="{% url 'inicio_jugador' id=h.usuario.id %}">{{ h.nombre }} {{ h.apellidos }}</a></li>
               {% endfor %}
           </ul>
-      </div>
-          {% else %}
+          </div>
+          {% if  jugador != none %}
+           <li class="nav-item">
+          <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
+          </li>
+              {% endif %}
+      {% elif  user.is_authenticated and user.rol == "Jugador"%}
+          <li class="nav-item">
+          <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
+          </li>
+      {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'tarifas' %}">Tarifas</a>
           </li>
       {% endif %}
-        <a class="navbar-brand d-none d-md-block" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% else %} {% url 'inicio' %} {% endif %} ">
+        <a class="navbar-brand d-none d-md-block" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% elif user.rol == "Jugador" %} {% url 'inicio_jugador' %} {% else %} {% url 'inicio' %} {% endif %} ">
           <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="">
         </a>
-        <li class="nav-item">
+
+      {% if user.is_authenticated and user.rol == "Jugador" %}
+      {% else %}
+          <li class="nav-item">
           <a class="nav-link" href="#">Tienda</a>
         </li>
+      {% endif %}
           {% if user.is_authenticated %}
               <li class="nav-item">
               <a class="nav-link" href="{% url 'perfil' %}" >Mi perfil</a>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'desloguear' %}" >Salir</a>
             </li>
-
-
           {% else %}
               <li class="nav-item">
                   <a class="nav-link" href="{% url 'login' %}" >Login</a>
@@ -99,8 +122,65 @@
     {% bootstrap_javascript %}
 {% endif %}
 
-
-
 {% block bootstrap5_extra_script %}{% endblock %}
+<script>
+    function confirmarEliminarUsuario(event) {
+    var confirmacion = confirm('¿Seguro que desea eliminar?');
+     if (!confirmacion) {
+    event.preventDefault();
+    }
+    }
+</script>
+<script>
+    $(document).ready(function(){
+    // Define el idioma de Moment.js a español
+    moment.locale('es');
+
+    // Obtiene los títulos de las columnas
+    var columnTitles = $("#tabla thead th").toArray().map(function (header) {
+        return $(header).text().trim();
+    });
+
+    // Verifica si las columnas 'Fecha' y 'Hora' existen
+    var fechaIndex = columnTitles.indexOf('Fecha') !== -1 ? columnTitles.indexOf('Fecha') : columnTitles.indexOf('Fecha de nacimiento')
+    var horaIndex = columnTitles.indexOf('Hora');
+
+    let tabla = $("#tabla").DataTable({
+        "dom": 'lrtip',
+        "lengthMenu": [[10, 25, -1], [10, 25, "All"]],
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No se encontraron registros",
+            "info": "Mostrando la página _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay registros disponibles",
+            "infoFiltered": "(filtrado de _MAX_ registros totales)",
+            "search": "Buscar:",
+            "paginate": {
+                "first": "Primero",
+                "last": "Último",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        },
+        "columnDefs": [
+            
+            {
+                "targets": horaIndex, // Aplica el formato a la columna 'Hora'
+                "render": function (data, type, row) {
+                    if (type === 'display' && horaIndex !== -1) {
+                        data = data.replace('noon', '12:00 PM');
+                        return moment(data, 'h:mm a').format('HH:mm'); // Formato de 24 horas
+                    }
+                    return data;
+                }
+            }
+        ]
+    });
+
+    $("#inputBuscar").on("keyup", function() {
+        tabla.search($(this).val()).draw();
+    });
+});
+</script>
 </body>
 </html>

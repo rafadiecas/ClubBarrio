@@ -9,6 +9,12 @@
             padding-block: 15px;
         }
         
+        @media (max-width: 768px) {
+            .card {
+                min-width: 100% !important;
+            }
+        }
+        
         
     </style>
 </head>
@@ -20,7 +26,7 @@
 <div class="container-fluid d-flex justify-content-center mt-5">
 
     <div class="row row-cols-1 row-cols-md-3 mb-3 text-center w-75">
-        <div class="col d-flex align-items-stretch">
+        <div class="col-12 col-sm-6 d-flex align-items-stretch justify-content-center">
             <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
                  <h4 class="my-0 fw-normal">Basic</h4>
@@ -35,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <div class="col d-flex align-items-stretch">
+        <div class="col-12 col-sm-6 d-flex align-items-stretch justify-content-center">
             <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
                  <h4 class="my-0 fw-normal">Plus</h4>
@@ -51,7 +57,7 @@
                 </div>
             </div>
         </div>
-        <div class="col d-flex align-items-stretch pe-0">
+        <div class="col-12 col-sm-6 d-flex align-items-stretch justify-content-center">
             <div class="card mb-4 rounded-3 shadow-sm">
                 <div class="card-header py-3">
                  <h4 class="my-0 fw-normal">Premium</h4>
