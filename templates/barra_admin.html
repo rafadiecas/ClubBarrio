@@ -115,13 +115,13 @@
 
 </body>
 <script>
-    function confirmarEliminarUsuario(event) {
-    var confirmacion = confirm('¿Seguro que desea eliminar?');
-     if (!confirmacion) {
-    event.preventDefault();
-    }
-    }
-</script>
+        function confirmarEliminarUsuario(event) {
+        var confirmacion = confirm('¿Seguro que desea eliminar?');
+         if (!confirmacion) {
+        event.preventDefault();
+        }
+        }
+    </script>
 <script>
     $(document).ready(function(){
     // Define el idioma de Moment.js a español
@@ -154,8 +154,15 @@
             }
         },
         "columnDefs": [
-
-    
+            {
+                "targets": fechaIndex, // Aplica el formato a la columna 'Fecha'
+                "render": function (data, type, row) {
+                    if (type === 'display' && fechaIndex !== -1) {
+                        return moment(data).format('LL');
+                    }
+                    return data;
+                }
+            },
             {
                 "targets": horaIndex, // Aplica el formato a la columna 'Hora'
                 "render": function (data, type, row) {
