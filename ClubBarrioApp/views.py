@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.hashers import make_password
+from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime
 import re
@@ -18,6 +19,8 @@ from django.contrib.auth import update_session_auth_hash
 def pagina_inicio(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     list_noticias = list_noticias[0:3]
+    #mail = EmailMessage('Asunto', 'Cuerpo del mensaje', to=['safaclubbasket@gmail.com'])
+    #mail.send()
     return render(request, 'inicio.html', {'noticias': list_noticias})
 
 def pagina_tienda(request):
@@ -260,6 +263,9 @@ def logear(request):
 
             elif user.rol == "Usuario" or user.rol == "Tutor":
                 return redirect('usuario')
+
+            elif user.rol == "Jugador":
+                return redirect('inicio_jugador')
 
             # Redirección tras un login exitoso
             return redirect('inicio')
@@ -655,9 +661,7 @@ def lista_hijos(request):
 def crea_hijos(request):
     usuario = request.user
     tutor = TutorLegal.objects.get(usuario_id=usuario.id)
-    categoria = ""
     hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
-    errors = []
     hijo = User()
     jugador = Jugador()
     if request.method == 'GET':
@@ -684,38 +688,16 @@ def crea_hijos(request):
                 hijo.username= username
                 hijo.email = email
                 hijo.fecha_nacimiento = fecha_nacimiento
+                hijo.rol = rol
                 hijo.password = make_password(password)
 
-
-            if diferencia.days < 1825:
-                categoria = 'Prebenjamin'
-            elif diferencia.days < 2920:
-                categoria = 'Benjamin'
-            elif diferencia.days < 4015:
-                categoria = 'Alevin'
-            elif diferencia.days < 5110:
-                categoria = 'Infantil'
-            elif diferencia.days < 6205:
-                categoria = 'Cadete'
-            elif diferencia.days < 7300:
-                categoria = 'Juvenil'
-            else:
-                errors.append("El jugador debe ser menor de 20 años")
-
-
+            categoria = calculador_categoria(diferencia, errors)
 
             if (tutor.tarifa == 'BASE' and len(hijos) >= 1) or (tutor.tarifa == 'PLUS' and len(hijos) >= 3) or (
                     tutor.tarifa == 'PREMIUM' and len(hijos) >= 5):
                 errors.append("No puedes añadir más hijos")
 
-            for equipo in Equipo.objects.all():
-                if categoria in equipo.categoria.tipo and equipo.es_safa:
-                    plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
-                    if plazas_libres > 0:
-                        dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
-                        lista_equipos.append(dict)
-            if len(lista_equipos) == 0:
-                errors.append("No hay plazas disponibles en ningún equipo")
+            filtro_equipos_plaza(categoria, errors, lista_equipos)
 
             if len(errors) != 0:
                 return render(request, 'crear_hijo.html',
@@ -735,6 +717,18 @@ def crea_hijos(request):
         jugador.equipo = Equipo.objects.get(id=int(request.POST.get('tarifa_seleccionada')))
         jugador.save()
         return redirect('gestion_familia')
+
+
+def filtro_equipos_plaza(categoria, errors, lista_equipos):
+    for equipo in Equipo.objects.all():
+        if categoria in equipo.categoria.tipo and equipo.es_safa:
+            plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
+            if plazas_libres > 0:
+                dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
+                lista_equipos.append(dict)
+    if len(lista_equipos) == 0:
+        errors.append("No hay plazas disponibles en ningún equipo")
+
 
 def elimina_hijo(request, id):
     hijo = Jugador.objects.get(id=id)
@@ -760,30 +754,9 @@ def edita_hijo(request, id):
             diferencia = datetime.now() - datetime.strptime(request.POST.get('fecha_nacimiento'), '%Y-%m-%d')
             lista_equipos = []
 
+            categoria = calculador_categoria(diferencia, errors)
 
-            if diferencia.days < 1825:
-                categoria = 'Prebenjamin'
-            elif diferencia.days < 2920:
-                categoria = 'Benjamin'
-            elif diferencia.days < 4015:
-                categoria = 'Alevin'
-            elif diferencia.days < 5110:
-                categoria = 'Infantil'
-            elif diferencia.days < 6205:
-                categoria = 'Cadete'
-            elif diferencia.days < 7300:
-                categoria = 'Juvenil'
-            else:
-                errors.append("El jugador debe ser menor de 20 años")
-
-            for equipo in Equipo.objects.all():
-                if categoria in equipo.categoria.tipo and equipo.es_safa:
-                    plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
-                    if plazas_libres > 0:
-                        dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
-                        lista_equipos.append(dict)
-            if len(lista_equipos) == 0:
-                errors.append("No hay plazas disponibles en ningún equipo")
+            filtro_equipos_plaza(categoria, errors, lista_equipos)
 
             if len(errors) != 0:
                 return render(request, 'crear_hijo.html', {'jugador': jugador,'modo_edicion': True, 'fecha_nacimiento': fecha_nacimiento,'errores': errors, 'edicion_equipo': False})
@@ -797,6 +770,26 @@ def edita_hijo(request, id):
         jugador.equipo = Equipo.objects.get(id=int(request.POST.get('tarifa_seleccionada')))
         jugador.save()
         return redirect('gestion_familia')
+
+
+def calculador_categoria(diferencia, errors):
+    categoria = ""
+    if diferencia.days < 1825:
+        categoria = 'Prebenjamin'
+    elif diferencia.days < 2920:
+        categoria = 'Benjamin'
+    elif diferencia.days < 4015:
+        categoria = 'Alevin'
+    elif diferencia.days < 5110:
+        categoria = 'Infantil'
+    elif diferencia.days < 6205:
+        categoria = 'Cadete'
+    elif diferencia.days < 7300:
+        categoria = 'Juvenil'
+    else:
+        errors.append("El jugador debe ser menor de 20 años")
+    return categoria
+
 
 def inicio_jugador(request, id=None):
     list_noticias = Noticias.objects.all().order_by('-id')
