@@ -93,7 +93,7 @@
             </a>
             <ul class="dropdown-menu">
             {% for e in equipos_entrenador %}
-                <li><a class="dropdown-item" href="#">{{ e.nombre }}</a></li>
+                <li><a class="dropdown-item" href="{% url 'equipo' id=e.id %}">{{ e.nombre }}</a></li>
             {% endfor %}
             </ul>
             </div>

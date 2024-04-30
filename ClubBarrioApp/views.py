@@ -1,9 +1,9 @@
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.hashers import make_password
 from django.core.mail import EmailMessage
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import render, redirect
-from django.utils.datetime_safe import datetime
+from django.utils.datetime_safe import datetime, date
 import re
 
 from .models import *
@@ -885,3 +885,13 @@ def entrenador(request):
     usuario = request.user
     equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
     return render(request, 'entrenador.html',{'equipos_entrenador': equipos})
+
+def pagina_equipo(request, id):
+    equipo = Equipo.objects.get(id=id)
+    fecha_actual = date.today()
+    partidos_anteriores = Partido.objects.filter(
+        Q(equipo1_id=id) | Q(equipo2_id=id), fecha__lt=fecha_actual).order_by('-fecha')
+    partidos_futuros = Partido.objects.filter(
+        Q(equipo1_id=id) | Q(equipo2_id=id), fecha__gte=fecha_actual).order_by('fecha')
+    jugadores = Jugador.objects.filter(equipo_id=id)
+    return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:5], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[:5]})

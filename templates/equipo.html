@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+{% include 'barra_navegacion.html' %}
+<head>
+    <meta charset="UTF-8">
+    <title>Pagina equipo</title>
+    <style>
+        .img-equipo {
+            width: 100%; 
+            height: auto;
+            max-width: 10em;
+            margin: auto; 
+            display: block;
+        }
+        
+        @media (max-width: 1000px) {
+            
+            .jornadas {
+                width: 100% !important; 
+            }
+        }
+        
+
+
+    </style>
+</head>
+<body>
+<div class="container">
+        <div class="row row-cols-1">
+        <div class="col col-12">
+            
+        </div>
+        <div class="col col-12 d-flex justify-content-center w-100 mt-3">
+        <div class="row row-cols-1 row-cols-md-2 w-75 jornadas">
+            <div class="col">
+                <div class="text-center">
+                    <h2>Partidos anteriores</h2>
+                    <ul class="list-group list-group-flush">
+                        {% for p in partidos_anteriores %}
+                            <li class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-4">
+                                        <img src="{{ p.equipo1.escudo }}" alt="" class="img-fluid img-equipo">
+                                    </div>
+                                    <div class="col-4">
+                                        <p><b>Jornada {{ p.jornada }}</b></p>
+                                        <p>{{ p.puntos_equipo1 }} - {{ p.puntos_equipo2 }}</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="{{ p.equipo2.escudo }}" alt="" class="img-fluid img-equipo">
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col">
+                <div class="text-center">
+                    <h2>Proximos partidos</h2>
+                    <ul class="list-group list-group-flush">
+                        {% for p in partidos_futuros %}
+                            <li class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-4">
+                                        <img src="{{ p.equipo1.escudo }}" alt="" class="img-fluid img-equipo">
+                                    </div>
+                                    <div class="col-4">
+                                        <p><b>Jornada {{ p.jornada }}</b></p>
+                                        <p>{{ p.fecha }}</p>
+                                        <p>{{ p.hora }}</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="{{ p.equipo2.escudo }}" alt="" class="img-fluid img-equipo">
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+    </div>
+
+</body>
+</html>
