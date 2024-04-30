@@ -89,7 +89,7 @@
                       <th scope="col">#</th>
                       <th scope="col">Nombre equipo</th>
                       <th scope="col">PG</th>
-                      <th scope="col">PJ</th>
+
                       <th scope="col">Total puntos</th>
 
                     </tr>
@@ -97,10 +97,10 @@
                   <tbody >
                   {% for e in clasificacion %}
                     <tr>
-                        <td {% if e.nombre == jugador.equipo.nombre %} style="font-weight: 700" {% endif %} >{{ e.nombre}}</td>
-                        <td>{{ e.partidos_ganados }}</td>
-                      <td>{{ e.partidos_jugados }}</td>
-                      <td>{{ e.diferencia_puntos }}</td>
+                        <td {% if e.nombre == jugador.equipo.nombre %} style="font-weight: 700" {% endif %} >{{ e.equipo_id }}</td>
+                        <td>{{ e.ganados }}</td>
+
+                      <td>{{ e.basket_average }}</td>
 
 
                     </tr>
