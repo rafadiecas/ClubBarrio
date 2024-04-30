@@ -828,6 +828,7 @@ def calculador_categoria(diferencia, errors):
 def inicio_jugador(request, id=None):
     list_noticias = Noticias.objects.all().order_by('-id')
     list_noticias = list_noticias[0:3]
+
     hijos=[]
     usuario = request.user
     if usuario.rol == 'Jugador':
@@ -861,8 +862,10 @@ def inicio_jugador(request, id=None):
             'diferencia_puntos': dif_puntos
         }
         clasificacion.append(equipo)
-    clasificacion.sort(key=lambda x:((x['partidos_ganados']), x['partidos_jugados']), reverse=True)
-    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos})
+    clasificacion.sort(key=lambda x:((x['partidos_ganados']), x['diferencia_puntos']), reverse=True)
+    equipo3 = Equipo.objects.get(id=jugador.equipo.id)
+    list_partidos = Partido.objects.filter(Q(equipo1_id= equipo3.id)| Q(equipo2_id= equipo3.id))
+    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos})
 
 def estadisticas_jugador(request, id):
     usuario = request.user
