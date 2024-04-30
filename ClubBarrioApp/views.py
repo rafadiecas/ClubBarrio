@@ -678,7 +678,7 @@ def inscripciones(request):
         tutor.save()
 
         mensaje = ("Gracias por suscribirte, " + usuario.username + ". Tu suscripción se ha completado con éxito."
-                   + "<br><br>" + "Algunos datos importante: " + "<br>"
+                   + "<br><br>" + "Algunos datos importantes: " + "<br>"
                    + "Tarifa selecionada: " + tutor.tarifa + "<br>" + "Pagos los dias " + str(datetime.now().day)+ " de cada mes." + "<br><br>" + "Un saludo, SafaClubBasket.")
         correo = EmailMessage('Suscripción en SafaClubBasket', mensaje, to=[usuario.email])
         correo.content_subtype = "html"

@@ -142,7 +142,8 @@
                 </div>
             </div>
         {% else %}
-        <div class="flex-container h-100">
+        <h1 class="mb-3">Proximamente</h1>
+        <div class="flex-container align-self-center" style="max-width: 590px">
         <p>
             ¡Únete al emocionante mundo del baloncesto este verano con SAFA Club! 🏀 Sumérgete en un 
              ambiente lleno de diversión, aprendizaje y amistad mientras mejoras tus habilidades en la cancha. 
@@ -157,10 +158,11 @@
             ¡No pierdas la oportunidad de vivir un verano inolvidable con SAFA Club! 
              ¡Inscripciones abiertas en Junio! 
         </p>
+        </div>
         <div class="container-fluid d-flex justify-content-center">   
-        <img class="img-fluid" src="{% static 'juegos-de-piscina-destacada.jpg' %}" alt="campus_verano" style="max-width: 300px; min-width: 200px" id="foto_carrusel">    
+        <img class="img-fluid d-none d-sm-block" src="{% static 'juegos-de-piscina-destacada.jpg' %}" alt="campus_verano" style="max-width: 300px; min-width: 200px" id="foto_carrusel">    
         </div>
-        </div>
+        
         {% endif %}
         </div>
         <div class="col d-flex flex-column text-center px-7 mt-5 mt-sm-0" id="derecha">
