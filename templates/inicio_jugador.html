@@ -96,14 +96,16 @@
                   </thead>
                   <tbody >
                   {% for e in clasificacion %}
+                      {% if e.equipo_id in equipos%}
                     <tr>
-                        <td {% if e.nombre == jugador.equipo.nombre %} style="font-weight: 700" {% endif %} >{{ e.equipo_id }}</td>
+                        <td {% if e.nombre == jugador.equipo.nombre %} style="font-weight: 700" {% endif %} >{{ e.equipo_id.nombre }}</td>
                         <td>{{ e.ganados }}</td>
 
                       <td>{{ e.basket_average }}</td>
 
 
                     </tr>
+                      {% endif %}
                   {% endfor %}
                   </tbody>
                 </table>
