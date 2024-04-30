@@ -94,7 +94,7 @@
         <a class="navbar-brand d-none d-md-block" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% elif user.rol == "Jugador" %} {% url 'inicio_jugador' %} {% else %} {% url 'inicio' %} {% endif %} ">
           <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="">
         </a>
-        <li class="nav-item">
+
       {% if user.is_authenticated and user.rol == "Jugador" %}
       {% else %}
           <li class="nav-item">
