@@ -11,8 +11,11 @@ from django.http import JsonResponse
 from .decorator import user_required, rol_requerido
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
-from django.db.models import Count, F, ExpressionWrapper, FloatField, Sum
+from django.db.models import Count, F, ExpressionWrapper, FloatField, Sum, QuerySet
 from itertools import chain
+
+from .models import Partido
+
 
 # Create your views here.
 
@@ -878,6 +881,24 @@ def inicio_jugador(request, id=None):
 
     # Convertimos el defaultdict a una lista de diccionarios
     clasificacion = list(resultados_por_equipo.values())
+    #queryset = Equipo.objects.select_related('partido').filter(id=F('partido__equipo1_id')).filter(categoria_id=jugador.equipo.categoria)
+    partidos_ganados_local = Partido.objects.filter(puntos_equipo1__gt=F('puntos_equipo2')).values('equipo1_id').annotate(partidos_ganados=Count('equipo1_id'))
+    partidos_ganados_visitante = Partido.objects.filter(puntos_equipo2__gt=F('puntos_equipo1')).values('equipo2_id').annotate(partidos_ganados=Count('equipo2_id'))
+    dif_puntos_local = Partido.objects.values('equipo1_id').annotate(dif_puntos=Sum('puntos_equipo1')-Sum('puntos_equipo2'))
+    dif_puntos_visitante = Partido.objects.values('equipo2_id').annotate(dif_puntos=Sum('puntos_equipo2')-Sum('puntos_equipo1'))
+    dict_total=[]
+    for e in equipos:
+        dicc={}
+        dicc['equipo_id'] = e.id
+        dicc['ganados'] = 0
+        dicc['dif_puntos'] = 0
+        dict_total.append(dicc)
+    for e in partidos_ganados_local:
+
+
+
+
+
     return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos})
 
 def estadisticas_jugador(request, id):
