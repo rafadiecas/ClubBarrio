@@ -97,6 +97,7 @@
 <div class="container-fluid" id="contenedor">
     <div class="row row-cols-md-2 row-cols-lg-2 row-cols-sm-1 row-cols-1 mb-3">
         <div class="col d-flex flex-column text-center px-5">
+        {% if user.is_authenticated  and user.rol == "Usuario" %}
             <ul class="nav nav-tabs d-flex " id="myTab" role="tablist">
                 <li class="nav-item flex-grow-1" role="presentation">
                     <button class="nav-link active w-100 py-4" id="inscripcion-tab" data-bs-toggle="tab"
@@ -140,6 +141,27 @@
                     {% endfor %}
                 </div>
             </div>
+        {% else %}
+        <div class="flex-container h-100">
+        <p>
+            ¡Únete al emocionante mundo del baloncesto este verano con SAFA Club! 🏀 Sumérgete en un 
+             ambiente lleno de diversión, aprendizaje y amistad mientras mejoras tus habilidades en la cancha. 
+        </p>
+        <br>
+        <p>
+            Nuestro campus de verano ofrece una experiencia única donde podrás desarrollar tu talento bajo 
+            la tutela de entrenadores expertos y conocer a otros apasionados del deporte. 
+        </p>    
+        <br>
+        <p>
+            ¡No pierdas la oportunidad de vivir un verano inolvidable con SAFA Club! 
+             ¡Inscripciones abiertas en Junio! 
+        </p>
+        <div class="container-fluid d-flex justify-content-center">   
+        <img class="img-fluid" src="{% static 'juegos-de-piscina-destacada.jpg' %}" alt="campus_verano" style="max-width: 300px; min-width: 200px" id="foto_carrusel">    
+        </div>
+        </div>
+        {% endif %}
         </div>
         <div class="col d-flex flex-column text-center px-7 mt-5 mt-sm-0" id="derecha">
             <h1 class="mb-5 mt-md-0 mt-sm-4">Próximos partidos</h1>

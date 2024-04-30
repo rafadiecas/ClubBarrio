@@ -130,3 +130,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'safaclubbasket@gmail.com'
 EMAIL_HOST_PASSWORD = 'nzju izcq kpmf biqn'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

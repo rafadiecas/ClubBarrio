@@ -65,9 +65,7 @@ urlpatterns = [
     path('usuario/gestion_familia/editar/<int:id>/', edita_hijo, name='edita_hijo'),
     path('usuario/perfil/', perfil, name='perfil'),
     path('usuario/perfil/pass/', perfil_pass, name='perfil_pass'),
-
-
-
     path('terminos_y_servicios', terminos_y_servicios, name='terminos_y_servicios'),
+    path('entrenador', entrenador, name='entrenador'),
 
 ]

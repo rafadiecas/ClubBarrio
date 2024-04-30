@@ -65,6 +65,9 @@ def pagina_noticias(request):
         elif usuario.rol == 'Jugador':
             jugador = Jugador.objects.get(usuario_id=usuario.id)
             data['jugador'] = jugador
+        elif usuario.rol == 'Entrenador':
+            equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
+            data['equipos_entrenador'] = equipos
     return render(request, 'Noticias.html', data)
 
 #@user_required
@@ -136,7 +139,7 @@ def perfil_pass(request):
 
 def new_user(request):
     Users = User.objects.all()
-    Equipos = Equipo.objects.all()
+    Equipos = Equipo.objects.filter(es_safa=True)
     Tutores = TutorLegal.objects.all()
     roles = Role.labels[:-1]
     if request.method == 'GET':
@@ -236,6 +239,7 @@ def registro(request):
         contrasenya = request.POST.get('contrasenya')
         repetirContrasenya = request.POST.get('repetirContrasenya')
         fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        rol = "Usuario"
 
         errores = filtro(email, fecha_nacimiento, 'Usuario', nombre_usuario, contrasenya, repetirContrasenya)
 
@@ -244,8 +248,14 @@ def registro(request):
             return render(request, 'registro.html', {"errores": errores, "nombre_usuraio": nombre_usuario, "email": email, "fecha_nacimiento": fecha_nacimiento})
         else:
             usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email,
-                                          fecha_nacimiento=fecha_nacimiento)
+                                          fecha_nacimiento=fecha_nacimiento, rol=rol)
             usuario.save()
+            mensaje = ("Bienvenido a SafaClubBasket, " + nombre_usuario + ". Tu registro se ha completado con éxito."
+                       + "<br><br>" + "Tus credenciales de acceso son: " + "<br>"
+                       + "Usuario: " + nombre_usuario + "<br>" + "Contraseña: " + contrasenya + "<br><br>" + "Un saludo, SafaClubBasket.")
+            correo = EmailMessage('Registro en SafaClubBasket', mensaje, to=[email])
+            correo.content_subtype = "html"
+            correo.send()
 
             return redirect('login')
 
@@ -267,6 +277,9 @@ def logear(request):
 
             elif user.rol == "Jugador":
                 return redirect('inicio_jugador')
+
+            elif user.rol == "Entrenador":
+                return redirect('entrenador')
 
             # Redirección tras un login exitoso
             return redirect('inicio')
@@ -387,7 +400,7 @@ def editar_equipo(request, id):
         entrenadores = Entrenador.objects.all()
         id_entrenadores = equipo.entrenadores.values_list('id', flat=True)
         es_safa = equipo.es_safa
-        return render(request, 'crear_equipo.html', {'equipo':equipo, 'id_entrenadores':id_entrenadores, 'lista_categorias': lista_categorias, 'entrenadores': entrenadores, 'es_safa': es_safa})
+        return render(request, 'crear_equipo.html', {'equipo':equipo, 'id_entrenadores':id_entrenadores, 'lista_categorias': lista_categorias, 'entrenadores': entrenadores, 'es_safa': es_safa, 'modo_edicion': True})
     else:
         equipo.nombre = request.POST.get('nombre')
         equipo.escudo = request.POST.get('escudo')
@@ -435,7 +448,7 @@ def editar_entrenamiento(request, id):
         lista_entrenadores = Entrenador.objects.all()
         lista_lugares_entrenamiento = LugarEntrenamiento.objects.all()
         return render(request, 'crear_entrenamiento.html',
-                      {'entrenamiento': entrenamiento, 'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento})
+                      {'entrenamiento': entrenamiento, 'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento, 'modo_edicion': True})
     else:
         entrenamiento.fecha = request.POST.get('fecha')
         entrenamiento.hora = request.POST.get('hora')
@@ -475,7 +488,7 @@ def elimina_noticia(request, id):
 def editar_noticia(request,id):
     noticia = Noticias.objects.get(id=id)
     if request.method == 'GET':
-        return render(request, 'crear_noticias.html', {'noticia':noticia})
+        return render(request, 'crear_noticias.html', {'noticia':noticia, 'modo_edicion': True})
     else:
         noticia.titulo = request.POST.get('titulo')
         noticia.articulo = request.POST.get('articulo')
@@ -510,7 +523,7 @@ def editar_estadisticas_jugador(request, id):
         lista_entrenadores = Entrenador.objects.all()
         lista_partidos = Partido.objects.all()
         return render(request, 'crear_estadisticas_jugador.html',
-                      {'estadisticas_jugador': estadisticas_jugador, 'lista_entrenadores': lista_entrenadores, 'lista_partidos': lista_partidos})
+                      {'estadisticas_jugador': estadisticas_jugador, 'lista_entrenadores': lista_entrenadores, 'lista_partidos': lista_partidos, 'modo_edicion': True})
     else:
         estadisticas_jugador.puntos = request.POST.get('puntos')
         estadisticas_jugador.minutos = request.POST.get('minutos')
@@ -562,7 +575,7 @@ def editar_partido(request, id):
     if request.method == 'GET':
         lista_equipos = Equipo.objects.all()
         temporadas = Temporada.objects.all()
-        return render(request, 'crear_partidos.html', {'partido': partido, 'lista_equipos': lista_equipos, 'temporadas': temporadas})
+        return render(request, 'crear_partidos.html', {'partido': partido, 'lista_equipos': lista_equipos, 'temporadas': temporadas, 'modo_edicion': True})
     else:
         partido.fecha = request.POST.get('fecha')
         partido.hora = request.POST.get('hora')
@@ -610,7 +623,7 @@ def edita_producto(request, id):
     if request.method == 'GET':
         tallas = Talla.objects.all()
         tipos = Tipo.objects.all()
-        return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos})
+        return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos, 'modo_edicion': True})
     else:
         producto.nombre = request.POST.get('nombre')
         producto.precio = request.POST.get('precio')
@@ -663,6 +676,13 @@ def inscripciones(request):
         tutor.apellidos = request.POST.get('apellidos')
         tutor.tarifa = request.POST.get('tarifa_seleccionada')
         tutor.save()
+
+        mensaje = ("Gracias por suscribirte, " + usuario.username + ". Tu suscripción se ha completado con éxito."
+                   + "<br><br>" + "Algunos datos importante: " + "<br>"
+                   + "Tarifa selecionada: " + tutor.tarifa + "<br>" + "Pagos los dias " + str(datetime.now().day)+ " de cada mes." + "<br><br>" + "Un saludo, SafaClubBasket.")
+        correo = EmailMessage('Suscripción en SafaClubBasket', mensaje, to=[usuario.email])
+        correo.content_subtype = "html"
+        correo.send()
 
         return redirect('usuario')
 
@@ -788,20 +808,20 @@ def edita_hijo(request, id):
 
 def calculador_categoria(diferencia, errors):
     categoria = ""
-    if diferencia.days < 1825:
+    if diferencia.days < 2555 and diferencia.days >= 1825:
         categoria = 'Prebenjamin'
-    elif diferencia.days < 2920:
+    elif diferencia.days < 3285:
         categoria = 'Benjamin'
     elif diferencia.days < 4015:
         categoria = 'Alevin'
-    elif diferencia.days < 5110:
+    elif diferencia.days < 4745:
         categoria = 'Infantil'
-    elif diferencia.days < 6205:
+    elif diferencia.days < 5475:
         categoria = 'Cadete'
-    elif diferencia.days < 7300:
+    elif diferencia.days < 6575:
         categoria = 'Juvenil'
     else:
-        errors.append("El jugador debe ser menor de 20 años")
+        errors.append("El jugador debe ser menor de 18 años y mayor de 5")
     return categoria
 
 
@@ -860,3 +880,8 @@ def estadisticas_jugador(request, id):
 
 def terminos_y_servicios(request):
     return render(request, 'terminos_y_servicios.html')
+
+def entrenador(request):
+    usuario = request.user
+    equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
+    return render(request, 'entrenador.html',{'equipos_entrenador': equipos})

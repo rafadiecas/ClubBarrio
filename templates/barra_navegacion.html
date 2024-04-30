@@ -54,7 +54,7 @@
 <body>
 <nav class="navbar navbar-expand-md navbar-dark">
   <div class="container-fluid">
-    <a class="navbar-brand d-md-none" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% else %} {% url 'inicio' %} {% endif %} ">
+    <a class="navbar-brand d-md-none" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %}{% elif user.is_authenticated and user.rol == "Entrenador" %}{% url 'entrenador' %}{% else %} {% url 'inicio' %} {% endif %} ">
   <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="" >
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,12 +86,23 @@
           <li class="nav-item">
           <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
           </li>
+      {% elif  user.is_authenticated and user.rol == "Entrenador"%}
+          <div class="dropdown">
+            <a class="nav-link" aria-current="page" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: white">
+            Equipos
+            </a>
+            <ul class="dropdown-menu">
+            {% for e in equipos_entrenador %}
+                <li><a class="dropdown-item" href="#">{{ e.nombre }}</a></li>
+            {% endfor %}
+            </ul>
+            </div>
       {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'tarifas' %}">Tarifas</a>
           </li>
       {% endif %}
-        <a class="navbar-brand d-none d-md-block" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% elif user.rol == "Jugador" %} {% url 'inicio_jugador' %} {% else %} {% url 'inicio' %} {% endif %} ">
+        <a class="navbar-brand d-none d-md-block" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% elif user.rol == "Jugador" %} {% url 'inicio_jugador' %}{% elif user.is_authenticated and user.rol == "Entrenador" %}{% url 'entrenador' %} {% else %} {% url 'inicio' %} {% endif %} ">
           <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="">
         </a>
 
