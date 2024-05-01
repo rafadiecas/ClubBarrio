@@ -68,5 +68,6 @@ urlpatterns = [
     path('terminos_y_servicios', terminos_y_servicios, name='terminos_y_servicios'),
     path('entrenador', entrenador, name='entrenador'),
     path('entrenador/equipos/<int:id>/', pagina_equipo, name='equipo'),
+    path('contacto', pagina_contacto, name='contacto'),
 
 ]

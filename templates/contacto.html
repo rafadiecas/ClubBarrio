@@ -1,0 +1,102 @@
+{% load static %}
+{% include "barra_navegacion.html" %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Contacta con Nosotros</title>
+</head>
+<style>
+
+    .btn-primary {
+        background-color: #00653D ;
+        border-color: #00653D !important; /* Cambia este valor al color que desees */
+    }
+
+
+
+</style>
+<body>
+    <div class="container" >
+        <div class="row justify-content-center align-items-center pt-5 h-75">
+            <div class="col-md-6">
+                <h1 class="text-center">Contacta con Nosotros</h1>
+                <form id="form-id"    action="{% url 'contacto' %}" method="post" class="pt-5">
+                    {% csrf_token %}
+                        <div class="form-group">
+                            <label for="nombre">Username:</label>
+                            <input type="text" name="nombre" id="nombre" class="form-control" value="{{ user.username }}" placeholder="Introduce tu nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" name="email" id="email" class="form-control" value= "{{ user.email }}" placeholder="Introduce tu email">{{ user.email }}
+                        </div>
+                        <div class="form-group">
+                            <label for="asunto">Asunto:</label>
+                            <select name="asunto" id="asunto" class="form-control">
+                                <option value="Problemas de Registro">Problemas de Registro</option>
+                                <option value="Problemas con contraseña">Problemas con contraseña</option>
+                                <option value="Problemas con suscripcion">Problemas con suscripción</option>
+                                <option value="Sugerencias">Sugerencias</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="mensaje">Mensaje:</label>
+                            <textarea name="mensaje" id="mensaje" class="form-control" placeholder="Cuéntanos tus dudas o sugerencias"></textarea>
+                        </div>
+                        <div class="d-flex justify-content-center pt-5">
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Luego, incluye DataTables -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
+
+
+<script>
+    $(document).ready(function() {
+        $('#form-id').on('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submitted');
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(data) {
+                    console.log('Success:', data);
+                    window.location.href = "{% url 'inicio' %}";
+                    // Muestra el mensaje de éxito en la página
+                    $('#success-messages').html('<p>' + data.success + '</p>');
+                    // Muestra un pop-up con el mensaje de éxito
+                    alert(data.success);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Error:', textStatus, errorThrown);
+                    if (jqXHR.status === 400) {
+                        var errores = jqXHR.responseJSON.errores;
+                        // Muestra los errores en la página
+                        $('#error-messages').html('');
+                        errores.forEach(function(error) {
+                            $('#error-messages').append('<p>' + error + '</p>');
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+</body>
+{% include 'footer.html' %}
+</html>

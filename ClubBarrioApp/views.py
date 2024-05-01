@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from .decorator import user_required, rol_requerido
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
+from django.conf import settings
 
 
 # Create your views here.
@@ -69,6 +70,24 @@ def pagina_noticias(request):
             equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
             data['equipos_entrenador'] = equipos
     return render(request, 'Noticias.html', data)
+
+def pagina_contacto(request):
+    usuario = request.user
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        email = request.POST.get('email')
+        asunto = request.POST.get('asunto') + " - Enviado por: " + nombre +"-"+ email
+        mensaje = " - Enviado por: " + nombre + "\n" + "Email: " + email + "\n"+ "Mensaje: " + request.POST.get('mensaje')
+        correo = EmailMessage(
+            asunto,
+            mensaje,
+            to=[settings.EMAIL_HOST_USER]
+        )
+        correo.content_subtype = "html"
+        correo.send()
+        return JsonResponse({'success': 'Mensaje enviado con éxito'})
+    return render(request, 'contacto.html')
+
 
 #@user_required
 #@rol_requerido('Administrador')
