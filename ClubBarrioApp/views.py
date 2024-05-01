@@ -446,7 +446,13 @@ def elimina_equipo(request, id):
     return redirect('equipos')
 
 def entrenamientos_listado(request):
-    lista_entrenamientos = Entrenamiento.objects.all()
+    usuario = request.user
+    if usuario.rol == 'Entrenador':
+        entrenador = Entrenador.objects.get(usuario_id=usuario.id)
+        lista_entrenamientos = Entrenamiento.objects.filter(
+            Q(entrenador=entrenador) & Q(equipo__entrenadores=entrenador))
+    else:
+        lista_entrenamientos = Entrenamiento.objects.all()
 
     return render(request, 'lista_entrenamiento.html', {"lista_entrenamientos":lista_entrenamientos})
 def crear_entrenamiento(request):
@@ -920,13 +926,18 @@ def inicio_jugador(request, id=None):
         equipo_id=F('equipo2_id'),
         basket_average=Sum('puntos_diferencia')
     )
+
     # Unimos los resultados de basket average como local y como visitante
     basket_average = list(chain(basket_average_local, basket_average_visitante))
+
+    partidos_jugados_local = Partido.objects.values('equipo1_id').annotate(equipo_id=F('equipo1_id'), jugados=Count('equipo1_id'), nombre=F('equipo1__nombre'))
+    partidos_jugados_visitante = Partido.objects.values('equipo2_id').annotate(equipo_id=F('equipo2_id'), jugados=Count('equipo2_id'), nombre=F('equipo2__nombre'))
+    partidos_jugados = list(chain(partidos_jugados_local, partidos_jugados_visitante))
     # Unimos los resultados de partidos ganados y basket average
     # Usamos un diccionario defaultdict para combinar los resultados por equipo_id
-    resultados_por_equipo = defaultdict(lambda: {'equipo_id': None, 'ganados': 0, 'basket_average': 0})
+    resultados_por_equipo = defaultdict(lambda: {'equipo_id': None, 'ganados': 0, 'basket_average': 0, 'jugados': 0, 'nombre': ""})
 
-    for resultado in chain(partidos_ganados, basket_average):
+    for resultado in chain(partidos_ganados, basket_average, partidos_jugados):
         equipo_id = resultado['equipo_id']
         resultados_por_equipo[equipo_id].update(resultado)
 
