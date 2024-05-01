@@ -944,7 +944,7 @@ def inicio_jugador(request, id=None):
     # Convertimos el defaultdict a una lista de diccionarios
     clasificacion = list(resultados_por_equipo.values())
 
-    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos})
+    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos})
 
 def estadisticas_jugador(request, id):
     usuario = request.user
