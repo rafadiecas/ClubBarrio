@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.hashers import make_password
+from django.contrib.sites import requests
 from django.core.mail import EmailMessage
 from django.db.models import Count, Q
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime, date
 import re
-
+import requests
 from .models import *
 from django.core.paginator import Paginator
 from django.http import Http404
@@ -66,7 +67,7 @@ def pagina_noticias(request):
             jugador = Jugador.objects.get(usuario_id=usuario.id)
             data['jugador'] = jugador
         elif usuario.rol == 'Entrenador':
-            equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
+            equipos = equipos_entrenador(request)
             data['equipos_entrenador'] = equipos
     return render(request, 'Noticias.html', data)
 
@@ -840,6 +841,14 @@ def inicio_jugador(request, id=None):
 
     equipos = Equipo.objects.filter(categoria_id=jugador.equipo.categoria)
 
+    clasificacion = saca_clasificacion(equipos)
+
+    equipo3 = Equipo.objects.get(id=jugador.equipo.id)
+    list_partidos = Partido.objects.filter(Q(equipo1_id= equipo3.id)| Q(equipo2_id= equipo3.id))
+    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos})
+
+
+def saca_clasificacion(equipos):
     clasificacion = list()
     for e in equipos:
         partidos_local = Partido.objects.filter(equipo1=e.id)
@@ -850,11 +859,11 @@ def inicio_jugador(request, id=None):
         for p in partidos_local:
             dif_puntos += p.puntos_equipo1 - p.puntos_equipo2
             if p.puntos_equipo1 > p.puntos_equipo2:
-                cont_partidos_ganados+=1
+                cont_partidos_ganados += 1
         for p in partidos_visitante:
             dif_puntos += p.puntos_equipo2 - p.puntos_equipo1
             if p.puntos_equipo1 < p.puntos_equipo2:
-                cont_partidos_ganados+=1
+                cont_partidos_ganados += 1
         equipo = {
             'nombre': e.nombre,
             'partidos_ganados': cont_partidos_ganados,
@@ -862,10 +871,9 @@ def inicio_jugador(request, id=None):
             'diferencia_puntos': dif_puntos
         }
         clasificacion.append(equipo)
-    clasificacion.sort(key=lambda x:((x['partidos_ganados']), x['diferencia_puntos']), reverse=True)
-    equipo3 = Equipo.objects.get(id=jugador.equipo.id)
-    list_partidos = Partido.objects.filter(Q(equipo1_id= equipo3.id)| Q(equipo2_id= equipo3.id))
-    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos})
+    clasificacion.sort(key=lambda x: ((x['partidos_ganados']), x['diferencia_puntos']), reverse=True)
+    return clasificacion
+
 
 def estadisticas_jugador(request, id):
     usuario = request.user
@@ -885,11 +893,11 @@ def terminos_y_servicios(request):
     return render(request, 'terminos_y_servicios.html')
 
 def entrenador(request):
-    usuario = request.user
-    equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
+    equipos = equipos_entrenador(request)
     return render(request, 'entrenador.html',{'equipos_entrenador': equipos})
 
 def pagina_equipo(request, id):
+    equipos = equipos_entrenador(request)
     equipo = Equipo.objects.get(id=id)
     fecha_actual = date.today()
     partidos_anteriores = Partido.objects.filter(
@@ -897,4 +905,24 @@ def pagina_equipo(request, id):
     partidos_futuros = Partido.objects.filter(
         Q(equipo1_id=id) | Q(equipo2_id=id), fecha__gte=fecha_actual).order_by('fecha')
     jugadores = Jugador.objects.filter(equipo_id=id)
-    return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:5], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[:5]})
+    equipos_cat= Equipo.objects.filter(categoria=equipo.categoria)
+    entrenador= Entrenador.objects.get(usuario_id=request.user.id)
+    entrenamientos= Entrenamiento.objects.filter(entrenador_id=entrenador.id, fecha__gte=fecha_actual).order_by('fecha')
+    clasificacion= saca_clasificacion(equipos_cat)
+    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={partidos_futuros[0].lugar}&format=json")
+    data = response.json()
+    print(response.content)
+    lat = data[0]['lat']
+    lon = data[0]['lon']
+
+    primer_entrenamiento = None
+    if entrenamientos.exists():
+        primer_entrenamiento = entrenamientos.first()
+
+    return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:5], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[:5],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon,'equipos_entrenador': equipos, 'entrenamiento': primer_entrenamiento})
+
+
+def equipos_entrenador(request):
+    usuario = request.user
+    equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
+    return equipos
