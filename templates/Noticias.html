@@ -17,7 +17,7 @@
             object-fit: contain;
             aspect-ratio: auto;
         }
-        
+
         .text-comment {
           overflow-wrap: break-word;
           text-overflow: ellipsis;
@@ -25,21 +25,21 @@
           width: 260px;
           height: 10.2em;
           white-space: nowrap;
-          
+
         }
-        
+
         .textoCompleto {
           height: auto;
           width: auto;
           white-space: normal;
         }
-        
+
         .more {
           cursor: pointer;
-          color: blue;
+          color: black;
           text-decoration: underline;
         }
-        
+
     </style>
 </head>
 {% include "barra_navegacion.html" %}
@@ -62,21 +62,21 @@
             </div>
         {% endfor %}
     </div>
-    
+
    <script>
         var buttons = document.querySelectorAll('.more');
-    
+
         buttons.forEach(button => {
             button.addEventListener('click', toggleText);
         });
-    
+
         function toggleText(event) {
             var buttonText = event.target.innerHTML;
             var cardText = event.target.parentElement;
-    
+
             cardText.classList.toggle('textoCompleto');
             cardText.querySelector('p').classList.toggle('text-truncate');
-    
+
             buttonText === 'Leer más...' ? buttonText = 'Leer menos...' : buttonText = 'Leer más...';
             event.target.innerHTML = buttonText;
         }
@@ -85,4 +85,5 @@
     {% include 'paginator.html' %}
 
 </body>
+{% include 'footer.html' %}
 </html>

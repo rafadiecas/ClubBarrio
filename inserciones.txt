@@ -43,16 +43,80 @@ INSERT INTO ClubBarrioApp_categoria (id, tipo) VALUES (2, 'Benjamin');
 INSERT INTO ClubBarrioApp_categoria (id, tipo) VALUES (1, 'PreBenjamin');
 
 /*Equipo*/
-
+-- Categoría 1: Juvenil
 INSERT INTO ClubBarrioApp_equipo (id, nombre, escudo, categoria_id, es_safa) VALUES (1, 'Cb Amigos del Kebab', 'https://www.gourmetkebab.es/wp-content/uploads/2021/04/kebab-que-es.jpg', 6, 1);
 INSERT INTO ClubBarrioApp_equipo (id, nombre, escudo, categoria_id, es_safa) VALUES (2, 'Baloncesto Pizzas Frias', 'https://s2.abcstatics.com/media/gurmesevilla/2013/04/pizza-margarita.jpg', 6, 1);
 INSERT INTO ClubBarrioApp_equipo (id, nombre, escudo, categoria_id, es_safa) VALUES (3, 'Club Amborguesa Grasa', 'https://www.unileverfoodsolutions.com.co/dam/global-ufs/mcos/NOLA/calcmenu/recipes/col-recipies/fruco-tomate-cocineros/HAMBURGUESA%201200x709.png', 6, 0);
-INSERT INTO ClubBarrioApp_equipo (id, nombre, escudo, categoria_id, es_safa) VALUES (4, 'SafaClubAlevin', 'https://www.estadiodeportivo.com/elementosWeb/gestionCajas/EDE/Image/escudo-Real-Betis-2012.jpg', 3, 0);
+INSERT INTO ClubBarrioApp_equipo (id, nombre, escudo, categoria_id, es_safa) VALUES (4, 'Safa Club Juvenil', 'https://www.estadiodeportivo.com/elementosWeb/gestionCajas/EDE/Image/escudo-Real-Betis-2012.jpg', 6, 0);
 INSERT INTO ClubBarrioApp_equipo (id, nombre, escudo, categoria_id, es_safa) VALUES (5, 'Golden State Hot dog', 'https://imag.bonviveur.com/hot-dog.jpg', 6, 0);
 INSERT INTO ClubBarrioApp_equipo (id, nombre, escudo, categoria_id, es_safa) VALUES (6, 'Sushi Basket', 'https://www.lafallera.es/wp-content/uploads/2023/03/cocer-arroz-de-sushi-1.jpg', 6, 0);
 INSERT INTO ClubBarrioApp_equipo (id, nombre, escudo, categoria_id, es_safa) VALUES (7, 'Croissant Grizzleis', 'https://elfornet.com/media/catalog/product/cache/f4753c3b6a74e8c954e5a6351875a4e6/c/r/croissant_01.jpg', 6, 0);
 INSERT INTO ClubBarrioApp_equipo (id, nombre, escudo, categoria_id, es_safa) VALUES (8, 'KFC Joventut', 'https://static.kfc.es/images/store-images/lg/foto-restaurente01.jpg?v=LZYJn3', 6, 0);
 INSERT INTO ClubBarrioApp_equipo (id, nombre, escudo, categoria_id, es_safa) VALUES (9, 'Donut Basket', 'https://dictionary.cambridge.org/es/images/thumb/doughn_noun_002_11387.jpg?version=5.0.390', 6, 0);
+INSERT INTO ClubBarrioApp_equipo (id, nombre, escudo, categoria_id, es_safa) VALUES (10, 'Burritos Calientes Basket', 'https://dictionary.cambridge.org/es/images/thumb/doughn_noun_002_11387.jpg?version=5.0.390', 6, 0);
+
+-- Categoría 1: Prebenjamín
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Cb Amigos del Kebab Prebenjamin', 'https://via.placeholder.com/150', 1, 1);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Safa Club Prebenjamín', 'https://via.placeholder.com/150', 1, 1);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Los Peques FC', 'https://via.placeholder.com/150', 1, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Mini Estrellas', 'https://via.placeholder.com/150', 1, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Rayitos de Sol', 'https://via.placeholder.com/150', 1, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Pequeños Gigantes', 'https://via.placeholder.com/150', 1, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Estrellitas', 'https://via.placeholder.com/150', 1, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Tigresitos', 'https://via.placeholder.com/150', 1, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Delfines', 'https://via.placeholder.com/150', 1, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Ositos del Campo', 'https://via.placeholder.com/150', 1, 0);
+
+-- Categoría 2: Benjamín
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Cb Amigos del Kebab Benjamin', 'https://via.placeholder.com/150', 2, 1);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Safa Club Benjamín', 'https://via.placeholder.com/150', 2, 1);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Los Chiquitines FC', 'https://via.placeholder.com/150', 2, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Mini Campeones', 'https://via.placeholder.com/150', 2, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Rayitos de Luna', 'https://via.placeholder.com/150', 2, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Pequeños Diamantes', 'https://via.placeholder.com/150', 2, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Estrellitas del Fútbol', 'https://via.placeholder.com/150', 2, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Tigrecitos', 'https://via.placeholder.com/150', 2, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Cachorros', 'https://via.placeholder.com/150', 2, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Pequeños Luchadores', 'https://via.placeholder.com/150', 2, 0);
+
+-- Categoría 3: Alevín
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Cb Amigos del Kebab Alevin', 'https://via.placeholder.com/150', 3, 1);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Safa Club Alevín', 'https://via.placeholder.com/150', 3, 1);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Los Jóvenes FC', 'https://via.placeholder.com/150', 3, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Estrellas Emergentes', 'https://via.placeholder.com/150', 3, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Rayos de Esperanza', 'https://via.placeholder.com/150', 3, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Pequeñas Promesas', 'https://via.placeholder.com/150', 3, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Estrellitas Alevines', 'https://via.placeholder.com/150', 3, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Tigres Jóvenes', 'https://via.placeholder.com/150', 3, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Cachorros Alevines', 'https://via.placeholder.com/150', 3, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Estrellas en Ascenso', 'https://via.placeholder.com/150', 3, 0);
+
+-- Categoría 4: Infantil
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Cb Amigos del Kebab Infantil', 'https://via.placeholder.com/150', 4, 1);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Safa Club Infantil', 'https://via.placeholder.com/150', 4, 1);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Los Futuros Campeones FC', 'https://via.placeholder.com/150', 4, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Estrellas en Formación', 'https://via.placeholder.com/150', 4, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Rayos de Esperanza Infantiles', 'https://via.placeholder.com/150', 4, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Promesas de Éxito', 'https://via.placeholder.com/150', 4, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Estrellas en Desarrollo', 'https://via.placeholder.com/150', 4, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Tigres Infantiles', 'https://via.placeholder.com/150', 4, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Lobitos', 'https://via.placeholder.com/150', 4, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Estrellas en Ascenso Infantiles', 'https://via.placeholder.com/150', 4, 0);
+
+-- Categoría 5: Cadete
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Cb Amigos del Kebab Cadete', 'https://via.placeholder.com/150', 5, 1);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Safa Club Cadete', 'https://via.placeholder.com/150', 5, 1);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Los Futuros Profesionales FC', 'https://via.placeholder.com/150', 5, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Estrellas en Crecimiento', 'https://via.placeholder.com/150', 5, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Rayos de Esperanza Cadetes', 'https://via.placeholder.com/150', 5, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Promesas de la Cancha', 'https://via.placeholder.com/150', 5, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Estrellas en Progreso', 'https://via.placeholder.com/150', 5, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Tigres Cadetes', 'https://via.placeholder.com/150', 5, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Linces', 'https://via.placeholder.com/150', 5, 0);
+INSERT INTO ClubBarrioApp_equipo (nombre, escudo, categoria_id, es_safa) VALUES ('Estrellas en Ascenso Cadetes', 'https://via.placeholder.com/150', 5, 0);
+
+
+
 
 
 /*equipo_entrenadores*/
@@ -109,31 +173,56 @@ INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEn
 INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id) VALUES (11, '2024-04-21', '16:45:00', 1, 1);
 
 
-/*Partido*/
+/*Partidos Generados para primera temporada - 540 registros totales - 5 enfrentamientos por jornada x 18 jornadas x 6 categorias.*/
 
--- Partidos de la jornada 1
-INSERT INTO ClubBarrioApp_partido (fecha, hora, lugar, puntos_equipo1, puntos_equipo2, equipo1_id, equipo2_id, temporada_id,jornada) VALUES
-('2024-06-22', '11:11:00', 'Safa', 62, 57, 1, 2, 1,1),
-('2024-06-23', '12:00:00', 'Estadio Municipal', 43, 75, 3, 4, 1,1),
-('2024-06-23', '14:30:00', 'Polideportivo', 72, 68, 5, 6, 1,1),
-('2024-06-24', '10:00:00', 'Campo de Hockey', 50, 46, 7, 8, 1,1),
-('2024-06-24', '16:00:00', 'Centro Deportivo', 55, 71, 9, 10, 1,1);
 
--- Partidos de la jornada 2
-INSERT INTO ClubBarrioApp_partido (fecha, hora, lugar, puntos_equipo1, puntos_equipo2, equipo1_id, equipo2_id, temporada_id,jornada) VALUES
-('2024-06-29', '11:00:00', 'Safa', 61, 48, 2, 3, 1,2),
-('2024-06-29', '13:30:00', 'Estadio Municipal', 73, 53, 4, 5, 1,2),
-('2024-06-30', '09:00:00', 'Polideportivo', 64, 42, 6, 7, 1,2),
-('2024-06-30', '15:00:00', 'Campo de Hockey', 56, 79, 8, 9, 1,2),
-('2024-07-01', '12:00:00', 'Centro Deportivo', 45, 67, 10, 1, 1,2);
+WITH equipos AS (
+    SELECT id, categoria_id, ROW_NUMBER() OVER(PARTITION BY categoria_id ORDER BY id) AS rn
+    FROM ClubBarrioApp_equipo
+),
+fechas AS (
+    SELECT '2024-06-22' AS fecha, 1 AS jornada
+    UNION ALL
+    SELECT DATE(fecha, '+7 day'), jornada + 1
+    FROM fechas
+    LIMIT 18
+),
+partidos AS (
+    SELECT
+        CASE WHEN e1.rn <= e2.rn THEN e1.id ELSE e2.id END AS equipo1_id,
+        CASE WHEN e1.rn <= e2.rn THEN e2.id ELSE e1.id END AS equipo2_id,
+        e1.categoria_id,
+        ((e1.rn + e2.rn - 2) % 9) + 1 AS jornada
+    FROM equipos e1
+    JOIN equipos e2 ON e1.categoria_id = e2.categoria_id AND e1.id < e2.id
+),
+partidos_ida AS (
+    SELECT f.fecha, p.jornada, p.equipo1_id, p.equipo2_id, p.categoria_id
+    FROM fechas AS f
+    JOIN partidos AS p ON f.jornada = p.jornada AND f.jornada <= 9
+),
+partidos_vuelta AS (
+    SELECT DATE(f.fecha, '+63 day') AS fecha, p.jornada + 9 AS jornada, p.equipo2_id AS equipo1_id, p.equipo1_id AS equipo2_id, p.categoria_id
+    FROM fechas AS f
+    JOIN partidos AS p ON f.jornada = p.jornada AND f.jornada <= 9
+)
+INSERT INTO ClubBarrioApp_partido (fecha, hora, lugar, puntos_equipo1, puntos_equipo2, equipo1_id, equipo2_id, temporada_id, jornada)
+SELECT
+    fecha,
+    CASE WHEN jornada % 2 = 0 THEN '12:00:00' ELSE '14:30:00' END AS hora,
+    CASE WHEN jornada % 2 = 0 THEN 'Estadio Municipal' ELSE 'Polideportivo' END AS lugar,
+    ABS(RANDOM()) % 101 AS puntos_equipo1,
+    ABS(RANDOM()) % 101 AS puntos_equipo2,
+    equipo1_id,
+    equipo2_id,
+    1 AS temporada_id,
+    jornada
+FROM (
+    SELECT * FROM partidos_ida
+    UNION ALL
+    SELECT * FROM partidos_vuelta
+);
 
--- Partidos de la jornada 3
-INSERT INTO ClubBarrioApp_partido (fecha, hora, lugar, puntos_equipo1, puntos_equipo2, equipo1_id, equipo2_id, temporada_id,jornada) VALUES
-('2024-07-06', '11:30:00', 'Safa', 49, 58, 3, 5, 1,3),
-('2024-07-06', '14:00:00', 'Estadio Municipal', 76, 44, 6, 8, 1,3),
-('2024-07-07', '10:30:00', 'Polideportivo', 66, 54, 9, 2, 1,3),
-('2024-07-07', '16:30:00', 'Campo de Hockey', 70, 47, 1, 4, 1,3),
-('2024-07-08', '13:00:00', 'Centro Deportivo', 52, 63, 10, 7, 1,3);
 
 
 

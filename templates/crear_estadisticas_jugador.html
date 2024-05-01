@@ -10,7 +10,7 @@
 <div class="container">
 
 
-    <h1 class="my-4">Crear equipo</h1>
+    <h1 class="my-4">{% if modo_edicion %}Editar{% else %}Crear{% endif %} Estadísticas</h1>
 
         {% if errores %}
         <div class="alert alert-danger">

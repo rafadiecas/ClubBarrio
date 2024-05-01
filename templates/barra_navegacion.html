@@ -16,7 +16,8 @@
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="https://cdn.datatables.net/plug-ins/1.10.15/sorting/datetime-moment.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/es.js"></script> <!-- Carga el archivo de idioma español -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/es.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script><!-- Carga el archivo de idioma español -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css">
 <style>
     .navbar-brand img {
@@ -42,19 +43,19 @@
     padding: 0 1em;
   }
 }
-    {% if not modo_edicion %}  
+    {% if not modo_edicion %}
 .form-control {
             background-color: white !important;
             color: black !important;
-        } 
-    {% endif %}  
+        }
+    {% endif %}
 </style>
 </head>
 
 <body>
 <nav class="navbar navbar-expand-md navbar-dark">
   <div class="container-fluid">
-    <a class="navbar-brand d-md-none" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% else %} {% url 'inicio' %} {% endif %} ">
+    <a class="navbar-brand d-md-none" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %}{% elif user.is_authenticated and user.rol == "Entrenador" %}{% url 'entrenador' %}{% else %} {% url 'inicio' %} {% endif %} ">
   <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="" >
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +68,7 @@
         </li>
       {% if user.is_authenticated and user.rol == "Tutor" %}
           <div class="btn-group">
-          <button type="button" class="btn" style="color: white;font-size: 1.1em;padding: 0.5em 1em;">Gestion</button>
+          <a class="nav-link" aria-current="page" href="{% url 'gestion_familia' %}" role="button">Gestión</a>
           <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="color: white">
             <span class="visually-hidden">Toggle Dropdown</span>
           </button>
@@ -86,19 +87,30 @@
           <li class="nav-item">
           <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
           </li>
+      {% elif  user.is_authenticated and user.rol == "Entrenador"%}
+          <div class="dropdown">
+            <a class="nav-link" aria-current="page" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: white">
+            Equipos
+            </a>
+            <ul class="dropdown-menu">
+            {% for e in equipos_entrenador %}
+                <li><a class="dropdown-item" href="{% url 'equipo' id=e.id %}">{{ e.nombre }}</a></li>
+            {% endfor %}
+            </ul>
+            </div>
       {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'tarifas' %}">Tarifas</a>
           </li>
       {% endif %}
-        <a class="navbar-brand d-none d-md-block" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% elif user.rol == "Jugador" %} {% url 'inicio_jugador' %} {% else %} {% url 'inicio' %} {% endif %} ">
+        <a class="navbar-brand d-none d-md-block" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% elif user.rol == "Jugador" %} {% url 'inicio_jugador' %}{% elif user.is_authenticated and user.rol == "Entrenador" %}{% url 'entrenador' %} {% else %} {% url 'inicio' %} {% endif %} ">
           <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="">
         </a>
 
       {% if user.is_authenticated and user.rol == "Jugador" %}
       {% else %}
           <li class="nav-item">
-          <a class="nav-link" href="#">Tienda</a>
+          <a class="nav-link" href="{% url 'tienda' %}">Tienda</a>
         </li>
       {% endif %}
           {% if user.is_authenticated %}
@@ -163,7 +175,7 @@
             }
         },
         "columnDefs": [
-            
+
             {
                 "targets": horaIndex, // Aplica el formato a la columna 'Hora'
                 "render": function (data, type, row) {

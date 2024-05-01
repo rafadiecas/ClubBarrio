@@ -55,6 +55,7 @@ urlpatterns = [
     path('usuario/', pagina_usuario, name='usuario'),
     path('tarifas/', tarifas, name='tarifas'),
     path('usuario/inscripcion', inscripciones, name='inscripciones'),
+    path('tienda/', pagina_tienda, name='tienda'),
     path('inicio_jugador/<int:id>/', inicio_jugador, name='inicio_jugador'),
     path('inicio_jugador/', inicio_jugador, name='inicio_jugador'),
     path('estadisticas/<int:id>/', estadisticas_jugador, name='estadisticas_jugador'),
@@ -64,6 +65,9 @@ urlpatterns = [
     path('usuario/gestion_familia/editar/<int:id>/', edita_hijo, name='edita_hijo'),
     path('usuario/perfil/', perfil, name='perfil'),
     path('usuario/perfil/pass/', perfil_pass, name='perfil_pass'),
-
+    path('terminos_y_servicios', terminos_y_servicios, name='terminos_y_servicios'),
+    path('entrenador', entrenador, name='entrenador'),
+    path('entrenador/equipos/<int:id>/', pagina_equipo, name='equipo'),
+    path('contacto', pagina_contacto, name='contacto'),
 
 ]

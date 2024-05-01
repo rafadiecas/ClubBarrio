@@ -1,7 +1,9 @@
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.hashers import make_password
+from django.core.mail import EmailMessage
+from django.db.models import Count, Q
 from django.shortcuts import render, redirect
-from django.utils.datetime_safe import datetime
+from django.utils.datetime_safe import datetime, date
 import re
 from collections import defaultdict
 from .models import *
@@ -15,6 +17,7 @@ from django.db.models import Count, F, ExpressionWrapper, FloatField, Sum, Query
 from itertools import chain
 
 from .models import Partido
+from django.conf import settings
 
 
 # Create your views here.
@@ -22,12 +25,30 @@ from .models import Partido
 def pagina_inicio(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     list_noticias = list_noticias[0:3]
+    #mail = EmailMessage('Asunto', 'Cuerpo del mensaje', to=['safaclubbasket@gmail.com'])
+    #mail.send()
     return render(request, 'inicio.html', {'noticias': list_noticias})
+
+def pagina_tienda(request):
+    list_productos = Producto.objects.all()
+    page = request.GET.get('page', 1)
+
+    try:
+        paginator = Paginator(list_productos, 9) # Muestra la cantidad de productor por pagina
+        list_productos = paginator.page(page)
+    except:
+        raise Http404
+
+    data = {
+        'entity': list_productos,
+        'paginator': paginator
+    }
+
+    return render(request, 'tienda.html', data)
 
 def pagina_noticias(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     page = request.GET.get('page', 1)
-
 
     try:
         paginator = Paginator(list_noticias, 3)
@@ -49,7 +70,28 @@ def pagina_noticias(request):
         elif usuario.rol == 'Jugador':
             jugador = Jugador.objects.get(usuario_id=usuario.id)
             data['jugador'] = jugador
+        elif usuario.rol == 'Entrenador':
+            equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
+            data['equipos_entrenador'] = equipos
     return render(request, 'Noticias.html', data)
+
+def pagina_contacto(request):
+    usuario = request.user
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        email = request.POST.get('email')
+        asunto = request.POST.get('asunto') + " - Enviado por: " + nombre +"-"+ email
+        mensaje = " - Enviado por: " + nombre + "\n" + "Email: " + email + "\n"+ "Mensaje: " + request.POST.get('mensaje')
+        correo = EmailMessage(
+            asunto,
+            mensaje,
+            to=[settings.EMAIL_HOST_USER]
+        )
+        correo.content_subtype = "html"
+        correo.send()
+        return JsonResponse({'success': 'Mensaje enviado con éxito'})
+    return render(request, 'contacto.html')
+
 
 #@user_required
 #@rol_requerido('Administrador')
@@ -120,7 +162,7 @@ def perfil_pass(request):
 
 def new_user(request):
     Users = User.objects.all()
-    Equipos = Equipo.objects.all()
+    Equipos = Equipo.objects.filter(es_safa=True)
     Tutores = TutorLegal.objects.all()
     roles = Role.labels[:-1]
     if request.method == 'GET':
@@ -220,6 +262,7 @@ def registro(request):
         contrasenya = request.POST.get('contrasenya')
         repetirContrasenya = request.POST.get('repetirContrasenya')
         fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        rol = "Usuario"
 
         errores = filtro(email, fecha_nacimiento, 'Usuario', nombre_usuario, contrasenya, repetirContrasenya)
 
@@ -228,8 +271,14 @@ def registro(request):
             return render(request, 'registro.html', {"errores": errores, "nombre_usuraio": nombre_usuario, "email": email, "fecha_nacimiento": fecha_nacimiento})
         else:
             usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email,
-                                          fecha_nacimiento=fecha_nacimiento)
+                                          fecha_nacimiento=fecha_nacimiento, rol=rol)
             usuario.save()
+            mensaje = ("Bienvenido a SafaClubBasket, " + nombre_usuario + ". Tu registro se ha completado con éxito."
+                       + "<br><br>" + "Tus credenciales de acceso son: " + "<br>"
+                       + "Usuario: " + nombre_usuario + "<br>" + "Contraseña: " + contrasenya + "<br><br>" + "Un saludo, SafaClubBasket.")
+            correo = EmailMessage('Registro en SafaClubBasket', mensaje, to=[email])
+            correo.content_subtype = "html"
+            correo.send()
 
             return redirect('login')
 
@@ -250,6 +299,9 @@ def logear(request):
                 return redirect('usuario')
             elif user.rol == "Jugador":
                 return redirect('inicio_jugador')
+
+            elif user.rol == "Entrenador":
+                return redirect('entrenador')
 
             # Redirección tras un login exitoso
             return redirect('inicio')
@@ -370,7 +422,7 @@ def editar_equipo(request, id):
         entrenadores = Entrenador.objects.all()
         id_entrenadores = equipo.entrenadores.values_list('id', flat=True)
         es_safa = equipo.es_safa
-        return render(request, 'crear_equipo.html', {'equipo':equipo, 'id_entrenadores':id_entrenadores, 'lista_categorias': lista_categorias, 'entrenadores': entrenadores, 'es_safa': es_safa})
+        return render(request, 'crear_equipo.html', {'equipo':equipo, 'id_entrenadores':id_entrenadores, 'lista_categorias': lista_categorias, 'entrenadores': entrenadores, 'es_safa': es_safa, 'modo_edicion': True})
     else:
         equipo.nombre = request.POST.get('nombre')
         equipo.escudo = request.POST.get('escudo')
@@ -418,7 +470,7 @@ def editar_entrenamiento(request, id):
         lista_entrenadores = Entrenador.objects.all()
         lista_lugares_entrenamiento = LugarEntrenamiento.objects.all()
         return render(request, 'crear_entrenamiento.html',
-                      {'entrenamiento': entrenamiento, 'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento})
+                      {'entrenamiento': entrenamiento, 'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento, 'modo_edicion': True})
     else:
         entrenamiento.fecha = request.POST.get('fecha')
         entrenamiento.hora = request.POST.get('hora')
@@ -458,7 +510,7 @@ def elimina_noticia(request, id):
 def editar_noticia(request,id):
     noticia = Noticias.objects.get(id=id)
     if request.method == 'GET':
-        return render(request, 'crear_noticias.html', {'noticia':noticia})
+        return render(request, 'crear_noticias.html', {'noticia':noticia, 'modo_edicion': True})
     else:
         noticia.titulo = request.POST.get('titulo')
         noticia.articulo = request.POST.get('articulo')
@@ -493,7 +545,7 @@ def editar_estadisticas_jugador(request, id):
         lista_entrenadores = Entrenador.objects.all()
         lista_partidos = Partido.objects.all()
         return render(request, 'crear_estadisticas_jugador.html',
-                      {'estadisticas_jugador': estadisticas_jugador, 'lista_entrenadores': lista_entrenadores, 'lista_partidos': lista_partidos})
+                      {'estadisticas_jugador': estadisticas_jugador, 'lista_entrenadores': lista_entrenadores, 'lista_partidos': lista_partidos, 'modo_edicion': True})
     else:
         estadisticas_jugador.puntos = request.POST.get('puntos')
         estadisticas_jugador.minutos = request.POST.get('minutos')
@@ -545,7 +597,7 @@ def editar_partido(request, id):
     if request.method == 'GET':
         lista_equipos = Equipo.objects.all()
         temporadas = Temporada.objects.all()
-        return render(request, 'crear_partidos.html', {'partido': partido, 'lista_equipos': lista_equipos, 'temporadas': temporadas})
+        return render(request, 'crear_partidos.html', {'partido': partido, 'lista_equipos': lista_equipos, 'temporadas': temporadas, 'modo_edicion': True})
     else:
         partido.fecha = request.POST.get('fecha')
         partido.hora = request.POST.get('hora')
@@ -593,7 +645,7 @@ def edita_producto(request, id):
     if request.method == 'GET':
         tallas = Talla.objects.all()
         tipos = Tipo.objects.all()
-        return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos})
+        return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos, 'modo_edicion': True})
     else:
         producto.nombre = request.POST.get('nombre')
         producto.precio = request.POST.get('precio')
@@ -615,7 +667,19 @@ def pagina_usuario(request):
         hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
         return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijos': hijos})
     else:
-        return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos})
+        equipos_por_categoria = {}
+
+        for equipo in Equipo.objects.all():
+            if equipo.es_safa:
+                plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
+                if plazas_libres > 0:
+                    equipo_info = {'equipo': equipo, 'plazas_libres': plazas_libres}
+                    categoria_equipo = equipo.categoria.tipo
+                    if categoria_equipo in equipos_por_categoria:
+                        equipos_por_categoria[categoria_equipo].append(equipo_info)
+                    else:
+                        equipos_por_categoria[categoria_equipo] = [equipo_info]
+        return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos,'equipos_por_categoria': equipos_por_categoria})
 
 def tarifas(request):
     return render(request, 'tarifas.html')
@@ -634,6 +698,13 @@ def inscripciones(request):
         tutor.tarifa = request.POST.get('tarifa_seleccionada')
         tutor.save()
 
+        mensaje = ("Gracias por suscribirte, " + usuario.username + ". Tu suscripción se ha completado con éxito."
+                   + "<br><br>" + "Algunos datos importantes: " + "<br>"
+                   + "Tarifa selecionada: " + tutor.tarifa + "<br>" + "Pagos los dias " + str(datetime.now().day)+ " de cada mes." + "<br><br>" + "Un saludo, SafaClubBasket.")
+        correo = EmailMessage('Suscripción en SafaClubBasket', mensaje, to=[usuario.email])
+        correo.content_subtype = "html"
+        correo.send()
+
         return redirect('usuario')
 
 def lista_hijos(request):
@@ -645,9 +716,7 @@ def lista_hijos(request):
 def crea_hijos(request):
     usuario = request.user
     tutor = TutorLegal.objects.get(usuario_id=usuario.id)
-    categoria = ""
     hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
-    errors = []
     hijo = User()
     jugador = Jugador()
     if request.method == 'GET':
@@ -674,38 +743,16 @@ def crea_hijos(request):
                 hijo.username= username
                 hijo.email = email
                 hijo.fecha_nacimiento = fecha_nacimiento
+                hijo.rol = rol
                 hijo.password = make_password(password)
 
-
-            if diferencia.days < 1825:
-                categoria = 'Prebenjamin'
-            elif diferencia.days < 2920:
-                categoria = 'Benjamin'
-            elif diferencia.days < 4015:
-                categoria = 'Alevin'
-            elif diferencia.days < 5110:
-                categoria = 'Infantil'
-            elif diferencia.days < 6205:
-                categoria = 'Cadete'
-            elif diferencia.days < 7300:
-                categoria = 'Juvenil'
-            else:
-                errors.append("El jugador debe ser menor de 20 años")
-
-
+            categoria = calculador_categoria(diferencia, errors)
 
             if (tutor.tarifa == 'BASE' and len(hijos) >= 1) or (tutor.tarifa == 'PLUS' and len(hijos) >= 3) or (
                     tutor.tarifa == 'PREMIUM' and len(hijos) >= 5):
                 errors.append("No puedes añadir más hijos")
 
-            for equipo in Equipo.objects.all():
-                if categoria in equipo.categoria.tipo and equipo.es_safa:
-                    plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
-                    if plazas_libres > 0:
-                        dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
-                        lista_equipos.append(dict)
-            if len(lista_equipos) == 0:
-                errors.append("No hay plazas disponibles en ningún equipo")
+            filtro_equipos_plaza(categoria, errors, lista_equipos)
 
             if len(errors) != 0:
                 return render(request, 'crear_hijo.html',
@@ -725,6 +772,18 @@ def crea_hijos(request):
         jugador.equipo = Equipo.objects.get(id=int(request.POST.get('tarifa_seleccionada')))
         jugador.save()
         return redirect('gestion_familia')
+
+
+def filtro_equipos_plaza(categoria, errors, lista_equipos):
+    for equipo in Equipo.objects.all():
+        if categoria in equipo.categoria.tipo and equipo.es_safa:
+            plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
+            if plazas_libres > 0:
+                dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
+                lista_equipos.append(dict)
+    if len(lista_equipos) == 0:
+        errors.append("No hay plazas disponibles en ningún equipo")
+
 
 def elimina_hijo(request, id):
     hijo = Jugador.objects.get(id=id)
@@ -750,30 +809,9 @@ def edita_hijo(request, id):
             diferencia = datetime.now() - datetime.strptime(request.POST.get('fecha_nacimiento'), '%Y-%m-%d')
             lista_equipos = []
 
+            categoria = calculador_categoria(diferencia, errors)
 
-            if diferencia.days < 1825:
-                categoria = 'Prebenjamin'
-            elif diferencia.days < 2920:
-                categoria = 'Benjamin'
-            elif diferencia.days < 4015:
-                categoria = 'Alevin'
-            elif diferencia.days < 5110:
-                categoria = 'Infantil'
-            elif diferencia.days < 6205:
-                categoria = 'Cadete'
-            elif diferencia.days < 7300:
-                categoria = 'Juvenil'
-            else:
-                errors.append("El jugador debe ser menor de 20 años")
-
-            for equipo in Equipo.objects.all():
-                if categoria in equipo.categoria.tipo and equipo.es_safa:
-                    plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
-                    if plazas_libres > 0:
-                        dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
-                        lista_equipos.append(dict)
-            if len(lista_equipos) == 0:
-                errors.append("No hay plazas disponibles en ningún equipo")
+            filtro_equipos_plaza(categoria, errors, lista_equipos)
 
             if len(errors) != 0:
                 return render(request, 'crear_hijo.html', {'jugador': jugador,'modo_edicion': True, 'fecha_nacimiento': fecha_nacimiento,'errores': errors, 'edicion_equipo': False})
@@ -787,6 +825,26 @@ def edita_hijo(request, id):
         jugador.equipo = Equipo.objects.get(id=int(request.POST.get('tarifa_seleccionada')))
         jugador.save()
         return redirect('gestion_familia')
+
+
+def calculador_categoria(diferencia, errors):
+    categoria = ""
+    if diferencia.days < 2555 and diferencia.days >= 1825:
+        categoria = 'Prebenjamin'
+    elif diferencia.days < 3285:
+        categoria = 'Benjamin'
+    elif diferencia.days < 4015:
+        categoria = 'Alevin'
+    elif diferencia.days < 4745:
+        categoria = 'Infantil'
+    elif diferencia.days < 5475:
+        categoria = 'Cadete'
+    elif diferencia.days < 6575:
+        categoria = 'Juvenil'
+    else:
+        errors.append("El jugador debe ser menor de 18 años y mayor de 5")
+    return categoria
+
 
 def inicio_jugador(request, id=None):
     list_noticias = Noticias.objects.all().order_by('-id')
@@ -890,3 +948,21 @@ def estadisticas_jugador(request, id):
 
     return render(request, 'estadisticas_jugador.html', {'estadisticas_jugador': estadisticas_jugador, 'hijos': hijos ,'jugador': jugador, 'list_noticias': list_noticias})
 
+
+def terminos_y_servicios(request):
+    return render(request, 'terminos_y_servicios.html')
+
+def entrenador(request):
+    usuario = request.user
+    equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
+    return render(request, 'entrenador.html',{'equipos_entrenador': equipos})
+
+def pagina_equipo(request, id):
+    equipo = Equipo.objects.get(id=id)
+    fecha_actual = date.today()
+    partidos_anteriores = Partido.objects.filter(
+        Q(equipo1_id=id) | Q(equipo2_id=id), fecha__lt=fecha_actual).order_by('-fecha')
+    partidos_futuros = Partido.objects.filter(
+        Q(equipo1_id=id) | Q(equipo2_id=id), fecha__gte=fecha_actual).order_by('fecha')
+    jugadores = Jugador.objects.filter(equipo_id=id)
+    return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:5], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[:5]})
