@@ -775,7 +775,7 @@ def crea_hijos(request):
 
 def filtro_equipos_plaza(categoria, errors, lista_equipos):
     for equipo in Equipo.objects.all():
-        if categoria in equipo.categoria.tipo and equipo.es_safa:
+        if categoria == equipo.categoria.tipo and equipo.es_safa:
             plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
             if plazas_libres > 0:
                 dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
@@ -828,8 +828,10 @@ def edita_hijo(request, id):
 
 def calculador_categoria(diferencia, errors):
     categoria = ""
-    if diferencia.days < 2555 and diferencia.days >= 1825:
-        categoria = 'Prebenjamin'
+    if diferencia.days <= 1825:
+        categoria =""
+    elif diferencia.days < 2555:
+        categoria = 'PreBenjamin'
     elif diferencia.days < 3285:
         categoria = 'Benjamin'
     elif diferencia.days < 4015:
@@ -938,7 +940,7 @@ def pagina_equipo(request, id):
     if entrenamientos.exists():
         primer_entrenamiento = entrenamientos.first()
 
-    return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:5], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[:5],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon,'equipos_entrenador': equipos, 'entrenamiento': primer_entrenamiento})
+    return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon,'equipos_entrenador': equipos, 'entrenamiento': primer_entrenamiento})
 
 
 def equipos_entrenador(request):
