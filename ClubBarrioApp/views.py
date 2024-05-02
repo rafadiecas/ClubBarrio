@@ -978,7 +978,7 @@ def inicio_jugador(request, id=None):
             'nombre': e.nombre,
         }
         clasificacion.append(datos_equipo)
-
+    clasificacion.sort(key=lambda x: ((x['ganados']), x['diferencia_puntos']), reverse=True)
     equipo3 = Equipo.objects.get(id=jugador.equipo.id)
     list_partidos = Partido.objects.filter(Q(equipo1_id=equipo3.id) | Q(equipo2_id=equipo3.id))
     return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos})
