@@ -739,11 +739,9 @@ def crea_hijos(request):
             errors = filtro(email, fecha_nacimiento, rol, username, password, password2)
 
             if(len(errors) == 0):
-                hijo.username= username
-                hijo.email = email
-                hijo.fecha_nacimiento = fecha_nacimiento
-                hijo.rol = rol
-                hijo.password = make_password(password)
+                datos= {'username': username, 'rol': rol, 'email': email, 'password': password, 'fecha_nacimiento': fecha_nacimiento, 'nombre': nombre, 'apellidos': apellidos}
+                request.session['datos'] = datos
+
 
             categoria = calculador_categoria(diferencia, errors)
 
@@ -759,16 +757,22 @@ def crea_hijos(request):
                                'password': password, 'email': email, 'username': username, 'errores': errors,
                                'hijos': hijos, 'nombre': nombre, 'apellidos': apellidos})
 
-            hijo.save()
 
 
             return render(request, 'crear_hijo.html', {'equipos': lista_equipos, 'edicion_equipo': True, 'nombre': nombre, 'apellidos': apellidos, 'hijo': hijo})
 
-        jugador.usuario = User.objects.get(id=request.POST.get('hijo'))
-        jugador.nombre = request.POST.get('nombre-jug')
-        jugador.apellidos = request.POST.get('apellidos-jug')
+        datos= request.session['datos']
+        hijo.username= datos['username']
+        hijo.email = datos['email']
+        hijo.fecha_nacimiento = datos['fecha_nacimiento']
+        hijo.rol = datos['rol']
+        hijo.password = make_password(datos['password'])
+        hijo.save()
+        jugador.usuario = User.objects.get(id=hijo.id)
+        jugador.nombre = datos['nombre']
+        jugador.apellidos = datos['apellidos']
         jugador.tutorLegal = tutor
-        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('tarifa_seleccionada')))
+        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('equipo_seleccionado')))
         jugador.save()
         return redirect('gestion_familia')
 

@@ -101,6 +101,9 @@
             <div class="col">
                 <div class="text-center">
                     <h2>Partidos anteriores</h2>
+                    {% if partidos_anteriores|length == 0 %}
+                        <p>No hay partidos anteriores</p>
+                    {% endif %}
                     <ul class="list-group list-group-flush">
                         {% for p in partidos_anteriores %}
                             <li class="list-group-item">
