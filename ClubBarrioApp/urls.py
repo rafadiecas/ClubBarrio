@@ -69,5 +69,5 @@ urlpatterns = [
     path('entrenador', entrenador, name='entrenador'),
     path('entrenador/equipos/<int:id>/', pagina_equipo, name='equipo'),
     path('contacto', pagina_contacto, name='contacto'),
-
+    path('entrenador/entrenamientos/', entrenamientos_listado_entrenador, name='entrenamientos_listado_entrenador'),
 ]
