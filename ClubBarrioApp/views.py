@@ -1,11 +1,15 @@
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.hashers import make_password
 from django.core.mail import EmailMessage
-from django.db.models import Count, Q
+from django.db.models import Count, Q, When, Value
+from django.db.models.functions import Coalesce
+from django.forms import IntegerField
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime, date
 import re
 from collections import defaultdict
+
+
 from .models import *
 from django.core.paginator import Paginator
 from django.http import Http404
@@ -19,6 +23,7 @@ from itertools import chain
 from .models import Partido
 from django.conf import settings
 
+from django.db.models import F, Count, Case, When, Value, IntegerField
 
 # Create your views here.
 
@@ -865,7 +870,7 @@ def inicio_jugador(request, id=None):
         jugador = Jugador.objects.get(usuario_id=id)
 
     equipos = Equipo.objects.filter(categoria_id=jugador.equipo.categoria)
-
+    clasificacion = []
     # clasificacion = list()
     #
     # for e in equipos:
@@ -891,58 +896,89 @@ def inicio_jugador(request, id=None):
     #     clasificacion.append(equipo)
     # clasificacion.sort(key=lambda x:((x['partidos_ganados']), x['partidos_jugados']), reverse=True)
 
-    partidos_ganados_local = Partido.objects.filter(
-        puntos_equipo1__gt=F('puntos_equipo2')
-    ).values('equipo1_id').annotate(
-        equipo_id=F('equipo1_id'),
-        ganados=Count('equipo1_id')
-    )
-    # Calculamos la cantidad de partidos ganados por cada equipo como visitante
-    partidos_ganados_visitante = Partido.objects.filter(
-        puntos_equipo2__gt=F('puntos_equipo1')
-    ).values('equipo2_id').annotate(
-        equipo_id=F('equipo2_id'),
-        ganados=Count('equipo2_id')
-    )
-    # Unimos los resultados de partidos ganados como local y como visitante
-    partidos_ganados = list(chain(partidos_ganados_local, partidos_ganados_visitante))
-    # Calculamos el basket average para cada equipo como local
-    basket_average_local = Partido.objects.annotate(
-        puntos_diferencia=ExpressionWrapper(
-            F('puntos_equipo1') - F('puntos_equipo2'),
-            output_field=FloatField()
-        )
-    ).values('equipo1_id').annotate(
-        equipo_id=F('equipo1_id'),
-        basket_average=Sum('puntos_diferencia')
-    )
-    # Calculamos el basket average para cada equipo como visitante
-    basket_average_visitante = Partido.objects.annotate(
-        puntos_diferencia=ExpressionWrapper(
-            F('puntos_equipo2') - F('puntos_equipo1'),
-            output_field=FloatField()
-        )
-    ).values('equipo2_id').annotate(
-        equipo_id=F('equipo2_id'),
-        basket_average=Sum('puntos_diferencia')
-    )
-
-    # Unimos los resultados de basket average como local y como visitante
-    basket_average = list(chain(basket_average_local, basket_average_visitante))
-
-    partidos_jugados_local = Partido.objects.values('equipo1_id').annotate(equipo_id=F('equipo1_id'), jugados=Count('equipo1_id'), nombre=F('equipo1__nombre'))
-    partidos_jugados_visitante = Partido.objects.values('equipo2_id').annotate(equipo_id=F('equipo2_id'), jugados=Count('equipo2_id'), nombre=F('equipo2__nombre'))
-    partidos_jugados = list(chain(partidos_jugados_local, partidos_jugados_visitante))
+    # partidos_ganados_local = Partido.objects.filter(
+    #     puntos_equipo1__gt=F('puntos_equipo2')
+    # ).values('equipo1_id').annotate(
+    #     equipo_id=F('equipo1_id'),
+    #     ganados=Count('equipo1_id')
+    # )
+    # # Calculamos la cantidad de partidos ganados por cada equipo como visitante
+    # partidos_ganados_visitante = Partido.objects.filter(
+    #     puntos_equipo2__gt=F('puntos_equipo1')
+    # ).values('equipo2_id').annotate(
+    #     equipo_id=F('equipo2_id'),
+    #     ganados=Count('equipo2_id')
+    # )
+    # # Unimos los resultados de partidos ganados como local y como visitante
+    # partidos_ganados = list(chain(partidos_ganados_local, partidos_ganados_visitante))
+    # # Calculamos el basket average para cada equipo como local
+    # basket_average_local = Partido.objects.annotate(
+    #     puntos_diferencia=ExpressionWrapper(
+    #         F('puntos_equipo1') - F('puntos_equipo2'),
+    #         output_field=FloatField()
+    #     )
+    # ).values('equipo1_id').annotate(
+    #     equipo_id=F('equipo1_id'),
+    #     basket_average=Sum('puntos_diferencia')
+    # )
+    # # Calculamos el basket average para cada equipo como visitante
+    # basket_average_visitante = Partido.objects.annotate(
+    #     puntos_diferencia=ExpressionWrapper(
+    #         F('puntos_equipo2') - F('puntos_equipo1'),
+    #         output_field=FloatField()
+    #     )
+    # ).values('equipo2_id').annotate(
+    #     equipo_id=F('equipo2_id'),
+    #     basket_average=Sum('puntos_diferencia')
+    # )
+    #
+    # # Unimos los resultados de basket average como local y como visitante
+    # basket_average = list(chain(basket_average_local, basket_average_visitante))
+    #
+    # partidos_jugados_local = Partido.objects.values('equipo1_id').annotate(equipo_id=F('equipo1_id'), jugados=Count('equipo1_id'), nombre=F('equipo1__nombre'))
+    # partidos_jugados_visitante = Partido.objects.values('equipo2_id').annotate(equipo_id=F('equipo2_id'), jugados=Count('equipo2_id'), nombre=F('equipo2__nombre'))
+    # partidos_jugados = list(chain(partidos_jugados_local, partidos_jugados_visitante))
     # Unimos los resultados de partidos ganados y basket average
     # Usamos un diccionario defaultdict para combinar los resultados por equipo_id
-    resultados_por_equipo = defaultdict(lambda: {'equipo_id': None, 'ganados': 0, 'basket_average': 0, 'jugados': 0, 'nombre': ""})
+    # resultados_por_equipo = defaultdict(lambda: {'equipo_id': None, 'ganados': 0, 'basket_average': 0, 'jugados': 0, 'nombre': ""})
+    #
+    # for resultado in chain(partidos_ganados, basket_average):
+    #     equipo_id = resultado['equipo_id']
+    #     resultados_por_equipo[equipo_id].update(resultado)
+    #
+    # # Convertimos el defaultdict a una lista de diccionarios
+    # clasificacion = list(resultados_por_equipo.values())
+    # Consulta para los partidos ganados como equipo local
+    # Consulta para los partidos ganados como equipo local
+    # Consulta para los partidos ganados como equipo local
+    # Consulta para los partidos ganados como equipo local
+    # Consulta para los partidos ganados como equipo local
+    # Consulta para los partidos ganados como equipo local
+    # Obtener los partidos ganados por cada equipo
+    # Obtener partidos jugados por cada equipo (tanto como local y visitante)
+    for e in equipos:
+        partidos_equipo1 = Partido.objects.filter(equipo1_id=e.id)
+        partidos_equipo2 = Partido.objects.filter(equipo2_id=e.id)
+        # Calcular partidos ganados
+        partidos_ganados_equipo1 = partidos_equipo1.filter(puntos_equipo1__gt=F('puntos_equipo2'))
+        partidos_ganados_equipo2 = partidos_equipo2.filter(puntos_equipo2__gt=F('puntos_equipo1'))
+        total_partidos_ganados = partidos_ganados_equipo1.count() + partidos_ganados_equipo2.count()
+        # Calcular partidos jugados
+        total_partidos_jugados = partidos_equipo1.count() + partidos_equipo2.count()
+        # Calcular diferencia de puntos
+        total_anotados_equipo1 = partidos_equipo1.aggregate(total_anotados=Sum('puntos_equipo1'))['total_anotados'] or 0
+        total_anotados_equipo2 = partidos_equipo2.aggregate(total_anotados=Sum('puntos_equipo2'))['total_anotados'] or 0
+        total_recibidos_equipo1 = partidos_equipo1.aggregate(total_recibidos=Sum('puntos_equipo2'))['total_recibidos'] or 0
+        total_recibidos_equipo2 = partidos_equipo2.aggregate(total_recibidos=Sum('puntos_equipo1'))['total_recibidos'] or 0
+        diferencia_puntos = (total_anotados_equipo1 + total_anotados_equipo2) - (total_recibidos_equipo1 + total_recibidos_equipo2)
+        datos_equipo = {
+            'ganados': total_partidos_ganados,
+            'jugados': total_partidos_jugados,
+            'diferencia_puntos': diferencia_puntos,
+            'nombre': e.nombre,
+        }
+        clasificacion.append(datos_equipo)
 
-    for resultado in chain(partidos_ganados, basket_average, partidos_jugados):
-        equipo_id = resultado['equipo_id']
-        resultados_por_equipo[equipo_id].update(resultado)
-
-    # Convertimos el defaultdict a una lista de diccionarios
-    clasificacion = list(resultados_por_equipo.values())
     equipo3 = Equipo.objects.get(id=jugador.equipo.id)
     list_partidos = Partido.objects.filter(Q(equipo1_id=equipo3.id) | Q(equipo2_id=equipo3.id))
     return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos})
