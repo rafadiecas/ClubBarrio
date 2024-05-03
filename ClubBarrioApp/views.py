@@ -105,6 +105,16 @@ def validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirma
         errores.append("La contraseña actual es incorrecta")
     if nueva_contraseña != confirmacion_contraseña:
         errores.append("Las contraseñas no coinciden")
+    largo = re.compile(r'.{8,}')
+    digito = re.compile(r'\d+')
+    letra_may = re.compile(r'[A-Z]+')
+    letra_min = re.compile(r'[a-z]+')
+    validaciones = [largo, digito, letra_may, letra_min]
+    for v in validaciones:
+        if not v.search(nueva_contraseña):
+            errores.append(
+                "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número")
+            break
     return errores
 
 def perfil(request):
