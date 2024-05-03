@@ -8,6 +8,7 @@
     <style>
         .card {
             height: 100%;
+            cursor: pointer;
         }
         
         .card-img-top {
@@ -20,6 +21,12 @@
         .resaltado {
             border: 2px solid #006b1b !important;
         }
+        .card:hover {
+        /* Aquí puedes agregar el efecto que quieras cuando se pasa el mouse sobre el elemento, por ejemplo, cambiar el color de fondo */
+        background-color: #f5f5f5;
+    }
+
+
     </style>
     
 </head>
@@ -72,7 +79,7 @@
             
         <div class="row">
             <div class="col-12 text-center">
-                <button type="submit" class="btn btn-primary mt-3" id="enviar_equipos">Submit</button>
+                <button type="submit" class="btn btn-primary mt-3" id="enviar_equipos">Enviar</button>
             </div>
         </div>
             
@@ -119,7 +126,7 @@
 
         <div class="row">
             <div class="col-12 text-center">
-                <button name="boton" value="seleccion_datos" type="submit" class="btn btn-primary mt-3">Submit</button>
+                <button name="boton" value="seleccion_datos" type="submit" class="btn btn-primary mt-3">Enviar</button>
             </div>
         </div>
 
