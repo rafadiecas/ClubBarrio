@@ -80,7 +80,7 @@ def pagina_contacto(request):
         nombre = request.POST.get('nombre')
         email = request.POST.get('email')
         asunto = request.POST.get('asunto') + " - Enviado por: " + nombre +"-"+ email
-        mensaje = " - Enviado por: " + nombre + "\n" + "Email: " + email + "\n"+ "Mensaje: " + request.POST.get('mensaje')
+        mensaje = "Enviado por: " + nombre + "<br><br>" + "Email: " + email + "<br><br>"+ "Mensaje: " + request.POST.get('mensaje')
         correo = EmailMessage(
             asunto,
             mensaje,
