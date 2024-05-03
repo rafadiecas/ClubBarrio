@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.hashers import make_password
+from django.contrib.sites import requests
 from django.core.mail import EmailMessage
 from django.db.models import Count, Q, When, Value
 from django.db.models.functions import Coalesce
@@ -7,9 +8,8 @@ from django.forms import IntegerField
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime, date
 import re
+import requests
 from collections import defaultdict
-
-
 from .models import *
 from django.core.paginator import Paginator
 from django.http import Http404
@@ -76,7 +76,7 @@ def pagina_noticias(request):
             jugador = Jugador.objects.get(usuario_id=usuario.id)
             data['jugador'] = jugador
         elif usuario.rol == 'Entrenador':
-            equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
+            equipos = equipos_entrenador(request)
             data['equipos_entrenador'] = equipos
     return render(request, 'Noticias.html', data)
 
@@ -758,11 +758,9 @@ def crea_hijos(request):
             errors = filtro(email, fecha_nacimiento, rol, username, password, password2)
 
             if(len(errors) == 0):
-                hijo.username= username
-                hijo.email = email
-                hijo.fecha_nacimiento = fecha_nacimiento
-                hijo.rol = rol
-                hijo.password = make_password(password)
+                datos= {'username': username, 'rol': rol, 'email': email, 'password': password, 'fecha_nacimiento': fecha_nacimiento, 'nombre': nombre, 'apellidos': apellidos}
+                request.session['datos'] = datos
+
 
             categoria = calculador_categoria(diferencia, errors)
 
@@ -783,18 +781,25 @@ def crea_hijos(request):
 
             return render(request, 'crear_hijo.html', {'equipos': lista_equipos, 'edicion_equipo': True, 'nombre': nombre, 'apellidos': apellidos, 'hijo': hijo})
 
-        jugador.usuario = User.objects.get(id=request.POST.get('hijo'))
-        jugador.nombre = request.POST.get('nombre-jug')
-        jugador.apellidos = request.POST.get('apellidos-jug')
+        datos= request.session['datos']
+        hijo.username= datos['username']
+        hijo.email = datos['email']
+        hijo.fecha_nacimiento = datos['fecha_nacimiento']
+        hijo.rol = datos['rol']
+        hijo.password = make_password(datos['password'])
+        hijo.save()
+        jugador.usuario = User.objects.get(id=hijo.id)
+        jugador.nombre = datos['nombre']
+        jugador.apellidos = datos['apellidos']
         jugador.tutorLegal = tutor
-        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('tarifa_seleccionada')))
+        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('equipo_seleccionado')))
         jugador.save()
         return redirect('gestion_familia')
 
 
 def filtro_equipos_plaza(categoria, errors, lista_equipos):
     for equipo in Equipo.objects.all():
-        if categoria in equipo.categoria.tipo and equipo.es_safa:
+        if categoria == equipo.categoria.tipo and equipo.es_safa:
             plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
             if plazas_libres > 0:
                 dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
@@ -847,8 +852,10 @@ def edita_hijo(request, id):
 
 def calculador_categoria(diferencia, errors):
     categoria = ""
-    if diferencia.days < 2555 and diferencia.days >= 1825:
-        categoria = 'Prebenjamin'
+    if diferencia.days <= 1825:
+        categoria =""
+    elif diferencia.days < 2555:
+        categoria = 'PreBenjamin'
     elif diferencia.days < 3285:
         categoria = 'Benjamin'
     elif diferencia.days < 4015:
@@ -877,7 +884,16 @@ def inicio_jugador(request, id=None):
         jugador = Jugador.objects.get(usuario_id=id)
 
     equipos = Equipo.objects.filter(categoria_id=jugador.equipo.categoria)
-    clasificacion = []
+
+    clasificacion = saca_clasificacion(equipos)
+
+    equipo3 = Equipo.objects.get(id=jugador.equipo.id)
+    list_partidos = Partido.objects.filter(Q(equipo1_id= equipo3.id)| Q(equipo2_id= equipo3.id))
+    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos})
+
+
+def saca_clasificacion(equipos):
+    clasificacion = list()
     for e in equipos:
         partidos_equipo1 = Partido.objects.filter(equipo1_id=e.id)
         partidos_equipo2 = Partido.objects.filter(equipo2_id=e.id)
@@ -900,10 +916,9 @@ def inicio_jugador(request, id=None):
             'nombre': e.nombre,
         }
         clasificacion.append(datos_equipo)
-    clasificacion.sort(key=lambda x: ((x['ganados']), x['diferencia_puntos']), reverse=True)
-    equipo3 = Equipo.objects.get(id=jugador.equipo.id)
-    list_partidos = Partido.objects.filter(Q(equipo1_id=equipo3.id) | Q(equipo2_id=equipo3.id))
-    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos})
+    clasificacion.sort(key=lambda x: ((x['partidos_ganados']), x['diferencia_puntos']), reverse=True)
+    return clasificacion
+
 
 def estadisticas_jugador(request, id):
     usuario = request.user
@@ -923,11 +938,11 @@ def terminos_y_servicios(request):
     return render(request, 'terminos_y_servicios.html')
 
 def entrenador(request):
-    usuario = request.user
-    equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
+    equipos = equipos_entrenador(request)
     return render(request, 'entrenador.html',{'equipos_entrenador': equipos})
 
 def pagina_equipo(request, id):
+    equipos = equipos_entrenador(request)
     equipo = Equipo.objects.get(id=id)
     fecha_actual = date.today()
     partidos_anteriores = Partido.objects.filter(
@@ -935,4 +950,26 @@ def pagina_equipo(request, id):
     partidos_futuros = Partido.objects.filter(
         Q(equipo1_id=id) | Q(equipo2_id=id), fecha__gte=fecha_actual).order_by('fecha')
     jugadores = Jugador.objects.filter(equipo_id=id)
-    return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:5], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[:5]})
+    equipos_cat= Equipo.objects.filter(categoria=equipo.categoria)
+    entrenador= Entrenador.objects.get(usuario_id=request.user.id)
+    entrenamientos= Entrenamiento.objects.filter(entrenador_id=entrenador.id, fecha__gte=fecha_actual).order_by('fecha')
+    clasificacion= saca_clasificacion(equipos_cat)
+    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={partidos_futuros[0].lugar}&format=json")
+    if response.status_code != 200:
+        return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0],'equipos_entrenador': equipos, 'entrenamiento': entrenamientos.first(), 'mapa_fallo': True})
+    data = response.json()
+    print(response.content)
+    lat = data[0]['lat']
+    lon = data[0]['lon']
+
+    primer_entrenamiento = None
+    if entrenamientos.exists():
+        primer_entrenamiento = entrenamientos.first()
+
+    return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon,'equipos_entrenador': equipos, 'entrenamiento': primer_entrenamiento})
+
+
+def equipos_entrenador(request):
+    usuario = request.user
+    equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
+    return equipos

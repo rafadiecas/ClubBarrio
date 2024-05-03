@@ -38,25 +38,25 @@
         <div class="row">
             <div class="col-md-4">
                 <label for="minutos" class="form-label">Minutos:</label>
-                <input type="text" name="minutos" id="minutos" class="form-control" value="{{ estadisticas_jugador.minutos  }}" required>
+                <input type="number" name="minutos" id="minutos" class="form-control" value="{{ estadisticas_jugador.minutos  }}" required>
             </div>
             <div class="col-md-4" id="nombreField">
                 <label for="puntos" class="form-label">Puntos:</label>
-                <input type="text" name="puntos" id="puntos" class="form-control" value="{{ estadisticas_jugador.puntos}}">
+                <input type="number" name="puntos" id="puntos" class="form-control" value="{{ estadisticas_jugador.puntos}}" required>
             </div>
             <div class="col-md-4" id="nombreField">
                 <label for="asistencias" class="form-label">Asistencias:</label>
-                <input type="text" name="asistencias" id="asistencias" class="form-control" value="{{ estadisticas_jugador.asistencias}}">
+                <input type="number" name="asistencias" id="asistencias" class="form-control" value="{{ estadisticas_jugador.asistencias}}" required>
             </div>
         </div>
         <div class="row">
             <div class="col-md-4" id="nombreField">
                 <label for="rebotes" class="form-label">Rebotes:</label>
-                <input type="text" name="rebotes" id="rebotes" class="form-control" value="{{ estadisticas_jugador.rebotes}}">
+                <input type="number" name="rebotes" id="rebotes" class="form-control" value="{{ estadisticas_jugador.rebotes}}" required>
             </div>
             <div class="col-md-4" id="nombreField">
                 <label for="faltas" class="form-label">Faltas:</label>
-                <input type="text" name="faltas" id="faltas" class="form-control" value="{{ estadisticas_jugador.faltas}}">
+                <input type="number" name="faltas" id="faltas" class="form-control" value="{{ estadisticas_jugador.faltas}}" required>
             </div>
 
         </div>
@@ -73,6 +73,48 @@
         </div>
     </div>
 </div>
+<script>
+    var input1=  document.getElementById('minutos');
+    input1.addEventListener('input',function(){
+      if (this.value.length > 3) 
+         this.value = this.value.slice(0,3);
+      if (this.value < 0) {
+                this.value = 0;
+            }
+    })
+    var input2=  document.getElementById('puntos');
+    input2.addEventListener('input',function(){
+      if (this.value.length > 3) 
+         this.value = this.value.slice(0,3);
+      if (this.value < 0) {
+                this.value = 0;
+            }
+    })
+        var input3=  document.getElementById('faltas');
+    input1.addEventListener('input',function(){
+      if (this.value.length > 3) 
+         this.value = this.value.slice(0,3);
+      if (this.value < 0) {
+                this.value = 0;
+            }
+    })
+    var input4=  document.getElementById('asistencias');
+    input2.addEventListener('input',function(){
+      if (this.value.length > 3) 
+         this.value = this.value.slice(0,3);
+      if (this.value < 0) {
+                this.value = 0;
+            }
+    })
+        var input5=  document.getElementById('rebotes');
+    input2.addEventListener('input',function(){
+      if (this.value.length > 3) 
+         this.value = this.value.slice(0,3);
+      if (this.value < 0) {
+                this.value = 0;
+            }
+    })
+</script>
 
 </body>
 
