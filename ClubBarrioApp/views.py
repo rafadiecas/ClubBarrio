@@ -897,13 +897,13 @@ def saca_clasificacion(equipos):
     for e in equipos:
         partidos_equipo1 = Partido.objects.filter(equipo1_id=e.id)
         partidos_equipo2 = Partido.objects.filter(equipo2_id=e.id)
-        # Calcular partidos ganados
+
         partidos_ganados_equipo1 = partidos_equipo1.filter(puntos_equipo1__gt=F('puntos_equipo2'))
         partidos_ganados_equipo2 = partidos_equipo2.filter(puntos_equipo2__gt=F('puntos_equipo1'))
         total_partidos_ganados = partidos_ganados_equipo1.count() + partidos_ganados_equipo2.count()
-        # Calcular partidos jugados
+
         total_partidos_jugados = partidos_equipo1.count() + partidos_equipo2.count()
-        # Calcular diferencia de puntos
+
         total_anotados_equipo1 = partidos_equipo1.aggregate(total_anotados=Sum('puntos_equipo1'))['total_anotados'] or 0
         total_anotados_equipo2 = partidos_equipo2.aggregate(total_anotados=Sum('puntos_equipo2'))['total_anotados'] or 0
         total_recibidos_equipo1 = partidos_equipo1.aggregate(total_recibidos=Sum('puntos_equipo2'))['total_recibidos'] or 0
@@ -916,7 +916,7 @@ def saca_clasificacion(equipos):
             'nombre': e.nombre,
         }
         clasificacion.append(datos_equipo)
-    clasificacion.sort(key=lambda x: ((x['partidos_ganados']), x['diferencia_puntos']), reverse=True)
+    clasificacion.sort(key=lambda x: ((x['ganados']), x['diferencia_puntos']), reverse=True)
     return clasificacion
 
 
@@ -938,8 +938,11 @@ def terminos_y_servicios(request):
     return render(request, 'terminos_y_servicios.html')
 
 def entrenador(request):
-    equipos = equipos_entrenador(request)
-    return render(request, 'entrenador.html',{'equipos_entrenador': equipos})
+    usuario = request.user
+    equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
+    equipo = Equipo.objects.get(entrenadores__usuario__id=usuario.id)
+    lista_entrenamientos = Entrenamiento.objects.filter(entrenador__equipo__id=equipo.id)
+    return render(request, 'entrenador.html',{'equipos_entrenador': equipos, 'lista_entrenamientos': lista_entrenamientos})
 
 def pagina_equipo(request, id):
     equipos = equipos_entrenador(request)
