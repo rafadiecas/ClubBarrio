@@ -64,6 +64,8 @@ def pagina_noticias(request):
             tutor = TutorLegal.objects.get(usuario_id=usuario.id)
             hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
             data['hijos'] = hijos
+            if len(hijos)==0:
+                data['hijo_existe'] = True
         elif usuario.rol == 'Jugador':
             jugador = Jugador.objects.get(usuario_id=usuario.id)
             data['jugador'] = jugador
@@ -676,6 +678,8 @@ def pagina_usuario(request):
     if usuario.rol == 'Tutor':
         tutor = TutorLegal.objects.get(usuario_id=usuario.id)
         hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+        if len(hijos) == 0:
+            return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijo_existe': True})
         return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijos': hijos})
     else:
         equipos_por_categoria = {}
@@ -722,6 +726,8 @@ def lista_hijos(request):
     usuario = request.user
     tutor = TutorLegal.objects.get(usuario_id=usuario.id)
     hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+    if len(hijos) == 0:
+        return render(request, 'lista_hijos.html', {'hijo_existe': True})
     return render(request, 'lista_hijos.html', {'hijos': hijos})
 
 def crea_hijos(request):

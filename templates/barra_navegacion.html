@@ -69,10 +69,13 @@
       {% if user.is_authenticated and user.rol == "Tutor" %}
           <div class="btn-group">
           <a class="nav-link" aria-current="page" href="{% url 'gestion_familia' %}" role="button">Gestión</a>
+          {% if not hijo_existe %}
           <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="color: white">
             <span class="visually-hidden">Toggle Dropdown</span>
           </button>
+          {% endif %}
           <ul class="dropdown-menu">
+          
               {% for h in hijos %}
               <li><a class="dropdown-item" href="{% url 'inicio_jugador' id=h.usuario.id %}">{{ h.nombre }} {{ h.apellidos }}</a></li>
               {% endfor %}
