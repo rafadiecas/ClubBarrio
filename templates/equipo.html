@@ -79,7 +79,13 @@
                         </div>
                      </div>
                     <h3 class="text-center">Lugar</h3>
-                    <div class="container w-50" id="map" style="height: 200px;"></div>
+                    {% if mapa_fallo %}
+                        <p class="text-center">{{ siguiente_partido.lugar }}</p>
+                    {% else %}
+                        <div class="container w-50" id="map" style="height: 200px;"></div>
+                    {% endif %}
+                    
+                    
                 </div>
                 <div class="container text-center mt-3">
                     <h3>Próximo Entrenamiento</h3>

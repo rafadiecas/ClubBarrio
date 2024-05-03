@@ -935,6 +935,8 @@ def pagina_equipo(request, id):
     entrenamientos= Entrenamiento.objects.filter(entrenador_id=entrenador.id, fecha__gte=fecha_actual).order_by('fecha')
     clasificacion= saca_clasificacion(equipos_cat)
     response = requests.get(f"https://nominatim.openstreetmap.org/search?q={partidos_futuros[0].lugar}&format=json")
+    if response.status_code != 200:
+        return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0],'equipos_entrenador': equipos, 'entrenamiento': entrenamientos.first(), 'mapa_fallo': True})
     data = response.json()
     print(response.content)
     lat = data[0]['lat']
