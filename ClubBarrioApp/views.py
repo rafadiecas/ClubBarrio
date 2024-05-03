@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.hashers import make_password
+from django.contrib.sites import requests
 from django.core.mail import EmailMessage
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import render, redirect
-from django.utils.datetime_safe import datetime
+from django.utils.datetime_safe import datetime, date
 import re
-
+import requests
 from .models import *
 from django.core.paginator import Paginator
 from django.http import Http404
@@ -13,6 +14,7 @@ from django.http import JsonResponse
 from .decorator import user_required, rol_requerido
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
+from django.conf import settings
 
 
 # Create your views here.
@@ -65,7 +67,28 @@ def pagina_noticias(request):
         elif usuario.rol == 'Jugador':
             jugador = Jugador.objects.get(usuario_id=usuario.id)
             data['jugador'] = jugador
+        elif usuario.rol == 'Entrenador':
+            equipos = equipos_entrenador(request)
+            data['equipos_entrenador'] = equipos
     return render(request, 'Noticias.html', data)
+
+def pagina_contacto(request):
+    usuario = request.user
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        email = request.POST.get('email')
+        asunto = request.POST.get('asunto') + " - Enviado por: " + nombre +"-"+ email
+        mensaje = " - Enviado por: " + nombre + "\n" + "Email: " + email + "\n"+ "Mensaje: " + request.POST.get('mensaje')
+        correo = EmailMessage(
+            asunto,
+            mensaje,
+            to=[settings.EMAIL_HOST_USER]
+        )
+        correo.content_subtype = "html"
+        correo.send()
+        return JsonResponse({'success': 'Mensaje enviado con éxito'})
+    return render(request, 'contacto.html')
+
 
 #@user_required
 #@rol_requerido('Administrador')
@@ -136,7 +159,7 @@ def perfil_pass(request):
 
 def new_user(request):
     Users = User.objects.all()
-    Equipos = Equipo.objects.all()
+    Equipos = Equipo.objects.filter(es_safa=True)
     Tutores = TutorLegal.objects.all()
     roles = Role.labels[:-1]
     if request.method == 'GET':
@@ -236,6 +259,7 @@ def registro(request):
         contrasenya = request.POST.get('contrasenya')
         repetirContrasenya = request.POST.get('repetirContrasenya')
         fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        rol = "Usuario"
 
         errores = filtro(email, fecha_nacimiento, 'Usuario', nombre_usuario, contrasenya, repetirContrasenya)
 
@@ -244,8 +268,14 @@ def registro(request):
             return render(request, 'registro.html', {"errores": errores, "nombre_usuraio": nombre_usuario, "email": email, "fecha_nacimiento": fecha_nacimiento})
         else:
             usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email,
-                                          fecha_nacimiento=fecha_nacimiento)
+                                          fecha_nacimiento=fecha_nacimiento, rol=rol)
             usuario.save()
+            mensaje = ("Bienvenido a SafaClubBasket, " + nombre_usuario + ". Tu registro se ha completado con éxito."
+                       + "<br><br>" + "Tus credenciales de acceso son: " + "<br>"
+                       + "Usuario: " + nombre_usuario + "<br>" + "Contraseña: " + contrasenya + "<br><br>" + "Un saludo, SafaClubBasket.")
+            correo = EmailMessage('Registro en SafaClubBasket', mensaje, to=[email])
+            correo.content_subtype = "html"
+            correo.send()
 
             return redirect('login')
 
@@ -267,6 +297,9 @@ def logear(request):
 
             elif user.rol == "Jugador":
                 return redirect('inicio_jugador')
+
+            elif user.rol == "Entrenador":
+                return redirect('entrenador')
 
             # Redirección tras un login exitoso
             return redirect('inicio')
@@ -387,7 +420,7 @@ def editar_equipo(request, id):
         entrenadores = Entrenador.objects.all()
         id_entrenadores = equipo.entrenadores.values_list('id', flat=True)
         es_safa = equipo.es_safa
-        return render(request, 'crear_equipo.html', {'equipo':equipo, 'id_entrenadores':id_entrenadores, 'lista_categorias': lista_categorias, 'entrenadores': entrenadores, 'es_safa': es_safa})
+        return render(request, 'crear_equipo.html', {'equipo':equipo, 'id_entrenadores':id_entrenadores, 'lista_categorias': lista_categorias, 'entrenadores': entrenadores, 'es_safa': es_safa, 'modo_edicion': True})
     else:
         equipo.nombre = request.POST.get('nombre')
         equipo.escudo = request.POST.get('escudo')
@@ -435,7 +468,7 @@ def editar_entrenamiento(request, id):
         lista_entrenadores = Entrenador.objects.all()
         lista_lugares_entrenamiento = LugarEntrenamiento.objects.all()
         return render(request, 'crear_entrenamiento.html',
-                      {'entrenamiento': entrenamiento, 'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento})
+                      {'entrenamiento': entrenamiento, 'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento, 'modo_edicion': True})
     else:
         entrenamiento.fecha = request.POST.get('fecha')
         entrenamiento.hora = request.POST.get('hora')
@@ -475,7 +508,7 @@ def elimina_noticia(request, id):
 def editar_noticia(request,id):
     noticia = Noticias.objects.get(id=id)
     if request.method == 'GET':
-        return render(request, 'crear_noticias.html', {'noticia':noticia})
+        return render(request, 'crear_noticias.html', {'noticia':noticia, 'modo_edicion': True})
     else:
         noticia.titulo = request.POST.get('titulo')
         noticia.articulo = request.POST.get('articulo')
@@ -510,7 +543,7 @@ def editar_estadisticas_jugador(request, id):
         lista_entrenadores = Entrenador.objects.all()
         lista_partidos = Partido.objects.all()
         return render(request, 'crear_estadisticas_jugador.html',
-                      {'estadisticas_jugador': estadisticas_jugador, 'lista_entrenadores': lista_entrenadores, 'lista_partidos': lista_partidos})
+                      {'estadisticas_jugador': estadisticas_jugador, 'lista_entrenadores': lista_entrenadores, 'lista_partidos': lista_partidos, 'modo_edicion': True})
     else:
         estadisticas_jugador.puntos = request.POST.get('puntos')
         estadisticas_jugador.minutos = request.POST.get('minutos')
@@ -562,7 +595,7 @@ def editar_partido(request, id):
     if request.method == 'GET':
         lista_equipos = Equipo.objects.all()
         temporadas = Temporada.objects.all()
-        return render(request, 'crear_partidos.html', {'partido': partido, 'lista_equipos': lista_equipos, 'temporadas': temporadas})
+        return render(request, 'crear_partidos.html', {'partido': partido, 'lista_equipos': lista_equipos, 'temporadas': temporadas, 'modo_edicion': True})
     else:
         partido.fecha = request.POST.get('fecha')
         partido.hora = request.POST.get('hora')
@@ -610,7 +643,7 @@ def edita_producto(request, id):
     if request.method == 'GET':
         tallas = Talla.objects.all()
         tipos = Tipo.objects.all()
-        return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos})
+        return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos, 'modo_edicion': True})
     else:
         producto.nombre = request.POST.get('nombre')
         producto.precio = request.POST.get('precio')
@@ -664,6 +697,13 @@ def inscripciones(request):
         tutor.tarifa = request.POST.get('tarifa_seleccionada')
         tutor.save()
 
+        mensaje = ("Gracias por suscribirte, " + usuario.username + ". Tu suscripción se ha completado con éxito."
+                   + "<br><br>" + "Algunos datos importantes: " + "<br>"
+                   + "Tarifa selecionada: " + tutor.tarifa + "<br>" + "Pagos los dias " + str(datetime.now().day)+ " de cada mes." + "<br><br>" + "Un saludo, SafaClubBasket.")
+        correo = EmailMessage('Suscripción en SafaClubBasket', mensaje, to=[usuario.email])
+        correo.content_subtype = "html"
+        correo.send()
+
         return redirect('usuario')
 def terminos_y_servicios(request):
     return render(request, 'terminos_y_servicios.html')
@@ -701,11 +741,9 @@ def crea_hijos(request):
             errors = filtro(email, fecha_nacimiento, rol, username, password, password2)
 
             if(len(errors) == 0):
-                hijo.username= username
-                hijo.email = email
-                hijo.fecha_nacimiento = fecha_nacimiento
-                hijo.rol = rol
-                hijo.password = make_password(password)
+                datos= {'username': username, 'rol': rol, 'email': email, 'password': password, 'fecha_nacimiento': fecha_nacimiento, 'nombre': nombre, 'apellidos': apellidos}
+                request.session['datos'] = datos
+
 
             categoria = calculador_categoria(diferencia, errors)
 
@@ -721,23 +759,29 @@ def crea_hijos(request):
                                'password': password, 'email': email, 'username': username, 'errores': errors,
                                'hijos': hijos, 'nombre': nombre, 'apellidos': apellidos})
 
-            hijo.save()
 
 
             return render(request, 'crear_hijo.html', {'equipos': lista_equipos, 'edicion_equipo': True, 'nombre': nombre, 'apellidos': apellidos, 'hijo': hijo})
 
-        jugador.usuario = User.objects.get(id=request.POST.get('hijo'))
-        jugador.nombre = request.POST.get('nombre-jug')
-        jugador.apellidos = request.POST.get('apellidos-jug')
+        datos= request.session['datos']
+        hijo.username= datos['username']
+        hijo.email = datos['email']
+        hijo.fecha_nacimiento = datos['fecha_nacimiento']
+        hijo.rol = datos['rol']
+        hijo.password = make_password(datos['password'])
+        hijo.save()
+        jugador.usuario = User.objects.get(id=hijo.id)
+        jugador.nombre = datos['nombre']
+        jugador.apellidos = datos['apellidos']
         jugador.tutorLegal = tutor
-        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('tarifa_seleccionada')))
+        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('equipo_seleccionado')))
         jugador.save()
         return redirect('gestion_familia')
 
 
 def filtro_equipos_plaza(categoria, errors, lista_equipos):
     for equipo in Equipo.objects.all():
-        if categoria in equipo.categoria.tipo and equipo.es_safa:
+        if categoria == equipo.categoria.tipo and equipo.es_safa:
             plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
             if plazas_libres > 0:
                 dict = {'equipo': equipo, 'plazas_libres': plazas_libres}
@@ -790,26 +834,29 @@ def edita_hijo(request, id):
 
 def calculador_categoria(diferencia, errors):
     categoria = ""
-    if diferencia.days < 1825:
-        categoria = 'Prebenjamin'
-    elif diferencia.days < 2920:
+    if diferencia.days <= 1825:
+        categoria =""
+    elif diferencia.days < 2555:
+        categoria = 'PreBenjamin'
+    elif diferencia.days < 3285:
         categoria = 'Benjamin'
     elif diferencia.days < 4015:
         categoria = 'Alevin'
-    elif diferencia.days < 5110:
+    elif diferencia.days < 4745:
         categoria = 'Infantil'
-    elif diferencia.days < 6205:
+    elif diferencia.days < 5475:
         categoria = 'Cadete'
-    elif diferencia.days < 7300:
+    elif diferencia.days < 6575:
         categoria = 'Juvenil'
     else:
-        errors.append("El jugador debe ser menor de 20 años")
+        errors.append("El jugador debe ser menor de 18 años y mayor de 5")
     return categoria
 
 
 def inicio_jugador(request, id=None):
     list_noticias = Noticias.objects.all().order_by('-id')
     list_noticias = list_noticias[0:3]
+
     hijos=[]
     usuario = request.user
     if usuario.rol == 'Jugador':
@@ -821,6 +868,14 @@ def inicio_jugador(request, id=None):
 
     equipos = Equipo.objects.filter(categoria_id=jugador.equipo.categoria)
 
+    clasificacion = saca_clasificacion(equipos)
+
+    equipo3 = Equipo.objects.get(id=jugador.equipo.id)
+    list_partidos = Partido.objects.filter(Q(equipo1_id= equipo3.id)| Q(equipo2_id= equipo3.id))
+    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos})
+
+
+def saca_clasificacion(equipos):
     clasificacion = list()
     for e in equipos:
         partidos_local = Partido.objects.filter(equipo1=e.id)
@@ -831,11 +886,11 @@ def inicio_jugador(request, id=None):
         for p in partidos_local:
             dif_puntos += p.puntos_equipo1 - p.puntos_equipo2
             if p.puntos_equipo1 > p.puntos_equipo2:
-                cont_partidos_ganados+=1
+                cont_partidos_ganados += 1
         for p in partidos_visitante:
             dif_puntos += p.puntos_equipo2 - p.puntos_equipo1
             if p.puntos_equipo1 < p.puntos_equipo2:
-                cont_partidos_ganados+=1
+                cont_partidos_ganados += 1
         equipo = {
             'nombre': e.nombre,
             'partidos_ganados': cont_partidos_ganados,
@@ -843,8 +898,9 @@ def inicio_jugador(request, id=None):
             'diferencia_puntos': dif_puntos
         }
         clasificacion.append(equipo)
-    clasificacion.sort(key=lambda x:((x['partidos_ganados']), x['partidos_jugados']), reverse=True)
-    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos})
+    clasificacion.sort(key=lambda x: ((x['partidos_ganados']), x['diferencia_puntos']), reverse=True)
+    return clasificacion
+
 
 def estadisticas_jugador(request, id):
     usuario = request.user
@@ -862,3 +918,38 @@ def estadisticas_jugador(request, id):
 
 def terminos_y_servicios(request):
     return render(request, 'terminos_y_servicios.html')
+
+def entrenador(request):
+    equipos = equipos_entrenador(request)
+    return render(request, 'entrenador.html',{'equipos_entrenador': equipos})
+
+def pagina_equipo(request, id):
+    equipos = equipos_entrenador(request)
+    equipo = Equipo.objects.get(id=id)
+    fecha_actual = date.today()
+    partidos_anteriores = Partido.objects.filter(
+        Q(equipo1_id=id) | Q(equipo2_id=id), fecha__lt=fecha_actual).order_by('-fecha')
+    partidos_futuros = Partido.objects.filter(
+        Q(equipo1_id=id) | Q(equipo2_id=id), fecha__gte=fecha_actual).order_by('fecha')
+    jugadores = Jugador.objects.filter(equipo_id=id)
+    equipos_cat= Equipo.objects.filter(categoria=equipo.categoria)
+    entrenador= Entrenador.objects.get(usuario_id=request.user.id)
+    entrenamientos= Entrenamiento.objects.filter(entrenador_id=entrenador.id, fecha__gte=fecha_actual).order_by('fecha')
+    clasificacion= saca_clasificacion(equipos_cat)
+    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={partidos_futuros[0].lugar}&format=json")
+    data = response.json()
+    print(response.content)
+    lat = data[0]['lat']
+    lon = data[0]['lon']
+
+    primer_entrenamiento = None
+    if entrenamientos.exists():
+        primer_entrenamiento = entrenamientos.first()
+
+    return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon,'equipos_entrenador': equipos, 'entrenamiento': primer_entrenamiento})
+
+
+def equipos_entrenador(request):
+    usuario = request.user
+    equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
+    return equipos

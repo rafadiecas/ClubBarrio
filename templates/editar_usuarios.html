@@ -48,22 +48,22 @@
         <div class="row">
             <div class="col-md-4">
                 <label for="username" class="form-label">Username:</label>
-                <input type="text" name="username" id="username" class="form-control" value="{{ usuario.username }}" required>
+                <input type="text" name="username" maxlength="20" id="username" class="form-control" value="{{ usuario.username }}" required>
             </div>
             <div class="col-md-4" id="nombreField">
                 <label for="nombre" class="form-label">Nombre:</label>
-                <input type="text" name="nombre" id="nombre" class="form-control" value="{{ datos.nombre }}">
+                <input type="text" name="nombre" maxlength="20" id="nombre" class="form-control" value="{{ datos.nombre }}">
             </div>
             <div class="col-md-4" id="apellidosField">
                 <label for="apellidos" class="form-label">Apellidos:</label>
-                <input type="text" name="apellidos" id="apellidos" class="form-control" value="{{ datos.apellidos }}">
+                <input type="text" name="apellidos" maxlength="50" id="apellidos" class="form-control" value="{{ datos.apellidos }}">
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-4">
                 <label for="email" class="form-label">Email:</label>
-                <input type="email" name="email" id="email" class="form-control" value="{{ usuario.email }}" required>
+                <input type="email" name="email" id="email" maxlength="30" class="form-control" value="{{ usuario.email }}" required>
             </div>
             
         </div>

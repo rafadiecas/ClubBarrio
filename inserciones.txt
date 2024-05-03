@@ -177,7 +177,7 @@ INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEn
 
 
 WITH equipos AS (
-    SELECT id, categoria_id
+    SELECT id, categoria_id, ROW_NUMBER() OVER(PARTITION BY categoria_id ORDER BY id) AS rn
     FROM ClubBarrioApp_equipo
 ),
 fechas AS (
@@ -188,31 +188,40 @@ fechas AS (
     LIMIT 18
 ),
 partidos AS (
-    SELECT e1.id AS equipo1_id, e2.id AS equipo2_id, e1.categoria_id
+    SELECT
+        CASE WHEN e1.rn <= e2.rn THEN e1.id ELSE e2.id END AS equipo1_id,
+        CASE WHEN e1.rn <= e2.rn THEN e2.id ELSE e1.id END AS equipo2_id,
+        e1.categoria_id,
+        ((e1.rn + e2.rn - 2) % 9) + 1 AS jornada
     FROM equipos e1
     JOIN equipos e2 ON e1.categoria_id = e2.categoria_id AND e1.id < e2.id
 ),
-partidos_por_jornada AS (
-    SELECT *
-    FROM (
-        SELECT *, ROW_NUMBER() OVER(PARTITION BY categoria_id ORDER BY equipo1_id, equipo2_id) as rn
-        FROM partidos
-    )
-    WHERE rn <= 5
+partidos_ida AS (
+    SELECT f.fecha, p.jornada, p.equipo1_id, p.equipo2_id, p.categoria_id
+    FROM fechas AS f
+    JOIN partidos AS p ON f.jornada = p.jornada AND f.jornada <= 9
+),
+partidos_vuelta AS (
+    SELECT DATE(f.fecha, '+63 day') AS fecha, p.jornada + 9 AS jornada, p.equipo2_id AS equipo1_id, p.equipo1_id AS equipo2_id, p.categoria_id
+    FROM fechas AS f
+    JOIN partidos AS p ON f.jornada = p.jornada AND f.jornada <= 9
 )
 INSERT INTO ClubBarrioApp_partido (fecha, hora, lugar, puntos_equipo1, puntos_equipo2, equipo1_id, equipo2_id, temporada_id, jornada)
 SELECT
-    f.fecha,
-    CASE WHEN f.jornada % 2 = 0 THEN '12:00:00' ELSE '14:30:00' END AS hora,
-    CASE WHEN f.jornada % 2 = 0 THEN 'Estadio Municipal' ELSE 'Polideportivo' END AS lugar,
+    fecha,
+    CASE WHEN jornada % 2 = 0 THEN '12:00:00' ELSE '14:30:00' END AS hora,
+    CASE WHEN jornada % 2 = 0 THEN 'Estadio Benito Villamarín' ELSE 'Estadio Ramón Sánchez Pizjuan' END AS lugar,
     ABS(RANDOM()) % 101 AS puntos_equipo1,
     ABS(RANDOM()) % 101 AS puntos_equipo2,
-    p.equipo1_id,
-    p.equipo2_id,
+    equipo1_id,
+    equipo2_id,
     1 AS temporada_id,
-    f.jornada
-FROM fechas AS f
-CROSS JOIN partidos_por_jornada AS p;
+    jornada
+FROM (
+    SELECT * FROM partidos_ida
+    UNION ALL
+    SELECT * FROM partidos_vuelta
+);
 
 
 

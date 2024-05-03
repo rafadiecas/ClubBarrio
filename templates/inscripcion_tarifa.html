@@ -81,21 +81,21 @@
 <div class="row d-flex justify-content-center">
      <div class="col-md-4" id="nombreField">
             <label for="nombre" class="form-label">Nombre:</label>
-            <input type="text" name="nombre" id="nombre" class="form-control">
+            <input type="text" name="nombre" maxlength="20" id="nombre" class="form-control">
         </div>
         <div class="col-md-4" id="apellidosField">
             <label for="apellidos" class="form-label">Apellidos:</label>
-            <input type="text" name="apellidos" id="apellidos" class="form-control">
+            <input type="text" name="apellidos" maxlength="50" id="apellidos" class="form-control">
         </div>
 </div>
 <div class="row d-flex justify-content-center">
      <div class="col-md-3">
             <label for="numero" class="form-label">Número de tarjeta:</label>
-            <input type="text" name="numero" id="numero" class="form-control" required>
+            <input type="text" name="numero" maxlength="30" id="numero" class="form-control" required>
         </div>
         <div class="col-md-3">
             <label for="cvc" class="form-label">CVC:</label>
-            <input type="text" name="cvc" id="cvc" placeholder="CVC" class="form-control" required>
+            <input type="text" name="cvc" maxlength="5" id="cvc" placeholder="CVC" class="form-control" required>
         </div>
         <div class="col-md-3">
             <label for="fecha" class="form-label">Fecha de caducidad:</label>
