@@ -58,6 +58,12 @@
                 <label for="faltas" class="form-label">Faltas:</label>
                 <input type="number" name="faltas" id="faltas" class="form-control" value="{{ estadisticas_jugador.faltas}}" required>
             </div>
+            <div class="col-md-4">
+            <label for="jugadores" class="form-label">Jugadores:</label>
+            <select name="jugadores" id="jugadores" class="form-select">
+               
+            </select>
+</div>
 
         </div>
         <div class="row">
@@ -115,6 +121,34 @@
             }
     })
 </script>
+<script>
+    document.getElementById('partido').addEventListener('change', function() {
+        var partidoId = this.value;
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var jugadoresSelect = document.getElementById('jugadores');
+                    jugadoresSelect.innerHTML = '';
+                    response.jugadores.forEach(function(jugador) {
+                        var option = document.createElement('option');
+                        option.value = jugador.id;
+                        option.textContent = jugador.nombre;
+                        option.setAttribute('name', jugador.id)
+                        jugadoresSelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Error al obtener los jugadores');
+                }
+            }
+        };
+        xhr.open('GET', '{% url 'obtener_jugadores_por_partido' %}?partido_id=' + partidoId, true);
+        xhr.send();
+    });
+
+</script>
+
 
 </body>
 
