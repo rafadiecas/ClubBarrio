@@ -173,15 +173,11 @@
                 </div>
                 <div class="tab-pane fade" id="equipos" role="tabpanel" aria-labelledby="equipos-tab">
                     <h1 class="mb-3 mt-5">Gestiona tus jugadores</h1>
-{#                    {% for categoria, equipos in equipos_por_categoria.items %}#}
-{#                        <h3 class="mb-3">{{ categoria }}</h3>#}
-{#                        {% for equipo_info in equipos %}#}
-{#                            <div class="row">#}
-{#                                <p><b>{{ equipo_info.equipo.nombre }}</b>:#}
-{#                                    {{ equipo_info.plazas_libres }} plazas libres</p>#}
-{#                            </div>#}
-{#                        {% endfor %}#}
-{#                    {% endfor %}#}
+                        <p>Registra a tus jugadores desde la pestaña de Gestión, puedes añadirlos, modificar sus datos y eliminarlo.</p>
+                        <p>Además, una vez tengas hijos añadidos, puedes consultar todos sus datos y estadísticas desde el desplegable de Gestión</p>
+                        <p>Si tienes alguna duda, ponte en contacto con nosotros.</p>
+                        <a class="btn btn-outline-success btn-custom align-self-center mt-3" role="button"
+                        href="{% url 'gestion_familia' %}">Gestión</a>
                 </div>
             </div>
 

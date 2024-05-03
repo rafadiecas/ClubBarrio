@@ -64,6 +64,8 @@ def pagina_noticias(request):
             tutor = TutorLegal.objects.get(usuario_id=usuario.id)
             hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
             data['hijos'] = hijos
+            if len(hijos)==0:
+                data['hijo_existe'] = True
         elif usuario.rol == 'Jugador':
             jugador = Jugador.objects.get(usuario_id=usuario.id)
             data['jugador'] = jugador
@@ -403,7 +405,7 @@ def equipos_listado(request):
 
 def crear_equipo(request):
     if request.method == 'GET':
-        lista_categorias = categoria.objects.all()
+        lista_categorias = Categoria.objects.all()
         entrenadores = Entrenador.objects.all()
         return render(request, 'crear_equipo.html', {'lista_categorias': lista_categorias, 'entrenadores': entrenadores})
     else:
@@ -414,7 +416,7 @@ def crear_equipo(request):
             equipo_nuevo.es_safa = True
         else:
             equipo_nuevo.es_safa = False
-        equipo_nuevo.categoria= categoria.objects.get(id=int(request.POST.get('categoria')))
+        equipo_nuevo.categoria= Categoria.objects.get(id=int(request.POST.get('categoria')))
         equipo_nuevo.save()
 
         lista_entrenadores = request.POST.getlist('entrenadores')
@@ -426,7 +428,7 @@ def crear_equipo(request):
 def editar_equipo(request, id):
     equipo = Equipo.objects.get(id=id)
     if request.method == 'GET':
-        lista_categorias = categoria.objects.all()
+        lista_categorias = Categoria.objects.all()
         entrenadores = Entrenador.objects.all()
         id_entrenadores = equipo.entrenadores.values_list('id', flat=True)
         es_safa = equipo.es_safa
@@ -434,7 +436,7 @@ def editar_equipo(request, id):
     else:
         equipo.nombre = request.POST.get('nombre')
         equipo.escudo = request.POST.get('escudo')
-        equipo.categoria = categoria.objects.get(id=int(request.POST.get('categoria')))
+        equipo.categoria = Categoria.objects.get(id=int(request.POST.get('categoria')))
         if request.POST.get('is_safa') == 'on':
             equipo.es_safa = True
         else:
@@ -542,11 +544,11 @@ def crear_estadisticas_jugador(request):
         estadisticas_jugador_nuevo.rebotes = request.POST.get('rebotes')
         estadisticas_jugador_nuevo.faltas = request.POST.get('minutos')
         estadisticas_jugador_nuevo.asistencias = request.POST.get('asistencias')
-        estadisticas_jugador_nuevo.jugador = Jugador.objects.get(id=int(request.POST.get('jugador')))
+        estadisticas_jugador_nuevo.jugador = Jugador.objects.get(id=int(request.POST.get('jugadores')))
         estadisticas_jugador_nuevo.partido = Partido.objects.get(id=int(request.POST.get('partido')))
         estadisticas_jugador_nuevo.save()
 
-        return redirect('entrenamientos_listado')
+        return redirect('estadisticas_jugador_listado')
 def editar_estadisticas_jugador(request, id):
     estadisticas_jugador = EstadisticasJugador.objects.get(id=id)
     if request.method == 'GET':
@@ -676,6 +678,8 @@ def pagina_usuario(request):
     if usuario.rol == 'Tutor':
         tutor = TutorLegal.objects.get(usuario_id=usuario.id)
         hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+        if len(hijos) == 0:
+            return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijo_existe': True})
         return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijos': hijos})
     else:
         equipos_por_categoria = {}
@@ -724,6 +728,8 @@ def lista_hijos(request):
     usuario = request.user
     tutor = TutorLegal.objects.get(usuario_id=usuario.id)
     hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+    if len(hijos) == 0:
+        return render(request, 'lista_hijos.html', {'hijo_existe': True})
     return render(request, 'lista_hijos.html', {'hijos': hijos})
 
 def crea_hijos(request):
@@ -967,3 +973,15 @@ def equipos_entrenador(request):
     usuario = request.user
     equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
     return equipos
+
+def obtener_jugadores_por_partido(request):
+    if request.method == 'GET' and 'partido_id' in request.GET:
+        partido_id = request.GET['partido_id']
+        partido = Partido.objects.get(pk=partido_id)
+        jugadores_equipo1 = Jugador.objects.filter(equipo=partido.equipo1)
+        jugadores_equipo2 = Jugador.objects.filter(equipo=partido.equipo2)
+        jugadores = list(jugadores_equipo1) + list(jugadores_equipo2)
+        jugadores_data = [{'id': jugador.id, 'nombre': jugador.nombre} for jugador in jugadores]
+        return JsonResponse({'jugadores': jugadores_data})
+    else:
+        return JsonResponse({'error': 'Se requiere el ID del partido'})
