@@ -120,7 +120,6 @@ class Administrador(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=250, default='sin nombre')
     apellidos = models.CharField(max_length=250, default='sin apellidos')
-
     def __str__(self):
         return self.nombre + " " + self.apellidos
 
@@ -176,6 +175,7 @@ class Equipo(models.Model):
     escudo = models.CharField(max_length=500)
     categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
     entrenadores = models.ManyToManyField(Entrenador)
+    es_safa = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nombre

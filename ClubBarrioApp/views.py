@@ -533,7 +533,7 @@ def estadisticas_jugador_listado(request):
     return render(request, 'lista_estadisticas_jugador.html', {"lista_estadisticas_jugador":lista_estadisticas_jugador})
 def crear_estadisticas_jugador(request):
     if request.method == 'GET':
-        lista_partidos = Partido.objects.all()
+        lista_partidos = Partido.objects.filter(Q(equipo1__es_safa=True) | Q(equipo2__es_safa=True))
         lista_jugador = Jugador.objects.all()
         return render(request, 'crear_estadisticas_jugador.html',
                       {'lista_partidos': lista_partidos, 'lista_jugador': lista_jugador})

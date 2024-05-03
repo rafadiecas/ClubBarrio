@@ -30,7 +30,7 @@
                 <label for="partido" class="form-label">Partido:</label>
                 <select name="partido" id="partido" class="form-select">
                     {% for p in lista_partidos %}
-                        <option value="{{ p.id }}"{% if p.id == estadisticas_jugador.partido.id %} selected {% endif %}>{{ p.equipo1 }} vs {{ p.equipo2 }}</option>
+                        <option class="part" value="{{ p.id }}"{% if p.id == estadisticas_jugador.partido.id %} selected {% endif %}>{{ p.equipo1 }} vs {{ p.equipo2 }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -147,6 +147,21 @@
         xhr.send();
     });
 
+</script>
+
+<script>
+    var partidos = document.querySelectorAll(".partido");
+
+
+    partidos.forEach(function(partido) {
+    
+        var equipo1 = partido.querySelector(".equipo1");
+        var equipo2 = partido.querySelector(".equipo2");
+ 
+        if (!equipo1.classList.contains("es-safa") && !equipo2.classList.contains("es-safa")) {
+        partido.classList.add("d-none");
+        }
+    });
 </script>
 
 
