@@ -161,17 +161,16 @@ INSERT INTO ClubBarrioApp_lugarentrenamiento (id, nombre, direccion) VALUES (10,
 
 /*Entrenamiento*/
 
-INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id) VALUES (2, '2024-04-12', '15:30:00', 1, 1);
-INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id) VALUES (3, '2024-04-13', '16:00:00', 1, 1);
-INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id) VALUES (4, '2024-04-14', '14:00:00', 1, 1);
-INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id) VALUES (5, '2024-04-15', '16:30:00', 1, 1);
-INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id) VALUES (6, '2024-04-16', '17:00:00', 1, 1);
-INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id) VALUES (7, '2024-04-17', '18:00:00', 1, 1);
-INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id) VALUES (8, '2024-04-18', '15:00:00', 1, 1);
-INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id) VALUES (9, '2024-04-19', '14:30:00', 1, 1);
-INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id) VALUES (10, '2024-04-20', '17:30:00', 1, 1);
-INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id) VALUES (11, '2024-04-21', '16:45:00', 1, 1);
-
+INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id, equipo_id) VALUES (2, '2024-04-12', '15:30:00', 1, 1,1);
+INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id,equipo_id) VALUES (3, '2024-04-13', '16:00:00', 1, 1,1);
+INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id,equipo_id) VALUES (4, '2024-04-14', '14:00:00', 1, 1,1);
+INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id,equipo_id) VALUES (5, '2024-04-15', '16:30:00', 1, 1,1);
+INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id,equipo_id) VALUES (6, '2024-04-16', '17:00:00', 1, 1,1);
+INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id,equipo_id) VALUES (7, '2024-04-17', '18:00:00', 1, 1,1);
+INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id,equipo_id) VALUES (8, '2024-04-18', '15:00:00', 1, 1,1);
+INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id,equipo_id) VALUES (9, '2024-04-19', '14:30:00', 1, 1,1);
+INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id,equipo_id) VALUES (10, '2024-04-20', '17:30:00', 1, 1,1);
+INSERT INTO ClubBarrioApp_entrenamiento (id, fecha, hora, entrenador_id, lugarEntrenamiento_id,equipo_id) VALUES (11, '2024-04-21', '16:45:00', 1, 1,1);
 
 /*Partidos Generados para primera temporada - 540 registros totales - 5 enfrentamientos por jornada x 18 jornadas x 6 categorias.*/
 

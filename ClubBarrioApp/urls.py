@@ -67,6 +67,7 @@ urlpatterns = [
     path('usuario/perfil/pass/', perfil_pass, name='perfil_pass'),
     path('terminos_y_servicios', terminos_y_servicios, name='terminos_y_servicios'),
     path('entrenador', entrenador, name='entrenador'),
+    path('entrenador/<int:id>/', entrenador, name='entrenador'),
     path('entrenador/equipos/<int:id>/', pagina_equipo, name='equipo'),
     path('contacto', pagina_contacto, name='contacto'),
     path('entrenador/entrenamientos/', entrenamientos_listado_entrenador, name='entrenamientos_listado_entrenador'),
