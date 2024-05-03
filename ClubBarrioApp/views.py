@@ -113,6 +113,16 @@ def validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirma
         errores.append("La contraseña actual es incorrecta")
     if nueva_contraseña != confirmacion_contraseña:
         errores.append("Las contraseñas no coinciden")
+    largo = re.compile(r'.{8,}')
+    digito = re.compile(r'\d+')
+    letra_may = re.compile(r'[A-Z]+')
+    letra_min = re.compile(r'[a-z]+')
+    validaciones = [largo, digito, letra_may, letra_min]
+    for v in validaciones:
+        if not v.search(nueva_contraseña):
+            errores.append(
+                "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número")
+            break
     return errores
 
 def perfil(request):
@@ -598,6 +608,7 @@ def crear_partido(request):
         partido_nuevo.equipo1 = Equipo.objects.get(id=int(request.POST.get('equipo_local')))
         partido_nuevo.equipo2 = Equipo.objects.get(id=int(request.POST.get('equipo_visitante')))
         partido_nuevo.temporada = Temporada.objects.get(id=int(request.POST.get('temporada')))
+        partido_nuevo.jornada = request.POST.get('jornada')
         if request.POST.get('equipo_local') == request.POST.get('equipo_visitante'):
             errores = ["Los equipos no pueden ser iguales"]
             return render(request, 'crear_partidos.html', {'errores': errores, 'lista_equipos': Equipo.objects.all(), 'temporadas': Temporada.objects.all()})
@@ -625,6 +636,7 @@ def editar_partido(request, id):
         partido.equipo1 = Equipo.objects.get(id=int(request.POST.get('equipo_local')))
         partido.equipo2 = Equipo.objects.get(id=int(request.POST.get('equipo_visitante')))
         partido.temporada = Temporada.objects.get(id=int(request.POST.get('temporada')))
+        partido.jornada = request.POST.get('jornada')
         if request.POST.get('equipo_local') == request.POST.get('equipo_visitante'):
             errores = ["Los equipos no pueden ser iguales"]
             return render(request, 'crear_partidos.html', {'errores': errores, 'lista_equipos': Equipo.objects.all(), 'temporadas': Temporada.objects.all()})

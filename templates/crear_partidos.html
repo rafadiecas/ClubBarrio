@@ -71,6 +71,10 @@
         </div>
     <div class="row">
         <div class="col-md-4">
+                <label for="jornada" class="form-label">Jornada:</label>
+                <input type="number" name="jornada" id="jornada" class="form-control" value="{{ partido.jornada }}">
+            </div>
+        <div class="col-md-4">
             <label for="temporada" class="form-label">Temporada:</label>
             <select name="temporada" id="temporada" class="form-select">
                 {% for temporada in temporadas %}

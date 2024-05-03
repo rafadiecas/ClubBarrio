@@ -72,7 +72,7 @@ class User(AbstractBaseUser):
         return self.username
 
 
-class categoria(models.Model):
+class Categoria(models.Model):
     tipo = models.CharField(max_length=250)
 
     def __str__(self):
@@ -165,6 +165,7 @@ class Entrenamiento(models.Model):
     hora = models.TimeField()
     entrenador = models.ForeignKey(Entrenador, on_delete=models.DO_NOTHING)
     lugarEntrenamiento = models.ForeignKey(LugarEntrenamiento, on_delete=models.DO_NOTHING, null=True)
+    equipo = models.ForeignKey('Equipo', on_delete=models.DO_NOTHING,default=1)
 
     def __str__(self):
         return str(self.fecha) + " " + str(self.hora) + " " + self.lugarEntrenamiento.nombre
@@ -173,7 +174,7 @@ class Entrenamiento(models.Model):
 class Equipo(models.Model):
     nombre = models.CharField(max_length=250)
     escudo = models.CharField(max_length=500)
-    categoria = models.ForeignKey(categoria, on_delete=models.DO_NOTHING)
+    categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
     entrenadores = models.ManyToManyField(Entrenador)
     es_safa = models.BooleanField(default=False)
 
