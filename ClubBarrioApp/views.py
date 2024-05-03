@@ -105,6 +105,16 @@ def validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirma
         errores.append("La contraseña actual es incorrecta")
     if nueva_contraseña != confirmacion_contraseña:
         errores.append("Las contraseñas no coinciden")
+    largo = re.compile(r'.{8,}')
+    digito = re.compile(r'\d+')
+    letra_may = re.compile(r'[A-Z]+')
+    letra_min = re.compile(r'[a-z]+')
+    validaciones = [largo, digito, letra_may, letra_min]
+    for v in validaciones:
+        if not v.search(nueva_contraseña):
+            errores.append(
+                "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número")
+            break
     return errores
 
 def perfil(request):
@@ -937,6 +947,8 @@ def pagina_equipo(request, id):
     entrenamientos= Entrenamiento.objects.filter(entrenador_id=entrenador.id, fecha__gte=fecha_actual).order_by('fecha')
     clasificacion= saca_clasificacion(equipos_cat)
     response = requests.get(f"https://nominatim.openstreetmap.org/search?q={partidos_futuros[0].lugar}&format=json")
+    if response.status_code != 200:
+        return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0],'equipos_entrenador': equipos, 'entrenamiento': entrenamientos.first(), 'mapa_fallo': True})
     data = response.json()
     print(response.content)
     lat = data[0]['lat']

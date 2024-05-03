@@ -82,7 +82,7 @@
         <div class="row" id="datos">
             <div class="col-md-4">
                 <label for="username" class="form-label">Username:</label>
-                <input type="text" name="username" id="username" maxlength="20" class="form-control" value="{{ username }}" required>
+                <input type="text" name="username" id="username" maxlength="20" class="form-control" value="{% if modo_edicion %}{{ jugador.usuario.username }}{% else %}{{ username }}{% endif %}" required>
             </div>
             <div class="col-md-4" id="nombreField">
                 <label for="nombre" class="form-label">Nombre:</label>
@@ -97,7 +97,7 @@
         <div class="row">
             <div class="col-md-4">
                 <label for="email" class="form-label">Email:</label>
-                <input type="email" name="email" id="email" maxlength="30" class="form-control" value="{{ email }}" required>
+                <input type="email" name="email" id="email" maxlength="30" class="form-control" value="{% if modo_edicion %}{{ jugador.usuario.email }}{% else %}{{ email }}{% endif %}" required>
             </div>
             <div class="col-md-4">
                 <label for="password" class="form-label">Contraseña:</label>
