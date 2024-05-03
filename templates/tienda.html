@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tienda</title>
+
+    <style>
+        #nombre{
+            color: blue;
+            overflow-wrap: break-word;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+        #precio{
+            color: red;
+            overflow-wrap: break-word;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+        #foto_tienda{
+            max-width: 300px;
+            max-height: 450px;
+            object-fit: contain;
+            aspect-ratio: auto;
+        }
+
+    </style>
+</head>
+{% include "barra_navegacion.html" %}
+<body>
+    <div class="container-fluid d-flex justify-content-center mt-5">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 mb-3 text-center w-75">
+            {% for p in entity %}
+                <div class="col d-flex align-items-stretch justify-content-center">
+                    <div class="card mb-4 rounded-3 shadow-lg" style="">
+                        <img src="{{ p.url_imagen }}" class="img-fluid" alt="imagen" id="foto_tienda">
+                        <div class="card-body">
+                            <h5 class="card-title" id="nombre">{{ p.nombre }}</h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">{{ p.talla }}</li>
+                            <li class="list-group-item" id="precio">{{ p.precio }}€</li>
+                        </ul>
+                        <!--<div class="card-body">
+                            <a href="#" class="card-link">Card link</a>
+                        </div>-->
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+    {% include 'paginator.html' %}
+</body>
+{% include 'footer.html' %}
+</html>

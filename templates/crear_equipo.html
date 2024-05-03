@@ -10,7 +10,7 @@
 <div class="container">
 
 
-    <h1 class="my-4">Crear equipo</h1>
+    <h1 class="my-4">{% if modo_edicion %}Editar{% else %}Crear{% endif %} Equipo</h1>
 
         {% if errores %}
         <div class="alert alert-danger">
@@ -29,7 +29,7 @@
         <div class="row">
             <div class="col-md-4">
                 <label for="nombre" class="form-label">Nombre:</label>
-                <input type="text" name="nombre" id="nombre" class="form-control" value="{{ equipo.nombre }}" required>
+                <input type="text" name="nombre" id="nombre" class="form-control" maxlength="50" value="{{ equipo.nombre }}" required>
             </div>
             <div class="col-md-4" id="nombreField">
                 <label for="escudo" class="form-label">Escudo:</label>

@@ -10,7 +10,7 @@
 <div class="container">
 
 
-    <h1 class="my-4">Crear Partido</h1>
+    <h1 class="my-4">{% if modo_edicion %}Editar{% else %}Crear{% endif %} Partido</h1>
 
         {% if errores %}
         <div class="alert alert-danger">
@@ -33,22 +33,22 @@
             </div>
             <div class="col-md-4" id="nombreField">
                 <label for="hora" class="form-label">Hora:</label>
-                <input type="time" name="hora" id="hora" class="form-control" value="{{ partido.hora|time:'H:i' }}">
+                <input type="time" name="hora" id="hora" class="form-control" value="{{ partido.hora|time:'H:i' }} " required>
             </div>
 
         </div>
         <div class="row">
             <div class="col-md-4">
                 <label for="lugar" class="form-label">Lugar:</label>
-                <input type="text" name="lugar" id="lugar" class="form-control" value="{{ partido.lugar }}">
+                <input type="text" name="lugar" id="lugar" maxlength="100" class="form-control" value="{{ partido.lugar }}">
             </div>
             <div class="col-md-4">
                 <label for="puntos_equipo1" class="form-label">Puntos equipo 1:</label>
-                <input type="text" name="puntos_equipo1" id="puntos_equipo1" class="form-control" value="{{ partido.puntos_equipo1 }}">
+                <input type="number" name="puntos_equipo1" id="puntos_equipo1" class="form-control" value="{{ partido.puntos_equipo1 }}">
             </div>
             <div class="col-md-4">
                 <label for="puntos_equipo2" class="form-label">Puntos equipo 2:</label>
-                <input type="text" name="puntos_equipo2" id="lugar" class="form-control" value="{{ partido.puntos_equipo2 }}">
+                <input type="number" name="puntos_equipo2" id="puntos_equipo2" class="form-control" value="{{ partido.puntos_equipo2 }}">
             </div>
         </div>
         <div class="row">
@@ -77,9 +77,9 @@
                     <option value="{{ temporada.id }}"{% if partido.temporada.id == temporada.id %} selected {% endif %}>{{ temporada.anyo }}</option>
                 {% endfor %}
             </select>
-          
+        </div>     
     </div>
-        <div class="row">
+       <div class="row">
             <div class="col-12 text-center">
                 <button type="submit" class="btn btn-primary mt-3">Submit</button>
             </div>
@@ -92,6 +92,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    var input1=  document.getElementById('puntos_equipo1');
+    input1.addEventListener('input',function(){
+      if (this.value.length > 3) 
+         this.value = this.value.slice(0,3);
+      if (this.value < 0) {
+                this.value = 0;
+            }
+    })
+    var input2=  document.getElementById('puntos_equipo2');
+    input2.addEventListener('input',function(){
+      if (this.value.length > 3) 
+         this.value = this.value.slice(0,3);
+      if (this.value < 0) {
+                this.value = 0;
+            }
+    })
+</script>
 
 </body>
 

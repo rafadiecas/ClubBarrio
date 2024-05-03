@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+{% include 'barra_navegacion.html' %}
+<head>
+    <meta charset="UTF-8">
+    <title>Pagina equipo</title>
+    <style>
+        .img-equipo {
+            width: 100%; 
+            height: auto;
+            max-width: 10em;
+            margin: auto; 
+            display: block;
+        }
+        
+        @media (max-width: 1000px) {
+            
+            .jornadas {
+                width: 100% !important; 
+            }
+        }
+        
+
+
+    </style>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+</head>
+<body>
+<div class="container">
+
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="table-responsive">
+                <table class="table" id="tabla" >
+                    <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Nombre equipo</th>
+                      <th scope="col">PG</th>
+                      <th scope="col">PJ</th>
+                      <th scope="col">Total puntos</th>
+
+                    </tr>
+                  </thead>
+                  <tbody >
+                  {% for e in clasificacion %}
+                    <tr>
+                        <td {% if e.nombre == jugador.equipo.nombre %} style="font-weight: 700" {% endif %} >{{ e.nombre}}</td>
+                        <td>{{ e.partidos_ganados }}</td>
+                      <td>{{ e.partidos_jugados }}</td>
+                      <td>{{ e.diferencia_puntos }}</td>
+
+
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+
+            </div>
+            </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="row">
+                <div class="col col-12">
+                    <h2 class="text-center">Proximo partido</h2>
+                     <div class="row align-items-center">
+                        <div class="col-4">
+                            <img src="{{ siguiente_partido.equipo1.escudo }}" alt="" class="img-fluid img-equipo">
+                        </div>
+                        <div class="col-4 text-center">
+                            <p><b>Jornada {{ siguiente_partido.jornada }}</b></p>
+                            <p>{{ siguiente_partido.fecha|date:'d-m-Y' }}</p>
+                            <p>{{ siguiente_partido.hora }}</p>
+                        </div>
+                        <div class="col-4">
+                            <img src="{{ siguiente_partido.equipo2.escudo }}" alt="" class="img-fluid img-equipo">
+                        </div>
+                     </div>
+                    <h3 class="text-center">Lugar</h3>
+                    <div class="container w-50" id="map" style="height: 200px;"></div>
+                </div>
+                <div class="container text-center mt-3">
+                    <h3>Próximo Entrenamiento</h3>
+                    {% if entrenamiento %}
+                        <p>{{ entrenamiento.fecha|date:'d-m-Y' }}</p>
+                        <p>{{ entrenamiento.hora }}</p>
+                        <p><b>{{ entrenamiento.lugarEntrenamiento.nombre }}</b></p>
+                    {% else %}
+                        <p>No hay entrenamientos próximos</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+            
+        </div>
+        <div class="container d-flex justify-content-center w-100 mt-3">
+        <div class="row row-cols-1 row-cols-md-2 w-75 jornadas">
+            <div class="col">
+                <div class="text-center">
+                    <h2>Partidos anteriores</h2>
+                    {% if partidos_anteriores|length == 0 %}
+                        <p>No hay partidos anteriores</p>
+                    {% endif %}
+                    <ul class="list-group list-group-flush">
+                        {% for p in partidos_anteriores %}
+                            <li class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-4">
+                                        <img src="{{ p.equipo1.escudo }}" alt="" class="img-fluid img-equipo">
+                                    </div>
+                                    <div class="col-4">
+                                        <p><b>Jornada {{ p.jornada }}</b></p>
+                                        <p>{{ p.puntos_equipo1 }} - {{ p.puntos_equipo2 }}</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="{{ p.equipo2.escudo }}" alt="" class="img-fluid img-equipo">
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col">
+                <div class="text-center">
+                    <h2>Proximos partidos</h2>
+                    <ul class="list-group list-group-flush">
+                        {% for p in partidos_futuros %}
+                            <li class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-4">
+                                        <img src="{{ p.equipo1.escudo }}" alt="" class="img-fluid img-equipo">
+                                    </div>
+                                    <div class="col-4">
+                                        <p><b>Jornada {{ p.jornada }}</b></p>
+                                        <p>{{ p.fecha|date:'d-m-Y' }}</p>
+                                        <p>{{ p.hora }}</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="{{ p.equipo2.escudo }}" alt="" class="img-fluid img-equipo">
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+
+<script>
+    // Función para agregar números de línea a cada fila
+    function agregarNumerosLinea() {
+        var tabla = document.getElementById("tabla");
+        var filas = tabla.getElementsByTagName("tr");
+
+        for (var i = 1; i < filas.length; i++) {
+            var celdaNumeroLinea = document.createElement("td");
+            celdaNumeroLinea.textContent = i; // El número de línea comienza desde 0
+            filas[i].insertBefore(celdaNumeroLinea, filas[i].firstChild);// Insertar celda al inicio de la fila
+        }
+    }
+
+    // Llamar a la función al cargar la página
+    window.onload = agregarNumerosLinea;
+</script>
+<script>
+        var lat = {{ lat }};
+        var lon = {{ lon }};
+
+        var map = L.map('map').setView([lat, lon], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        L.marker([lat, lon]).addTo(map)
+            .bindPopup('<b>{{ siguiente_partido.lugar }}</b>')
+            .openPopup();
+    </script>
+</body>
+{% include 'footer.html' %}
+</html>

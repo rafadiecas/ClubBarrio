@@ -59,12 +59,12 @@
                         <div class="form-outline mb-4">
                            
                             <label class="form-label" for="nombre_usuario">Nombre usuario</label>
-                            <input type="text" id="nombre_usuario" name="nombre_usuario" class="form-control" value="{{ nombre_usuraio }}" />
+                            <input type="text" id="nombre_usuario" name="nombre_usuario" class="form-control" maxlength="20" value="{{ nombre_usuraio }}" />
                         </div>
 
                         <div class="form-outline mb-4">
                             <label class="form-label" for="email">Email</label>
-                            <input type="email" id="email" name="email" class="form-control" value="{{ email }}" />
+                            <input type="email" id="email" name="email" class="form-control" maxlength="30" value="{{ email }}" />
                         </div>
 
                         <div class="form-outline mb-4">
@@ -102,4 +102,5 @@
   </main>
 
 </body>
+{% include 'footer.html' %}
 </html>

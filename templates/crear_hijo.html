@@ -68,10 +68,7 @@
             </div>
             {% endfor %}
         </div>
-        <input type="hidden" id="tarifa_seleccionada" name="tarifa_seleccionada">
-        <input type="hidden" id="nombre-jug" name="nombre-jug" value="{{ nombre }}">
-        <input type="hidden" id="apellidos-jug" name="apellidos-jug" value="{{ apellidos }}">
-        <input type="hidden" id="hijo" name="hijo" value="{{ hijo.id }}">
+        <input type="hidden" id="equipo_seleccionado" name="equipo_seleccionado">
             
         <div class="row">
             <div class="col-12 text-center">
@@ -85,22 +82,22 @@
         <div class="row" id="datos">
             <div class="col-md-4">
                 <label for="username" class="form-label">Username:</label>
-                <input type="text" name="username" id="username" class="form-control" value="{{ username }}" required>
+                <input type="text" name="username" id="username" maxlength="20" class="form-control" value="{{ username }}" required>
             </div>
             <div class="col-md-4" id="nombreField">
                 <label for="nombre" class="form-label">Nombre:</label>
-                <input type="text" name="nombre" id="nombre" class="form-control" value="{% if modo_edicion %}{{ jugador.nombre }}{% else %}{{ nombre }}{% endif %}">
+                <input type="text" name="nombre" id="nombre" class="form-control" maxlength="20" value="{% if modo_edicion %}{{ jugador.nombre }}{% else %}{{ nombre }}{% endif %}">
             </div>
             <div class="col-md-4" id="apellidosField">
                 <label for="apellidos" class="form-label">Apellidos:</label>
-                <input type="text" name="apellidos" id="apellidos" class="form-control" value="{% if modo_edicion %}{{ jugador.apellidos }}{% else %}{{ apellidos }}{% endif %}">
+                <input type="text" name="apellidos" id="apellidos" maxlength="50" class="form-control" value="{% if modo_edicion %}{{ jugador.apellidos }}{% else %}{{ apellidos }}{% endif %}">
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-4">
                 <label for="email" class="form-label">Email:</label>
-                <input type="email" name="email" id="email" class="form-control" value="{{ email }}" required>
+                <input type="email" name="email" id="email" maxlength="30" class="form-control" value="{{ email }}" required>
             </div>
             <div class="col-md-4">
                 <label for="password" class="form-label">Contraseña:</label>
@@ -166,7 +163,7 @@
     $('#enviar_equipos').on('click', function(e) {
         e.preventDefault(); // Evitar el envío del formulario por defecto
         var equipoId = $('.resaltado').data('equipo-id');
-        $('#tarifa_seleccionada').val(equipoId);
+        $('#equipo_seleccionado').val(equipoId);
         $('#equipos_form').submit();
     });
 });
