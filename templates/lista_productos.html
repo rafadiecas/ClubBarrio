@@ -47,10 +47,10 @@
               {% for p in lista_productos %}
                 <tr>
                   <th scope="row">{{ p.id }}</th>
-                  <td>{{ p.nombre }}</td>
-                  <td>{{ p.precio }}</td>
+                  <td>{{ p.producto.nombre }}</td>
+                  <td>{{ p.producto.precio }}</td>
                   <td>{{ p.stock }}</td>
-                    <td>{{ p.url_imagen }}</td>
+                    <td>{{ p.producto.url_imagen }}</td>
                     <td>{{ p.talla.nombre }}</td>
                     <td>{{ p.tipo.nombre }}</td>
                     <td>
