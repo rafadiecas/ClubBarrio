@@ -33,6 +33,7 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 mb-3 text-center w-75">
             {% for p in entity %}
                 <div class="col d-flex align-items-stretch justify-content-center">
+                <a href="carrito.html">Carrito</a>
                     <div class="card mb-4 rounded-3 shadow-lg" style="">
                         <img src="{{ p.url_imagen }}" class="img-fluid" alt="imagen" id="foto_tienda">
                         <div class="card-body">
@@ -41,6 +42,7 @@
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">{{ p.talla }}</li>
                             <li class="list-group-item" id="precio">{{ p.precio }}€</li>
+                            <li class="list-group-item" id="precio"> <a href="{% url 'add_carrito' id=p.id %}"><button type="button" class="btn btn-success">+</button></a></li>
                         </ul>
                         <!--<div class="card-body">
                             <a href="#" class="card-link">Card link</a>

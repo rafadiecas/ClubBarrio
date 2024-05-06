@@ -71,4 +71,6 @@ urlpatterns = [
     path('entrenador/equipos/<int:id>/', pagina_equipo, name='equipo'),
     path('contacto', pagina_contacto, name='contacto'),
     path('entrenador/entrenamientos/', entrenamientos_listado_entrenador, name='entrenamientos_listado_entrenador'),
+    path('carrito/add/<int:id>', add_carrito, name='add_carrito'),
+    path('tienda/carrito/', carrito, name='carrito'),
 ]

@@ -1020,3 +1020,23 @@ def equipos_entrenador(request):
     usuario = request.user
     equipos = Equipo.objects.filter(entrenadores__usuario_id=usuario.id)
     return equipos
+
+def add_carrito(request, id):
+    carro = {}
+
+    # Comprobar si hay ya un carrito en sesión
+    if "carro" in request.session:
+        carro = request.session.get("carro", {})
+
+    # Comprobar que el producto está o no está en el carrito
+    if str(id) in carro.keys():
+        carro[str(id)] = carro[str(id)] + 1
+    else:
+        carro[str(id)] = 1
+
+    request.session["carro"] = carro
+
+    return redirect('tienda')
+
+def carrito(request):
+    return render(request, 'carrito.html')

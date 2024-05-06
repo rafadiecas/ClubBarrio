@@ -70,21 +70,21 @@
             <div class="col d-flex flex-column text-center px-5" >
                 <ul class="nav nav-tabs d-flex " id="myTab" role="tablist">
                 <li class="nav-item flex-grow-1" role="presentation">
-                    <button class="nav-link active w-100 py-4" id="entrenamientos-tab" data-bs-toggle="tab"
+                    <button class="nav-link {% if vista %} active{% endif %} w-100 py-4" id="entrenamientos-tab" data-bs-toggle="tab"
                             data-bs-target="#entrenamientos" type="button" role="tab" aria-controls="entrenamientos"
-                            aria-selected="false">
+                            aria-selected="true">
                         Entrenamientos
                     </button>
                 </li>
                 <li class="nav-item flex-grow-1" role="presentation">
-                    <button class="nav-link w-100 py-4" id="equipos-tab" data-bs-toggle="tab" data-bs-target="#equipos"
-                            type="button" role="tab" aria-controls="equipos" aria-selected="false">
-                        Equipos disponibles
+                    <button class="nav-link {% if not vista %} active{% endif %} w-100 py-4" id="equipos-tab" data-bs-toggle="tab"
+                            data-bs-target="#equipos" type="button" role="tab" aria-controls="equipos" aria-selected="false">
+                        Nuevo entrenamiento
                     </button>
                 </li>
                 </ul>
                  <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="entrenamientos" role="tabpanel"
+                    <div class="tab-pane fade {% if vista %}show active{% endif %}" id="entrenamientos" role="tabpanel"
                          aria-labelledby="entrenamientos-tab">
                         <div class="table-responsive">
                             <table class="table" id="tabla">
@@ -116,7 +116,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="equipos" role="tabpanel" aria-labelledby="equipos-tab">
+                    <div class="tab-pane fade {% if not vista %}show active{% endif %}" id="equipos" role="tabpanel" aria-labelledby="equipos-tab">
                         
                         <div class="global-container">
                         <div class="card login-form">
@@ -204,36 +204,37 @@
         widgetTiempo.children[1].style.display = widgetTiempo.children[1].style.display === 'none' ? 'block' : 'none';
     }
 </script>
-<script>
-    function cambiarTabActivo() {
-    // Obtener el tab activo actualmente
-    var tabActivo = document.querySelector('.nav-tabs .nav-link.active');
-
-    // Verificar si el tab activo es el de Entrenamientos
-    if (tabActivo.getAttribute('id') === 'entrenamientos-tab') {
-        // Obtener el tab de Equipos disponibles
-        var tabEquipos = document.querySelector('#equipos-tab');
-
-        // Cambiar el tab activo al de Equipos disponibles
-        tabEquipos.classList.add('active');
-        tabActivo.classList.remove('active');
-
-        // Obtener el contenido del tab de Equipos disponibles
-        var tabContentEquipos = document.querySelector('#equipos');
-        var tabContentEntrenamientos = document.querySelector('#entrenamientos');
-
-        // Mostrar el contenido del tab de Equipos disponibles y ocultar el de Entrenamientos
-        tabContentEquipos.classList.add('show', 'active');
-        tabContentEntrenamientos.classList.remove('show', 'active');
-    }
-}
-
-// Agregar un evento de clic a los botones de editar en cada fila de la tabla
-var botonesEditar = document.querySelectorAll('a[href^="{% url 'entrenador' %}"]');
-botonesEditar.forEach(function(boton) {
-    boton.addEventListener('click', function(event) {
-        cambiarTabActivo(); // Llamar a la función para cambiar el tab activo
-    });
-});
-</script>
+{#<script>#}
+{#    function cambiarTabActivo() {#}
+{#    // Obtener el tab activo actualmente#}
+{#    var tabActivo = document.querySelector('.nav-tabs .nav-link.active');#}
+{##}
+{#    // Verificar si el tab activo es el de Entrenamientos#}
+{#    if (tabActivo.getAttribute('id') === 'entrenamientos-tab') {#}
+{#        // Obtener el tab de Equipos disponibles#}
+{#        var tabEquipos = document.querySelector('#equipos-tab');#}
+{##}
+{#        // Cambiar el tab activo al de Equipos disponibles#}
+{#        tabEquipos.classList.add('active');#}
+{#        tabActivo.classList.remove('active');#}
+{##}
+{#        // Obtener el contenido del tab de Equipos disponibles#}
+{#        var tabContentEquipos = document.querySelector('#equipos');#}
+{#        var tabContentEntrenamientos = document.querySelector('#entrenamientos');#}
+{##}
+{#        // Mostrar el contenido del tab de Equipos disponibles y ocultar el de Entrenamientos#}
+{#        tabContentEquipos.classList.add('show', 'active');#}
+{#        tabContentEntrenamientos.classList.remove('show', 'active');#}
+{#    }#}
+{#}#}
+{##}
+{#// Agregar un evento de clic a los botones de editar en cada fila de la tabla#}
+{#var botonesEditar = document.querySelectorAll('a[href^="{% url 'entrenador' %}"]');#}
+{#botonesEditar.forEach(function(boton) {#}
+{#    boton.addEventListener('click', function(event) {#}
+{#        cambiarTabActivo(); // Llamar a la función para cambiar el tab activo#}
+{#    });#}
+{#});#}
+{#</script>#}
 </body>
+{% include 'footer.html' %}
