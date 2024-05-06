@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.hashers import make_password
 from django.contrib.sites import requests
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.db.models import Count, Q
 from django.shortcuts import render, redirect
@@ -628,7 +629,7 @@ def editar_partido(request, id):
 
 
 def lista_tienda(request):
-    lista_productos = Producto.objects.all()
+    lista_productos = ProductoTalla.objects.all()
     return render(request, 'lista_productos.html', {"lista_productos":lista_productos})
 
 def crear_producto(request):
@@ -640,11 +641,14 @@ def crear_producto(request):
         producto_nuevo = Producto()
         producto_nuevo.nombre = request.POST.get('nombre')
         producto_nuevo.precio = request.POST.get('precio')
-        producto_nuevo.talla = Talla.objects.get(id=int(request.POST.get('talla')))
         producto_nuevo.tipo = Tipo.objects.get(id=int(request.POST.get('tipo')))
-        producto_nuevo.stock = request.POST.get('stock')
         producto_nuevo.url_imagen = request.POST.get('url_imagen')
         producto_nuevo.save()
+        producto_talla_nuevo = ProductoTalla()
+        producto_talla_nuevo.producto = producto_nuevo
+        producto_talla_nuevo.talla = Talla.objects.get(id=int(request.POST.get('talla')))
+        producto_talla_nuevo.stock = request.POST.get('stock')
+        producto_talla_nuevo.save()
         return redirect('lista_tienda')
 
 def elimina_producto(request, id):
@@ -653,7 +657,8 @@ def elimina_producto(request, id):
     return redirect('lista_tienda')
 
 def edita_producto(request, id):
-    producto = Producto.objects.get(id=id)
+    productotalla = ProductoTalla.objects.get(id=id)
+    producto = productotalla.producto
     if request.method == 'GET':
         tallas = Talla.objects.all()
         tipos = Tipo.objects.all()
@@ -661,11 +666,19 @@ def edita_producto(request, id):
     else:
         producto.nombre = request.POST.get('nombre')
         producto.precio = request.POST.get('precio')
-        producto.talla = Talla.objects.get(id=int(request.POST.get('talla')))
         producto.tipo = Tipo.objects.get(id=int(request.POST.get('tipo')))
-        producto.stock = request.POST.get('stock')
         producto.url_imagen = request.POST.get('url_imagen')
         producto.save()
+        try:
+            producto_talla = ProductoTalla.objects.get(producto_id=id, talla=request.POST.get('talla'))
+            producto_talla.stock = request.POST.get('stock')
+            producto_talla.save()
+        except ObjectDoesNotExist:
+            productotalla.producto = producto
+            productotalla.talla = Talla.objects.get(id=int(request.POST.get('talla')))
+            productotalla.stock = request.POST.get('stock')
+            productotalla.save()
+
         return redirect('lista_tienda')
 
 
@@ -985,3 +998,8 @@ def obtener_jugadores_por_partido(request):
         return JsonResponse({'jugadores': jugadores_data})
     else:
         return JsonResponse({'error': 'Se requiere el ID del partido'})
+
+def producto(request, id):
+    producto = Producto.objects.get(id=id)
+    tallas = Talla.objects.all()
+    return render(request, 'producto.html', {'producto': producto, 'tallas': tallas})

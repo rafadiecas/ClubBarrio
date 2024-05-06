@@ -106,14 +106,23 @@ class Tipo(models.Model):
 class Producto(models.Model):
     nombre = models.CharField(max_length=250)
     precio = models.FloatField()
-    stock = models.IntegerField(default=0)
-    pedidos = models.ManyToManyField(Pedido)
+    descripcion = models.TextField(default='sin descripción')
     url_imagen = models.CharField(max_length=500, default='sin imagen')
     tipo = models.ForeignKey(Tipo, on_delete=models.DO_NOTHING, null=True)
-    talla = models.ForeignKey(Talla, on_delete=models.DO_NOTHING, null=True)
+    tallas = models.ManyToManyField(Talla, through='ProductoTalla')
+
 
     def __str__(self):
         return self.nombre
+
+class ProductoTalla(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    talla = models.ForeignKey(Talla, on_delete=models.DO_NOTHING, null=True)
+    stock = models.IntegerField(default=0)
+    pedidos = models.ManyToManyField(Pedido)
+
+    def __str__(self):
+        return self.producto.nombre + " " + self.talla.nombre + " " + str(self.stock)
 
 
 class Administrador(models.Model):

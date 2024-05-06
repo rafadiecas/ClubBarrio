@@ -249,7 +249,7 @@ INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (3, 'Calzonas');
 INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (4, 'Sudadera');
 
 /* producto */
-INSERT INTO ClubBarrioApp_producto (id, nombre, precio, stock, talla_id, tipo_id, url_imagen) VALUES (1, 'Equipacion', 30, 10, 5, 2, 'Sin ruta');
+
 
 
 

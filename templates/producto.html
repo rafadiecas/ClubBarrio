@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Producto</title>
+</head>
+<body>
+    <div class="flex-container">
+        <div class="img-fluid">{{ producto.url_imagen }}</div>
+        <div class="flex-container flex-column">
+            <h3>{{ producto.nombre }}</h3>
+            <p>{{ producto.nombre }}</p>
+            <label for="tallas">Tallas:</label>
+            <select name="tallas" id="tallas">
+                {% for talla in tallas %}
+                    <option value="{{ talla.id }}">{{ talla.nombre }}</option>
+                {% endfor %}
+            </select>
+            <b>{{ producto.precio }}€</b>
+        </div>
+    </div>
+
+</body>
+</html>
