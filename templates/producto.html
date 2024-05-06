@@ -9,16 +9,25 @@
         <div class="img-fluid">{{ producto.url_imagen }}</div>
         <div class="flex-container flex-column">
             <h3>{{ producto.nombre }}</h3>
-            <p>{{ producto.nombre }}</p>
+            <p>{{ producto.descripcion }}</p>
             <label for="tallas">Tallas:</label>
             <select name="tallas" id="tallas">
                 {% for talla in tallas %}
-                    <option value="{{ talla.id }}">{{ talla.nombre }}</option>
+                    <option value="{{ talla.talla.id }}" data-stock="{{ talla.stock }}">{{ talla.talla.nombre }}</option>
                 {% endfor %}
             </select>
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" max="" id="cantidad">
             <b>{{ producto.precio }}€</b>
         </div>
     </div>
 
+    <script>
+        document.getElementById('tallas').addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            var maxStock = selectedOption.getAttribute('data-stock');
+            document.getElementById('cantidad').setAttribute('max', maxStock);
+        });
+    </script>
 </body>
 </html>
