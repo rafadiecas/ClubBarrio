@@ -70,6 +70,15 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.username
+class Notificaciones(models.Model):
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
+    password_change = models.BooleanField(default=False)
+    weekly_newsletter = models.BooleanField(default=False)
+    new_training = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Notificaciones para {self.usuario.username}'
+
 
 
 class Categoria(models.Model):

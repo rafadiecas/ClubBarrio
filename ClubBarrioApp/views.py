@@ -1,8 +1,9 @@
 from django.contrib.auth import authenticate, logout, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.contrib.sites import requests
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, send_mail
 from django.db.models import Count, Q
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime, date
@@ -122,11 +123,11 @@ def validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirma
 
 def perfil(request):
     usuario = User.objects.get(id=request.user.id)
+    notificaciones = Notificaciones.objects.get(usuario=usuario)
     roles_map = {
         'Tutor': TutorLegal,
         'Jugador': Jugador,
         'Entrenador': Entrenador
-
     }
 
     if usuario.rol in roles_map:
@@ -140,33 +141,60 @@ def perfil(request):
         if usuario.rol == 'Jugador':
             equipo = perfil.equipo  # Obtén el equipo asociado al perfil si el usuario es un jugador
             jugador = Jugador.objects.get(usuario_id=usuario.id)
-            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo, 'jugador':jugador})
+            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo, 'jugador':jugador, 'notificaciones': notificaciones})
 
-        return render(request, 'profile.html', {'perfil': perfil})
+        return render(request, 'profile.html', {'perfil': perfil, 'notificaciones': notificaciones})
 
-    return render(request, 'profile.html')
+    return render(request, 'profile.html', {'notificaciones': notificaciones})
 
 def perfil_pass(request):
-    usuario = request.user
-    error_en_cambio_de_contraseña = False
-
     if request.method == 'POST':
+        usuario = request.user
         contraseña_actual = request.POST.get('password_actual')
         nueva_contraseña = request.POST.get('new_password')
         confirmacion_contraseña = request.POST.get('confirmacion_password')
 
         errores = validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirmacion_contraseña)
         if errores:
-            error_en_cambio_de_contraseña = True
             return JsonResponse({'errores': errores}, status=400)
 
         usuario.password = make_password(nueva_contraseña)
         usuario.save()  # Guarda el usuario después de cambiar la contraseña
         update_session_auth_hash(request, usuario)  # Actualiza la sesión del usuario
+        notificaciones = Notificaciones.objects.get(usuario=request.user)
+        if notificaciones.password_change:
+            send_mail(
+                'Cambio de contraseña en ClubBarrioApp',
+                'Has cambiado tu contraseña. Si no has realizado este cambio, por favor, contacta con nosotros.',
+                'safaclubbasket@gmail.com',
+                [request.user.email],
+                fail_silently=False,
+            )
 
         return JsonResponse({'success': 'Contraseña cambiada con éxito'})
 
-    return render(request, 'profile.html', {'error_en_cambio_de_contraseña': error_en_cambio_de_contraseña})
+    # Si el método no es POST, redirige al usuario a la página de perfil (o donde quieras)
+    return redirect('perfil')
+
+# @login_required
+def notificaciones(request):
+    if request.method == 'POST':
+
+        notificaciones = Notificaciones.objects.get(usuario=request.user)
+
+        # Actualiza los campos de notificación basándose en los valores de los checkbox
+        notificaciones.password_change = 'passwordChange' in request.POST
+        notificaciones.weekly_newsletter = 'weeklyNewsletter' in request.POST
+        notificaciones.new_training = 'newTraining' in request.POST
+
+
+        notificaciones.save()
+
+        return JsonResponse({'success': 'Notificaciones actualizadas con éxito'})
+        # return redirect('perfil')
+
+    # Si el método no es POST, redirige al usuario a la página de perfil (o donde quieras)
+    return redirect('perfil')
 
 
 
@@ -276,21 +304,26 @@ def registro(request):
 
         errores = filtro(email, fecha_nacimiento, 'Usuario', nombre_usuario, contrasenya, repetirContrasenya)
 
-
         if len(errores) != 0:
             return render(request, 'registro.html', {"errores": errores, "nombre_usuraio": nombre_usuario, "email": email, "fecha_nacimiento": fecha_nacimiento})
         else:
             usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email,
                                           fecha_nacimiento=fecha_nacimiento, rol=rol)
             usuario.save()
+
+            # Crea un objeto Notificaciones para el nuevo usuario
+            notificaciones = Notificaciones.objects.create(id=usuario.id, usuario=usuario, password_change=False,
+                                                           weekly_newsletter=False, new_training=False)
+            notificaciones.save()
+
             mensaje = ("Bienvenido a SafaClubBasket, " + nombre_usuario + ". Tu registro se ha completado con éxito."
                        + "<br><br>" + "Tus credenciales de acceso son: " + "<br>"
                        + "Usuario: " + nombre_usuario + "<br>" + "Contraseña: " + contrasenya + "<br><br>" + "Un saludo, SafaClubBasket.")
             correo = EmailMessage('Registro en SafaClubBasket', mensaje, to=[email])
             correo.content_subtype = "html"
             correo.send()
-
-            return redirect('login')
+            return JsonResponse({'success': 'Usuario registrado con éxito'})
+            # return redirect('login')
 
 def logear(request):
     if request.method == 'POST':
@@ -464,15 +497,50 @@ def crear_entrenamiento(request):
     if request.method == 'GET':
         lista_entrenadores = Entrenador.objects.all()
         lista_lugares_entrenamiento = LugarEntrenamiento.objects.all()
+        lista_equipos = Equipo.objects.filter(es_safa=True)
         return render(request, 'crear_entrenamiento.html',
-                      {'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento})
+                      {'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento, 'lista_equipos': lista_equipos})
     else:
         entrenamiento_nuevo = Entrenamiento()
         entrenamiento_nuevo.fecha = request.POST.get('fecha')
         entrenamiento_nuevo.hora = request.POST.get('hora')
         entrenamiento_nuevo.entrenador = Entrenador.objects.get(id=int(request.POST.get('entrenador')))
         entrenamiento_nuevo.lugarEntrenamiento = LugarEntrenamiento.objects.get(id=int(request.POST.get('lugarEntrenamiento')))
+        entrenamiento_nuevo.equipo = Equipo.objects.get(id=int(request.POST.get('equipo')))
         entrenamiento_nuevo.save()
+
+        # Obtén todos los jugadores que pertenecen al equipo
+        jugadores_equipo = Jugador.objects.filter(equipo=entrenamiento_nuevo.equipo).select_related('usuario')
+
+        for jugador in jugadores_equipo:
+            try:
+                notificaciones = Notificaciones.objects.get(usuario=jugador.usuario)
+                if notificaciones.new_training:  # Verifica si las notificaciones del jugador están activadas
+                    send_mail(
+                        'Nuevo entrenamiento en ClubBarrioApp',
+                        'Se ha programado un nuevo entrenamiento para tu equipo. Inicia sesión para ver los detalles.',
+                        'safaclubbasket@gmail.com',
+                        [jugador.usuario.email],
+                        fail_silently=False,
+                    )
+            except Notificaciones.DoesNotExist:
+                pass
+
+            # Obtén el tutor del jugador
+            tutor = jugador.tutorLegal
+            if tutor is not None:
+                try:
+                    notificaciones_tutor = Notificaciones.objects.get(usuario=tutor.usuario)
+                    if notificaciones_tutor.new_training:  # Verifica si las notificaciones del tutor están activadas
+                        send_mail(
+                            'Nuevo entrenamiento en ClubBarrioApp',
+                            'Se ha programado un nuevo entrenamiento para el equipo de tu hijo/a. Inicia sesión para ver los detalles.',
+                            'safaclubbasket@gmail.com',
+                            [tutor.usuario.email],
+                            fail_silently=False,
+                        )
+                except Notificaciones.DoesNotExist:
+                    pass
 
         return redirect('entrenamientos_listado')
 def editar_entrenamiento(request, id):
@@ -511,6 +579,23 @@ def crear_noticia(request):
         noticia_nueva.url_imagen = request.POST.get('url_imagen')
         noticia_nueva.administrador_id = 1
         noticia_nueva.save()
+
+        # Obtén todos los usuarios que tienen habilitado el check de noticias
+        usuarios_con_noticias = Notificaciones.objects.filter(weekly_newsletter=True).select_related('usuario')
+
+        for notificacion in usuarios_con_noticias:
+            try:
+                if notificacion.new_training:  # Verifica si las notificaciones del usuario están activadas
+                    send_mail(
+                        'Nueva noticia en ClubBarrioApp',
+                        'Se ha publicado una nueva noticia. Inicia sesión para verla.',
+                        'safaclubbasket@gmail.com',
+                        [notificacion.usuario.email],
+                        fail_silently=False,
+                    )
+            except Notificaciones.DoesNotExist:
+                pass
+
         return redirect('noticias_admin')
 
 def elimina_noticia(request, id):
