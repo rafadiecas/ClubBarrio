@@ -43,6 +43,9 @@ def pagina_tienda(request):
         'paginator': paginator
     }
 
+    usuario = request.user
+    envio_datos_barra(data,request,usuario)
+
     return render(request, 'tienda.html', data)
 
 def pagina_noticias(request):
@@ -61,12 +64,17 @@ def pagina_noticias(request):
     }
 
     usuario = request.user
+    envio_datos_barra(data, request, usuario)
+    return render(request, 'Noticias.html', data)
+
+
+def envio_datos_barra(data, request, usuario):
     if usuario.is_authenticated:
         if usuario.rol == 'Tutor':
             tutor = TutorLegal.objects.get(usuario_id=usuario.id)
             hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
             data['hijos'] = hijos
-            if len(hijos)==0:
+            if len(hijos) == 0:
                 data['hijo_existe'] = True
         elif usuario.rol == 'Jugador':
             jugador = Jugador.objects.get(usuario_id=usuario.id)
@@ -74,7 +82,9 @@ def pagina_noticias(request):
         elif usuario.rol == 'Entrenador':
             equipos = equipos_entrenador(request)
             data['equipos_entrenador'] = equipos
-    return render(request, 'Noticias.html', data)
+
+
+
 
 def pagina_contacto(request):
     usuario = request.user
@@ -130,6 +140,10 @@ def perfil(request):
         'Entrenador': Entrenador
     }
 
+    usuario = request.user
+    data={}
+    envio_datos_barra(data,request,usuario)
+
     if usuario.rol in roles_map:
         perfil = roles_map[usuario.rol].objects.get(usuario_id=usuario.id)
 
@@ -141,11 +155,11 @@ def perfil(request):
         if usuario.rol == 'Jugador':
             equipo = perfil.equipo  # Obtén el equipo asociado al perfil si el usuario es un jugador
             jugador = Jugador.objects.get(usuario_id=usuario.id)
-            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo, 'jugador':jugador, 'notificaciones': notificaciones})
+            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo, 'jugador':jugador, 'notificaciones': notificaciones,"data":data})
 
-        return render(request, 'profile.html', {'perfil': perfil, 'notificaciones': notificaciones})
+        return render(request, 'profile.html', {'perfil': perfil, 'notificaciones': notificaciones,"data":data})
 
-    return render(request, 'profile.html', {'notificaciones': notificaciones})
+    return render(request, 'profile.html', {'notificaciones': notificaciones,"data":data})
 
 def perfil_pass(request):
     if request.method == 'POST':
@@ -717,6 +731,8 @@ def editar_partido(request, id):
 
 def lista_tienda(request):
     lista_productos = ProductoTalla.objects.all()
+
+
     return render(request, 'lista_productos.html', {"lista_productos":lista_productos})
 
 def crear_producto(request):
