@@ -43,6 +43,9 @@ def pagina_tienda(request):
         'paginator': paginator
     }
 
+    usuario = request.user
+    envio_datos_barra(data,request,usuario)
+
     return render(request, 'tienda.html', data)
 
 def pagina_noticias(request):
@@ -61,12 +64,17 @@ def pagina_noticias(request):
     }
 
     usuario = request.user
+    envio_datos_barra(data, request, usuario)
+    return render(request, 'Noticias.html', data)
+
+
+def envio_datos_barra(data, request, usuario):
     if usuario.is_authenticated:
         if usuario.rol == 'Tutor':
             tutor = TutorLegal.objects.get(usuario_id=usuario.id)
             hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
             data['hijos'] = hijos
-            if len(hijos)==0:
+            if len(hijos) == 0:
                 data['hijo_existe'] = True
         elif usuario.rol == 'Jugador':
             jugador = Jugador.objects.get(usuario_id=usuario.id)
@@ -74,7 +82,9 @@ def pagina_noticias(request):
         elif usuario.rol == 'Entrenador':
             equipos = equipos_entrenador(request)
             data['equipos_entrenador'] = equipos
-    return render(request, 'Noticias.html', data)
+
+
+
 
 def pagina_contacto(request):
     usuario = request.user
@@ -130,6 +140,10 @@ def perfil(request):
         'Entrenador': Entrenador
     }
 
+    usuario = request.user
+    data={}
+    envio_datos_barra(data,request,usuario)
+
     if usuario.rol in roles_map:
         perfil = roles_map[usuario.rol].objects.get(usuario_id=usuario.id)
 
@@ -141,11 +155,11 @@ def perfil(request):
         if usuario.rol == 'Jugador':
             equipo = perfil.equipo  # Obtén el equipo asociado al perfil si el usuario es un jugador
             jugador = Jugador.objects.get(usuario_id=usuario.id)
-            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo, 'jugador':jugador, 'notificaciones': notificaciones})
+            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo, 'jugador':jugador, 'notificaciones': notificaciones,"data":data})
 
-        return render(request, 'profile.html', {'perfil': perfil, 'notificaciones': notificaciones})
+        return render(request, 'profile.html', {'perfil': perfil, 'notificaciones': notificaciones,"data":data})
 
-    return render(request, 'profile.html', {'notificaciones': notificaciones})
+    return render(request, 'profile.html', {'notificaciones': notificaciones,"data":data})
 
 def perfil_pass(request):
     if request.method == 'POST':
@@ -717,6 +731,8 @@ def editar_partido(request, id):
 
 def lista_tienda(request):
     lista_productos = ProductoTalla.objects.all()
+
+
     return render(request, 'lista_productos.html', {"lista_productos":lista_productos})
 
 def crear_producto(request):
@@ -730,6 +746,7 @@ def crear_producto(request):
         producto_nuevo.precio = request.POST.get('precio')
         producto_nuevo.tipo = Tipo.objects.get(id=int(request.POST.get('tipo')))
         producto_nuevo.url_imagen = request.POST.get('url_imagen')
+        producto_nuevo.descripcion = request.POST.get('descripcion')
         producto_nuevo.save()
         producto_talla_nuevo = ProductoTalla()
         producto_talla_nuevo.producto = producto_nuevo
@@ -749,10 +766,10 @@ def edita_producto(request, id):
     if request.method == 'GET':
         tallas = Talla.objects.all()
         tipos = Tipo.objects.all()
-        return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos, 'modo_edicion': True})
+        return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos, 'modo_edicion': True, 'productotalla': productotalla})
     else:
         producto.nombre = request.POST.get('nombre')
-        producto.precio = request.POST.get('precio')
+        producto.precio = float(request.POST.get('precio'))
         producto.tipo = Tipo.objects.get(id=int(request.POST.get('tipo')))
         producto.url_imagen = request.POST.get('url_imagen')
         producto.save()
@@ -774,26 +791,28 @@ def pagina_usuario(request):
     list_noticias = list_noticias[0:3]
     list_partidos = Partido.objects.all()
     usuario = request.user
+    equipos_por_categoria = {}
+
+    for equipo in Equipo.objects.all():
+        if equipo.es_safa:
+            plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
+            if plazas_libres > 0:
+                equipo_info = {'equipo': equipo, 'plazas_libres': plazas_libres}
+                categoria_equipo = equipo.categoria.tipo
+                if categoria_equipo in equipos_por_categoria:
+                    equipos_por_categoria[categoria_equipo].append(equipo_info)
+                else:
+                    equipos_por_categoria[categoria_equipo] = [equipo_info]
 
     if usuario.rol == 'Tutor':
         tutor = TutorLegal.objects.get(usuario_id=usuario.id)
         hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
         if len(hijos) == 0:
-            return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijo_existe': True})
-        return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijos': hijos})
+            return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijo_existe': True,'equipos_por_categoria': equipos_por_categoria})
+        return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijos': hijos,'equipos_por_categoria': equipos_por_categoria})
     else:
-        equipos_por_categoria = {}
 
-        for equipo in Equipo.objects.all():
-            if equipo.es_safa:
-                plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
-                if plazas_libres > 0:
-                    equipo_info = {'equipo': equipo, 'plazas_libres': plazas_libres}
-                    categoria_equipo = equipo.categoria.tipo
-                    if categoria_equipo in equipos_por_categoria:
-                        equipos_por_categoria[categoria_equipo].append(equipo_info)
-                    else:
-                        equipos_por_categoria[categoria_equipo] = [equipo_info]
+
         return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos,'equipos_por_categoria': equipos_por_categoria})
 
 def tarifas(request):
@@ -1088,5 +1107,5 @@ def obtener_jugadores_por_partido(request):
 
 def producto(request, id):
     producto = Producto.objects.get(id=id)
-    tallas = Talla.objects.all()
+    tallas = ProductoTalla.objects.filter(producto_id=id)
     return render(request, 'producto.html', {'producto': producto, 'tallas': tallas})
