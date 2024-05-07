@@ -157,25 +157,25 @@
             }
         },
         "columnDefs": [
-            {
-                "targets": fechaIndex, // Aplica el formato a la columna 'Fecha'
-                "render": function (data, type, row) {
-                    if (type === 'display' && fechaIndex !== -1) {
-                        return moment(data).format('LL');
-                    }
-                    return data;
-                }
-            },
-            {
-                "targets": horaIndex, // Aplica el formato a la columna 'Hora'
-                "render": function (data, type, row) {
-                    if (type === 'display' && horaIndex !== -1) {
-                        data = data.replace('noon', '12:00 PM');
-                        return moment(data, 'h:mm a').format('HH:mm'); // Formato de 24 horas
-                    }
-                    return data;
-                }
-            }
+            {#{#}
+            {#    "targets": fechaIndex, // Aplica el formato a la columna 'Fecha'#}
+            {#    "render": function (data, type, row) {#}
+            {#        if (type === 'display' && fechaIndex !== -1) {#}
+            {#            return moment(data).format('LL');#}
+            {#        }#}
+            {#        return data;#}
+            {#    }#}
+            {#},#}
+            {#{#}
+            {#    "targets": horaIndex, // Aplica el formato a la columna 'Hora'#}
+            {#    "render": function (data, type, row) {#}
+            {#        if (type === 'display' && horaIndex !== -1) {#}
+            {#            data = data.replace('noon', '12:00 PM');#}
+            {#            return moment(data, 'h:mm a').format('HH:mm'); // Formato de 24 horas#}
+            {#        }#}
+            {#        return data;#}
+            {#    }#}
+            {#}#}
         ]
     });
 

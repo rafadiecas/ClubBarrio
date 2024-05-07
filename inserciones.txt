@@ -254,7 +254,6 @@ INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (2, 'Equipacion');
 INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (3, 'Calzonas');
 INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (4, 'Sudadera');
 
-/* producto */
 
 /* Notificaciones */
 INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id)
