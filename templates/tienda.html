@@ -16,6 +16,12 @@
         .card {
             cursor: default !important;
         }
+        
+         .product-image {
+        width: 200px;  /* Ancho fijo */
+        height: 200px; /* Altura fija */
+        object-fit: cover; /* Esto hará que la imagen se recorte para llenar el contenedor, manteniendo su aspecto */
+    }
 
     </style>
 </head>
@@ -26,8 +32,9 @@
         {% for p in entity %}
             <div class="d-flex justify-content-center container mt-5">
                 <div class="card p-3 bg-white h-100 w-100 d-flex flex-column">
-                    <div class="about-product text-center mt-2"><a href="{% url 'producto' id=p.id %}"><img
-                            src="{{ p.url_imagen }}" class="img-fluid"></a>
+                    <div class="about-product text-center mt-2"><a href="{% url 'producto' id=p.id %}">
+                        <img src="{{ p.url_imagen }}" class="img-fluid product-image">
+                    </a>
                         <div>
                             <h4>{{ p.nombre }}</h4>
                             <h6 class="mt-0 text-black-50">{{ p.descripcion }}</h6>
