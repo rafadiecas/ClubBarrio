@@ -746,6 +746,7 @@ def crear_producto(request):
         producto_nuevo.precio = request.POST.get('precio')
         producto_nuevo.tipo = Tipo.objects.get(id=int(request.POST.get('tipo')))
         producto_nuevo.url_imagen = request.POST.get('url_imagen')
+        producto_nuevo.descripcion = request.POST.get('descripcion')
         producto_nuevo.save()
         producto_talla_nuevo = ProductoTalla()
         producto_talla_nuevo.producto = producto_nuevo
@@ -765,10 +766,10 @@ def edita_producto(request, id):
     if request.method == 'GET':
         tallas = Talla.objects.all()
         tipos = Tipo.objects.all()
-        return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos, 'modo_edicion': True})
+        return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos, 'modo_edicion': True, 'productotalla': productotalla})
     else:
         producto.nombre = request.POST.get('nombre')
-        producto.precio = request.POST.get('precio')
+        producto.precio = float(request.POST.get('precio'))
         producto.tipo = Tipo.objects.get(id=int(request.POST.get('tipo')))
         producto.url_imagen = request.POST.get('url_imagen')
         producto.save()
