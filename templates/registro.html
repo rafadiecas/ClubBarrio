@@ -27,6 +27,17 @@
     border-bottom-right-radius: .3rem;
     }
     }
+                .card:hover {
+        /* Aquí puedes agregar el efecto que quieras cuando se pasa el mouse sobre el elemento, por ejemplo, cambiar el color de fondo */
+        background-color: white !important;
+    }
+
+    .card {
+        cursor: default !important;
+    }
+    .shadow-custom {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 20px 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
     </style>
 </head>
 <body>
@@ -44,9 +55,9 @@
       <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
           <div class="col-xl-10">
-            <div class="card rounded-3 text-black">
+            <div class="card rounded-3 text-black shadow-custom" >
               <div class="row g-0">
-                <div class="col-lg-6">
+                <div class="col-12">
                   <div class="card-body p-md-5 mx-md-4">
                     <div class="text-center">
                       <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png"
@@ -55,7 +66,10 @@
                     </div>
                     <form action="" method="post" id="form-id">
                     {% csrf_token %}
-                        <p>Registrate</p>
+                        <div class="text-center">
+                            <p><b>Registrate</p></b>
+                        </div>
+
                         <div class="form-outline mb-4">
                            
                             <label class="form-label" for="nombre_usuario">Nombre usuario</label>
