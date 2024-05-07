@@ -39,6 +39,7 @@
                   <th scope="col">Hora</th>
                   <th scope="col">Entrenador</th>
                   <th scope="col">Lugar</th>
+                    <th scope="col">Equipo</th>
                   <th></th>
                 </tr>
               </thead>
@@ -50,6 +51,7 @@
                   <td>{{ e.hora }}</td>
                   <td>{{ e.entrenador }}</td>
                     <td>{{ e.lugarEntrenamiento.nombre }}</td>
+                    <td>{{ e.equipo.nombre }}</td>
                     <td>
                         <a href="{% url 'editar_entrenamiento' id=e.id %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>
                         <a href="{% url 'elimina_entrenamiento' id=e.id%}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>

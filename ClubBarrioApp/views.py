@@ -548,13 +548,15 @@ def editar_entrenamiento(request, id):
     if request.method == 'GET':
         lista_entrenadores = Entrenador.objects.all()
         lista_lugares_entrenamiento = LugarEntrenamiento.objects.all()
+        lista_equipos = Equipo.objects.filter(es_safa=True)
         return render(request, 'crear_entrenamiento.html',
-                      {'entrenamiento': entrenamiento, 'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento, 'modo_edicion': True})
+                      {'entrenamiento': entrenamiento, 'lista_entrenadores': lista_entrenadores, 'lista_lugares_entrenamiento': lista_lugares_entrenamiento, 'modo_edicion': True,'lista_equipos': lista_equipos})
     else:
         entrenamiento.fecha = request.POST.get('fecha')
         entrenamiento.hora = request.POST.get('hora')
         entrenamiento.entrenador = Entrenador.objects.get(id=int(request.POST.get('entrenador')))
         entrenamiento.lugarEntrenamiento = LugarEntrenamiento.objects.get(id=int(request.POST.get('lugarEntrenamiento')))
+        entrenamiento.equipo = Equipo.objects.get(id=int(request.POST.get('equipo')))
         entrenamiento.save()
 
         return redirect('entrenamientos_listado')

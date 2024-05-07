@@ -57,7 +57,7 @@
                 <label for="equipo" class="form-label">Equipo:</label>
                 <select name="equipo" id="equipo" class="form-select">
                     {% for eq in lista_equipos %}
-                        <option value="{{ eq.id }}" {% if eq.id == entrenamiento.equipo.nombre %} selected {% endif %}>{{ eq }}</option>
+                        <option value="{{ eq.id }}" {% if eq.id == entrenamiento.equipo.id %} selected {% endif %}>{{ eq }}</option>
                     {% endfor %}
                 </select>
             </div>
