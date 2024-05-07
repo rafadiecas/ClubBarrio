@@ -1088,5 +1088,5 @@ def obtener_jugadores_por_partido(request):
 
 def producto(request, id):
     producto = Producto.objects.get(id=id)
-    tallas = Talla.objects.all()
+    tallas = ProductoTalla.objects.filter(producto_id=id)
     return render(request, 'producto.html', {'producto': producto, 'tallas': tallas})

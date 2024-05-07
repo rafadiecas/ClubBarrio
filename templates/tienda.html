@@ -34,7 +34,7 @@
             {% for p in entity %}
                 <div class="col d-flex align-items-stretch justify-content-center">
                     <div class="card mb-4 rounded-3 shadow-lg" style="">
-                        <img src="{{ p.url_imagen }}" class="img-fluid" alt="imagen" id="foto_tienda">
+                        <a href="{% url 'producto' id=p.id %}"><img src="{{ p.url_imagen }}" class="img-fluid" alt="imagen" id="foto_tienda"></a>
                         <div class="card-body">
                             <h5 class="card-title" id="nombre">{{ p.nombre }}</h5>
                         </div>
