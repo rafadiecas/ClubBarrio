@@ -53,7 +53,7 @@
                         style="width: 185px;" alt="logo">
                       <h4 class="mt-1 mb-5 pb-1"></h4>
                     </div>
-                    <form action="" method="post">
+                    <form action="" method="post" id="form-id">
                     {% csrf_token %}
                         <p>Registrate</p>
                         <div class="form-outline mb-4">
@@ -100,6 +100,36 @@
       </div>
     </section>
   </main>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $('#form-id').on('submit', function(e) {
+    e.preventDefault();
+
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(data) {
+            // Si la contraseña se cambió con éxito, redirige al usuario a profile.html
+            window.location.href = "{% url 'login' %}";
+            // Muestra el mensaje de éxito en la página
+            $('#success-messages').html('<p>' + data.success + '</p>');
+            // Muestra un pop-up con el mensaje de éxito
+            alert(data.success);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            if (jqXHR.status === 400) {
+                var errores = jqXHR.responseJSON.errores;
+                // Muestra los errores en la página
+                $('#error-messages').html('');
+                errores.forEach(function(error) {
+                    $('#error-messages').append('<p>' + error + '</p>');
+                });
+            }
+        }
+    });
+});
+</script>
 
 </body>
 {% include 'footer.html' %}
