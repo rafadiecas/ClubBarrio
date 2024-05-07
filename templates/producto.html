@@ -4,58 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Producto</title>
-    <style>
-        .row {
-            padding: 20px;
-        }
-        img {
-            width: 100%;
-            height: auto;
-        }
-        .col {
-            padding: 20px;
-        }
-        select {
-            width: 100% !important;
-            margin-bottom: 10px;
-        }
-        input {
-            width: 100% !important;
-            margin-bottom: 10px;
-        }
-        #cuadro {
-            border: 1px solid grey;
-            border-radius: 10px;
-            
-        }
-        @media (max-width: 768px) {
-            #cuadro {
-                width: 100% !important;
-            }
-        }
-        @media (max-width: 320px) {
-            .col {
-                padding: 10px;
-            }
-        
-            input[type="number"], select {
-                margin-bottom: 5px; 
-            }
-        
-            button {
-                width: 100%; /* Hacer que el botón ocupe todo el ancho disponible */
-            }
-            body {
-                background: #eee !important;
-            }
-}
-
-    </style>
-       
 </head>
 <body>
-<div class="container d-flex justify-content-center">
-    <div class="row row-cols-1 row-cols-md-2 w-75 rounded-5 shadow-lg mt-3 mb-5 justify-content-center" id="cuadro">
+<div class="container d-flex justify-content-center pt-5 pb-5">
+    <div class="row row-cols-1 row-cols-md-2 w-75 rounded-5 shadow-lg mt-3 mb-5 justify-content-center pt-5 pb-5" id="cuadro">
         <img src="{{ producto.url_imagen }}" class="img-fluid" alt="foto_producto">
         <div class="col col-6 d-flex flex-column">
         <form action="" method="post">
