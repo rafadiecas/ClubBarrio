@@ -1241,7 +1241,12 @@ def estadisticas_equipo(request, id):
             'estadisticas': estadisticas
         })
 
-    return render(request, 'lista_estadisticas_equipo.html', {'equipo': equipo, 'estadisticas_jugadores': estadisticas_jugadores})
+    usuario = request.user
+    data={}
+
+    envio_datos_barra(data,request,usuario)
+
+    return render(request, 'lista_estadisticas_equipo.html', {'equipo': equipo, 'estadisticas_jugadores': estadisticas_jugadores, 'data': data})
 
 
 # def add_carrito(request):

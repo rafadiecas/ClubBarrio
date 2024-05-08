@@ -1,5 +1,5 @@
 {% load static %}
-{% include 'barra_admin.html' %}
+{% include 'barra_navegacion.html' with equipos_entrenador=data.equipos_entrenador%}
 <head>
     <title>Lista Estadisticas Equipo</title>
     <style>
@@ -53,3 +53,4 @@
         </div>
     </div>
 </div>
+{% include 'footer.html' %}
