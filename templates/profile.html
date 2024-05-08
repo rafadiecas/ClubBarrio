@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,6 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
 </head>
+
 
 <style>
     .text-bg-primary {
@@ -22,9 +25,12 @@
     .nav-item .nav-link {
         color: #00653D !important; /* Cambia este valor al color que desees */
     }
+    label {
+    padding-top: 0px !important;
+    }
 </style>
 <body>
-{% include "barra_navegacion.html" %}
+{% include "barra_navegacion.html" with hijos=data.hijos equipos_entrenador=data.equipos_entrenador %}
 
 <!-- Profile 1 - Bootstrap Brain Component -->
 <section class="bg-light py-3 py-md-5 py-xl-8">
@@ -42,7 +48,7 @@
                   <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" class="img-fluid rounded-circle" alt="INTRODUCE FOTO">
                 </div>
                 <h5 class="text-center mb-1">{{perfil.nombre}} {{ perfil.apellidos }}</h5>
-                <p class="text-center text-secondary mb-4">Project Manager</p>
+                <p class="text-center text-secondary mb-4">En construccion</p>
 
               </div>
             </div>
@@ -72,7 +78,7 @@
                 </li>
                 {% endif %}
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {% if error_en_cambio_de_contraseña %}active{% endif %}" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">Password</button>
+                    <button class="nav-link {% if error_en_cambio_de_contraseña %}active{% endif %}" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">Contraseña</button>
                 </li>
             </ul>
             <div class="tab-content pt-4" id="profileTabContent">
@@ -185,61 +191,57 @@
                 </form>
             </div>
               <div class="tab-pane fade" id="email-tab-pane" role="tabpanel" aria-labelledby="email-tab" tabindex="0">
-                <form action="#!">
+                <form action="{% url 'notificaciones' %}" method="POST" id="form-notificaciones" class="ajax-form">
+                  {% csrf_token %}
                   <fieldset class="row gy-3 gy-md-0">
-                    <legend class="col-form-label col-12 col-md-3 col-xl-2">Email Alerts</legend>
+                    <legend class="col-form-label col-12 col-md-3 col-xl-2">Notificaciones Email</legend>
                     <div class="col-12 col-md-9 col-xl-10">
+
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="emailChange">
-                        <label class="form-check-label" for="emailChange">
-                          Email Changed
-                        </label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="passwordChange">
+                        <input class="form-check-input" type="checkbox" id="passwordChange" name="passwordChange" {% if notificaciones.password_change %}checked{% endif %}>
                         <label class="form-check-label" for="passwordChange">
-                          Password Changed
+                          Contraseña Cambiada
                         </label>
                       </div>
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="weeklyNewsletter">
+                        <input class="form-check-input" type="checkbox" id="weeklyNewsletter" name="weeklyNewsletter" {% if notificaciones.weekly_newsletter %}checked{% endif %}>
                         <label class="form-check-label" for="weeklyNewsletter">
-                          Weekly Newsletter
+                          Noticias Semanales
                         </label>
                       </div>
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="productPromotions">
-                        <label class="form-check-label" for="productPromotions">
-                          Product Promotions
+                        <input class="form-check-input" type="checkbox" id="newTraining" name="newTraining" {% if notificaciones.new_training %}checked{% endif %}>
+                        <label class="form-check-label" for="newTraining">
+                          Nuevos Entrenamientos
                         </label>
                       </div>
                     </div>
                   </fieldset>
                   <div class="row">
                     <div class="col-12">
-                      <button type="submit" class="btn btn-primary mt-4">Save Changes</button>
+                      <button type="submit" class="btn btn-primary mt-4">Guardar Cambios</button>
                     </div>
                   </div>
                 </form>
               </div>
               <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
-                <form action="{% url 'perfil_pass' %}" method="post" class="row gy-3 gy-xxl-4" id="form-id">
+                <form action="{% url 'perfil_pass' %}" method="post" class="row gy-3 gy-xxl-4" id="new-ajax-form">
                     {% csrf_token %}
                     <div class="row gy-3 gy-xxl-4">
                         <div class="col-12">
-                            <label for="currentPassword" class="form-label">Current Password</label>
+                            <label for="currentPassword" class="form-label">Contraseña Actual</label>
                             <input type="password" class="form-control" id="currentPassword" name="password_actual">
                         </div>
                         <div class="col-12">
-                            <label for="newPassword" class="form-label">New Password</label>
+                            <label for="newPassword" class="form-label">Nueva Contraseña</label>
                             <input type="password" class="form-control" id="newPassword" name="new_password">
                         </div>
                         <div class="col-12">
-                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <label for="confirmPassword" class="form-label">Repite Nueva Contraseña</label>
                             <input type="password" class="form-control" id="confirmPassword" name="confirmacion_password">
                         </div>
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary">Change Password</button>
+                            <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
                         </div>
                         <div id="error-messages">
                             {% for e in errores %}
@@ -258,7 +260,7 @@
   </div>
 
 </section>
-<script src="https://unpkg.com/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+{#<script src="https://unpkg.com/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>#}
 <script>
     $(function() {
     // Guarda la última pestaña activa en el almacenamiento local del navegador
@@ -274,33 +276,78 @@
     }
 });
 </script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    $('#form-id').on('submit', function(e) {
+    $('.ajax-form').on('submit', function(e) {
     e.preventDefault();
+
+    var formId = $(this).attr('id');
 
     $.ajax({
         url: $(this).attr('action'),
         type: 'POST',
         data: $(this).serialize(),
         success: function(data) {
-            // Si la contraseña se cambió con éxito, redirige al usuario a profile.html
-            window.location.href = "{% url 'perfil' %}";
-            // Muestra el mensaje de éxito en la página
-            $('#success-messages').html('<p>' + data.success + '</p>');
-            // Muestra un pop-up con el mensaje de éxito
-            alert(data.success);
+            console.log('Response:', data);
+            if (data.success) {
+                $('#success-messages').html('<p>' + data.success + '</p>');
+                alert(data.success);
+                if (formId === 'form-perfil-pass') {
+                    window.location.href = "{% url 'perfil' %}";
+                }
+            } else {
+                console.log('La respuesta del servidor no incluye un mensaje de éxito');
+            }
         },
         error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Error:', jqXHR, textStatus, errorThrown);
             if (jqXHR.status === 400) {
                 var errores = jqXHR.responseJSON.errores;
-                // Muestra los errores en la página
                 $('#error-messages').html('');
                 errores.forEach(function(error) {
                     $('#error-messages').append('<p>' + error + '</p>');
                 });
+                alert(errores.join('\n'));
             }
         }
+    });
+});
+
+</script>
+<script>
+    $(document).ready(function() {
+    $('#new-ajax-form').on('submit', function(e) {
+        e.preventDefault();
+
+        var formId = $(this).attr('id');
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(data) {
+                console.log('Response:', data);
+                if (data.success) {
+                    alert(data.success);
+                    if (formId === 'new-ajax-form') {
+                        window.location.href = "{% url 'perfil' %}";
+                    }
+                } else {
+                    console.log('La respuesta del servidor no incluye un mensaje de éxito');
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error:', jqXHR, textStatus, errorThrown);
+                if (jqXHR.status === 400) {
+                    var errores = jqXHR.responseJSON.errores;
+                    $('#error-messages').html('');
+                    errores.forEach(function(error) {
+                        $('#error-messages').append('<p>' + error + '</p>');
+                    });
+                }
+            }
+        });
     });
 });
 </script>

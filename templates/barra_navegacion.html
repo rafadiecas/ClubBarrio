@@ -11,122 +11,163 @@
         {% bootstrap_javascript %}
     {% endif %}
     {% block bootstrap5_extra_head %}{% endblock %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-    <script src="https://cdn.datatables.net/plug-ins/1.10.15/sorting/datetime-moment.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/es.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script><!-- Carga el archivo de idioma español -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css">
-<style>
-    .navbar-brand img {
-  width: 80px;
-}
-.navbar-nav {
-  align-items: center;
-}
-.navbar{
-    background-color: #00653D;
-}
-.navbar .navbar-nav .nav-link {
-  color: #fff !important;
-  font-size: 1.1em;
-  padding: 0.5em 1em;
-}
-@media screen and (min-width: 768px) {
-  .navbar-brand img {
-    width: 100px;
-  }
-  .navbar-brand {
-    margin-right: 0;
-    padding: 0 1em;
-  }
-}
-    {% if not modo_edicion %}
-.form-control {
-            background-color: white !important;
-            color: black !important;
+    <style>
+        .navbar-brand img {
+            width: 80px;
         }
-    {% endif %}
-</style>
+
+        .navbar-nav {
+            align-items: center;
+        }
+
+        .navbar {
+            background-color: #00653D;
+        }
+
+        .navbar .navbar-nav .nav-link {
+            color: #fff !important;
+            font-size: 1.1em;
+            padding: 0.5em 1em;
+        }
+
+        @media screen and (min-width: 768px) {
+            .navbar-brand img {
+                width: 100px;
+            }
+
+            .navbar-brand {
+                margin-right: 0;
+                padding: 0 1em;
+            }
+        }
+
+        {% if not modo_edicion %}
+            .form-control {
+                background-color: white !important;
+                color: black !important;
+            }
+        {% endif %}
+
+        .card:hover {
+            /* Aquí puedes agregar el efecto que quieras cuando se pasa el mouse sobre el elemento, por ejemplo, cambiar el color de fondo */
+            background-color: #f5f5f5;
+        }
+
+        .card {
+            cursor: pointer;
+        }
+
+        .btn.btn-primary {
+            background-color: #00653D;
+        }
+
+        label {
+            padding-top: 25px;
+        }
+
+        .shadow-custom {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 20px 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+    </style>
+
+
 </head>
 
 <body>
 <nav class="navbar navbar-expand-md navbar-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand d-md-none" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %}{% elif user.is_authenticated and user.rol == "Entrenador" %}{% url 'entrenador' %}{% else %} {% url 'inicio' %} {% endif %} ">
-  <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="" >
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav mx-auto">
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="{% url 'noticias' %}">Noticias</a>
-        </li>
-      {% if user.is_authenticated and user.rol == "Tutor" %}
-          <div class="btn-group">
-          <a class="nav-link" aria-current="page" href="{% url 'gestion_familia' %}" role="button">Gestión</a>
-          <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="color: white">
-            <span class="visually-hidden">Toggle Dropdown</span>
-          </button>
-          <ul class="dropdown-menu">
-              {% for h in hijos %}
-              <li><a class="dropdown-item" href="{% url 'inicio_jugador' id=h.usuario.id %}">{{ h.nombre }} {{ h.apellidos }}</a></li>
-              {% endfor %}
-          </ul>
-          </div>
-          {% if  jugador != none %}
-           <li class="nav-item">
-          <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
-          </li>
-              {% endif %}
-      {% elif  user.is_authenticated and user.rol == "Jugador"%}
-          <li class="nav-item">
-          <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
-          </li>
-      {% elif  user.is_authenticated and user.rol == "Entrenador"%}
-          <div class="dropdown">
-            <a class="nav-link" aria-current="page" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: white">
-            Equipos
-            </a>
-            <ul class="dropdown-menu">
-            {% for e in equipos_entrenador %}
-                <li><a class="dropdown-item" href="{% url 'equipo' id=e.id %}">{{ e.nombre }}</a></li>
-            {% endfor %}
-            </ul>
-            </div>
-      {% else %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'tarifas' %}">Tarifas</a>
-          </li>
-      {% endif %}
-        <a class="navbar-brand d-none d-md-block" href="{%  if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% elif user.rol == "Jugador" %} {% url 'inicio_jugador' %}{% elif user.is_authenticated and user.rol == "Entrenador" %}{% url 'entrenador' %} {% else %} {% url 'inicio' %} {% endif %} ">
-          <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="">
+    <div class="container-fluid">
+        <a class="navbar-brand d-md-none"
+           href="{% if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %}
+               {% url 'usuario' %}{% elif user.is_authenticated and user.rol == "Entrenador" %}{% url 'entrenador' %}{% else %} {% url 'inicio' %} {% endif %} ">
+            <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="">
         </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{% url 'noticias' %}">Noticias</a>
+                </li>
+                {% if user.is_authenticated and user.rol == "Tutor" %}
+                    <div class="btn-group">
+                        <a class="nav-link" aria-current="page" href="{% url 'gestion_familia' %}"
+                           role="button">Gestión</a>
+                        {% if not hijo_existe %}
+                            <button type="button" class="btn dropdown-toggle dropdown-toggle-split"
+                                    data-bs-toggle="dropdown" aria-expanded="false" style="color: white">
+                                <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                        {% endif %}
+                        <ul class="dropdown-menu">
 
-      {% if user.is_authenticated and user.rol == "Jugador" %}
-      {% else %}
-          <li class="nav-item">
-          <a class="nav-link" href="{% url 'tienda' %}">Tienda</a>
-        </li>
-      {% endif %}
-          {% if user.is_authenticated %}
-              <li class="nav-item">
-              <a class="nav-link" href="{% url 'perfil' %}" >Mi perfil</a>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'desloguear' %}" >Salir</a>
-            </li>
-          {% else %}
-              <li class="nav-item">
-                  <a class="nav-link" href="{% url 'login' %}" >Login</a>
-             </li>
-          {% endif %}
-      </ul>
+                            {% for h in hijos %}
+                                <li><a class="dropdown-item"
+                                       href="{% url 'inicio_jugador' id=h.usuario.id %}">{{ h.nombre }} {{ h.apellidos }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% if  jugador != none %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
+                        </li>
+                    {% endif %}
+                {% elif  user.is_authenticated and user.rol == "Jugador" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'estadisticas_jugador' id=jugador.id %}">Estadísticas</a>
+                    </li>
+                {% elif  user.is_authenticated and user.rol == "Entrenador" %}
+                    <div class="dropdown">
+                        <a class="nav-link" aria-current="page" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false" style="color: white">
+                            Equipos
+                        </a>
+                        <ul class="dropdown-menu">
+                            {% for e in equipos_entrenador %}
+                                <li><a class="dropdown-item" href="{% url 'equipo' id=e.id %}">{{ e.nombre }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'tarifas' %}">Tarifas</a>
+                    </li>
+                {% endif %}
+            
+                {% if user.is_authenticated and user.rol == "Entrenador" and modo_equipo %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'equipo_estadisticas' id=equipo.id %}">Estadísticas</a>
+                    </li>
+                {% endif %}
+            
+                <a class="navbar-brand d-none d-md-block"
+                   href="{% if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% elif user.rol == "Jugador" %}
+                       {% url 'inicio_jugador' %}{% elif user.is_authenticated and user.rol == "Entrenador" %}{% url 'entrenador' %} {% else %} {% url 'inicio' %} {% endif %} ">
+                    <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" alt="">
+                </a>
+
+                {% if user.is_authenticated and user.rol == "Jugador" %}
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'tienda' %}">Tienda</a>
+                    </li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'perfil' %}">Mi perfil</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'desloguear' %}">Salir</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>
 
 <!-- Bootstrap JavaScript if it is in body -->
@@ -135,64 +176,17 @@
 {% endif %}
 
 {% block bootstrap5_extra_script %}{% endblock %}
-<script>
-    function confirmarEliminarUsuario(event) {
-    var confirmacion = confirm('¿Seguro que desea eliminar?');
-     if (!confirmacion) {
-    event.preventDefault();
-    }
-    }
-</script>
-<script>
-    $(document).ready(function(){
-    // Define el idioma de Moment.js a español
-    moment.locale('es');
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.15/sorting/datetime-moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/es.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css">
 
-    // Obtiene los títulos de las columnas
-    var columnTitles = $("#tabla thead th").toArray().map(function (header) {
-        return $(header).text().trim();
-    });
 
-    // Verifica si las columnas 'Fecha' y 'Hora' existen
-    var fechaIndex = columnTitles.indexOf('Fecha') !== -1 ? columnTitles.indexOf('Fecha') : columnTitles.indexOf('Fecha de nacimiento')
-    var horaIndex = columnTitles.indexOf('Hora');
+<script src="{% static 'js/barra_navegacion.js' %}"></script>
 
-    let tabla = $("#tabla").DataTable({
-        "dom": 'lrtip',
-        "lengthMenu": [[10, 25, -1], [10, 25, "All"]],
-        "language": {
-            "lengthMenu": "Mostrar _MENU_ registros por página",
-            "zeroRecords": "No se encontraron registros",
-            "info": "Mostrando la página _PAGE_ de _PAGES_",
-            "infoEmpty": "No hay registros disponibles",
-            "infoFiltered": "(filtrado de _MAX_ registros totales)",
-            "search": "Buscar:",
-            "paginate": {
-                "first": "Primero",
-                "last": "Último",
-                "next": "Siguiente",
-                "previous": "Anterior"
-            }
-        },
-        "columnDefs": [
-
-            {
-                "targets": horaIndex, // Aplica el formato a la columna 'Hora'
-                "render": function (data, type, row) {
-                    if (type === 'display' && horaIndex !== -1) {
-                        data = data.replace('noon', '12:00 PM');
-                        return moment(data, 'h:mm a').format('HH:mm'); // Formato de 24 horas
-                    }
-                    return data;
-                }
-            }
-        ]
-    });
-
-    $("#inputBuscar").on("keyup", function() {
-        tabla.search($(this).val()).draw();
-    });
-});
-</script>
 </body>
 </html>

@@ -19,14 +19,14 @@
 </style>
 <body>
     <div class="container" >
-        <div class="row justify-content-center align-items-center pt-5 h-75">
-            <div class="col-md-6">
+        <div class="row justify-content-center align-items-center pt-5">
+            <div class="col-md-6 shadow-custom pt-4">
                 <h1 class="text-center">Contacta con Nosotros</h1>
                 <form id="form-id"    action="{% url 'contacto' %}" method="post" class="pt-5">
                     {% csrf_token %}
                         <div class="form-group">
                             <label for="nombre">Username:</label>
-                            <input type="text" name="nombre" id="nombre" class="form-control" value="{{ user.username }}" placeholder="Introduce tu nombre">
+                            <input type="text" name="nombre" id="nombre" class="form-control" maxlength="20" value="{{ user.username }}" placeholder="Introduce tu nombre">
                         </div>
                         <div class="form-group">
                             <label for="email">Email:</label>

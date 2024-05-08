@@ -71,6 +71,9 @@
         .nav-item .nav-link {
             color: #00653D !important; /* Cambia este valor al color que desees */
         }
+        .card {
+        cursor: default !important;
+        }
 
     </style>
     <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet'/>
@@ -91,11 +94,11 @@
                                 target="_blank">Tiempo 25 días</a></div>
         <script async src="https://app2.weatherwidget.org/js/?id=ww_8676dbf7a199e"></script>
     </div>
-    <img src="{% static '6207a0fe26ab99000460a356.png' %}" alt="weather"
+    <img src="{% static 'imagenes/6207a0fe26ab99000460a356.png' %}" alt="weather"
          style="display: none;max-width: 90px; padding-inline: 10px"/>
 </div>
 <div class="container-fluid" id="contenedor">
-    <div class="row row-cols-md-2 row-cols-lg-2 row-cols-sm-1 row-cols-1 mb-3">
+    <div class="row row-cols-md-1 row-cols-lg-2 row-cols-sm-1 row-cols-1 mb-3">
         <div class="col d-flex flex-column text-center px-5">
         {% if user.is_authenticated  and user.rol == "Usuario" %}
             <ul class="nav nav-tabs d-flex " id="myTab" role="tablist">
@@ -112,7 +115,7 @@
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="inscripcion" role="tabpanel"
+                <div class="tab-pane fade show active " id="inscripcion" role="tabpanel"
                      aria-labelledby="inscripcion-tab">
                     <h1 class="mb-3 mt-5">Inscríbete</h1>
                     <p>¡Únete a nuestro equipo de baloncesto infantil y experimenta la emoción del juego en su máximo
@@ -129,16 +132,21 @@
                        href="{% url 'inscripciones' %}">Inscripción</a>
                 </div>
                 <div class="tab-pane fade" id="equipos" role="tabpanel" aria-labelledby="equipos-tab">
-                    <h1 class="mb-3 mt-5">Equipos con plazas</h1>
-                    {% for categoria, equipos in equipos_por_categoria.items %}
-                        <h3 class="mb-3">{{ categoria }}</h3>
-                        {% for equipo_info in equipos %}
-                            <div class="row">
-                                <p><b>{{ equipo_info.equipo.nombre }}</b>:
-                                    {{ equipo_info.plazas_libres }} plazas libres</p>
+                    <div class="row row-cols-1 row-cols-lg-2 pt-5">
+                        {% for categoria, equipos in equipos_por_categoria.items %}
+                            <div class="col mb-4">
+                                <div class="card h-100 d-flex flex-column">
+                                    <div class="card-body">
+                                        <h3 class="card-title">{{ categoria }}</h3>
+                                        {% for equipo_info in equipos %}
+                                            <p><b>{{ equipo_info.equipo.nombre }}</b>:
+                                                {{ equipo_info.plazas_libres }} plazas libres</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
                             </div>
                         {% endfor %}
-                    {% endfor %}
+                    </div>
                 </div>
             </div>
         {% else %}
@@ -150,10 +158,16 @@
                     </button>
                 </li>
                 <li class="nav-item flex-grow-1" role="presentation">
-                    <button class="nav-link w-100 py-4" id="equipos-tab" data-bs-toggle="tab" data-bs-target="#equipos"
+                    <button class="nav-link w-100 py-4" id="jugadores-tab" data-bs-toggle="tab" data-bs-target="#jugadores"
                             type="button" role="tab" aria-controls="equipos" aria-selected="false">Gestiona tus jugadores
                     </button>
                 </li>
+                <li class="nav-item flex-grow-1" role="presentation">
+                    <button class="nav-link w-100 py-4" id="equipos-tab" data-bs-toggle="tab" data-bs-target="#equipos"
+                            type="button" role="tab" aria-controls="equipos" aria-selected="false">Equipos disponibles
+                    </button>
+                </li>
+
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="inscripcion" role="tabpanel"
@@ -165,23 +179,36 @@
                     <p>¡No pierdas la oportunidad de vivir un verano inolvidable con SAFA Club!
                         ¡Inscripciones abiertas en Junio! Ponte en contacto con nosotros y te llamamos </p><br>
                     <div class="container-fluid d-flex justify-content-center">
-                    <img class="img-fluid d-none d-sm-block" src="{% static 'juegos-de-piscina-destacada.jpg' %}" alt="campus_verano" style="max-width: 300px; min-width: 200px" id="foto_carrusel">
+                    <img class="img-fluid d-none d-sm-block" src="{% static 'imagenes/juegos-de-piscina-destacada.jpg' %}" alt="campus_verano" style="max-width: 300px; min-width: 200px" id="foto_carrusel">
                     </div>
 
                     <a class="btn btn-outline-success btn-custom align-self-center mt-3" role="button"
                        href="{% url 'contacto' %}">Contactanos</a>
                 </div>
-                <div class="tab-pane fade" id="equipos" role="tabpanel" aria-labelledby="equipos-tab">
+                <div class="tab-pane fade" id="jugadores" role="tabpanel" aria-labelledby="jugadores-tab">
                     <h1 class="mb-3 mt-5">Gestiona tus jugadores</h1>
-{#                    {% for categoria, equipos in equipos_por_categoria.items %}#}
-{#                        <h3 class="mb-3">{{ categoria }}</h3>#}
-{#                        {% for equipo_info in equipos %}#}
-{#                            <div class="row">#}
-{#                                <p><b>{{ equipo_info.equipo.nombre }}</b>:#}
-{#                                    {{ equipo_info.plazas_libres }} plazas libres</p>#}
-{#                            </div>#}
-{#                        {% endfor %}#}
-{#                    {% endfor %}#}
+                        <p>Registra a tus jugadores desde la pestaña de Gestión, puedes añadirlos, modificar sus datos y eliminarlo.</p>
+                        <p>Además, una vez tengas hijos añadidos, puedes consultar todos sus datos y estadísticas desde el desplegable de Gestión</p>
+                        <p>Si tienes alguna duda, ponte en contacto con nosotros.</p>
+                        <a class="btn btn-outline-success btn-custom align-self-center mt-3" role="button"
+                        href="{% url 'gestion_familia' %}">Gestión</a>
+                </div>
+                <div class="tab-pane fade" id="equipos" role="tabpanel" aria-labelledby="equipos-tab">
+                    <div class="row row-cols-1 row-cols-lg-2 pt-5">
+                        {% for categoria, equipos in equipos_por_categoria.items %}
+                            <div class="col mb-4">
+                                <div class="card h-100 d-flex flex-column">
+                                    <div class="card-body">
+                                        <h3 class="card-title">{{ categoria }}</h3>
+                                        {% for equipo_info in equipos %}
+                                            <p><b>{{ equipo_info.equipo.nombre }}</b>:
+                                                {{ equipo_info.plazas_libres }} plazas libres</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
 

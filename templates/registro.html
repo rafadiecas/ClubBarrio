@@ -27,6 +27,17 @@
     border-bottom-right-radius: .3rem;
     }
     }
+                .card:hover {
+        /* Aquí puedes agregar el efecto que quieras cuando se pasa el mouse sobre el elemento, por ejemplo, cambiar el color de fondo */
+        background-color: white !important;
+    }
+
+    .card {
+        cursor: default !important;
+    }
+    .shadow-custom {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 20px 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
     </style>
 </head>
 <body>
@@ -41,21 +52,22 @@
 
 <main>
     <section class="h-100 gradient-form" style="background-color: #eee;">
-      <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col-xl-10">
-            <div class="card rounded-3 text-black">
+      <div class="container py-5 h-100 d-flex justify-content-center">
+<div class="row d-flex justify-content-center align-items-center h-100 col-12 col-lg-6">            <div class="card rounded-3 text-black shadow-custom" >
               <div class="row g-0">
-                <div class="col-lg-6">
+                <div class="col-12">
                   <div class="card-body p-md-5 mx-md-4">
                     <div class="text-center">
                       <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png"
                         style="width: 185px;" alt="logo">
                       <h4 class="mt-1 mb-5 pb-1"></h4>
                     </div>
-                    <form action="" method="post">
+                    <form action="" method="post" id="form-id">
                     {% csrf_token %}
-                        <p>Registrate</p>
+                        <div class="text-center">
+                            <p><b>Registrate</b></p>
+                        </div>
+
                         <div class="form-outline mb-4">
                            
                             <label class="form-label" for="nombre_usuario">Nombre usuario</label>
@@ -100,6 +112,36 @@
       </div>
     </section>
   </main>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $('#form-id').on('submit', function(e) {
+    e.preventDefault();
+
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(data) {
+            // Si la contraseña se cambió con éxito, redirige al usuario a profile.html
+            window.location.href = "{% url 'login' %}";
+            // Muestra el mensaje de éxito en la página
+            $('#success-messages').html('<p>' + data.success + '</p>');
+            // Muestra un pop-up con el mensaje de éxito
+            alert(data.success);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            if (jqXHR.status === 400) {
+                var errores = jqXHR.responseJSON.errores;
+                // Muestra los errores en la página
+                $('#error-messages').html('');
+                errores.forEach(function(error) {
+                    $('#error-messages').append('<p>' + error + '</p>');
+                });
+            }
+        }
+    });
+});
+</script>
 
 </body>
 {% include 'footer.html' %}

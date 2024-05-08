@@ -18,12 +18,15 @@
         <h1>Lista de Productos</h1>
     </div>
     <div class="container w-75 d-flex justify-content-between align-items-center ">
+        <div class="container">
         <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_producto' %}" >Nuevo Producto</a>
+        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_tallaje' %}" >Nueva Talla</a>
+        </div>
 
         <div class="input-group w-25 h-50 ">
           <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;" id="inputBuscar">
           <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="background-color: #00653d; color: white; ">
-              <img src="{% static 'icons8-búsqueda-30.png' %}">
+              <img src="{% static 'imagenes/icons8-búsqueda-30.png' %}">
           </button>
         </div>
     </div>
@@ -36,7 +39,6 @@
                    <th scope="col">Nombre</th>
                   <th scope="col">Precio</th>
                   <th scope="col">Stock</th>
-                    <th scope="col">Url Imagen</th>
                   <th scope="col">Talla</th>
                     <th scope="col">Tipo</th>
 
@@ -47,15 +49,14 @@
               {% for p in lista_productos %}
                 <tr>
                   <th scope="row">{{ p.id }}</th>
-                  <td>{{ p.nombre }}</td>
-                  <td>{{ p.precio }}</td>
+                  <td>{{ p.producto.nombre }}</td>
+                  <td>{{ p.producto.precio }}</td>
                   <td>{{ p.stock }}</td>
-                    <td>{{ p.url_imagen }}</td>
                     <td>{{ p.talla.nombre }}</td>
-                    <td>{{ p.tipo.nombre }}</td>
+                    <td>{{ p.producto.tipo.nombre }}</td>
                     <td>
-                        <a href="{% url 'edita_producto' id=p.id  %}"> <img src="{% static 'icons8-edit-30.png' %}"></a>
-                        <a href="{% url 'elimina_producto' id=p.id  %}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}"></a>                    </td>
+                        <a href="{% url 'edita_producto' id=p.id  %}"> <img src="{% static 'imagenes/icons8-edit-30.png' %}"></a>
+                        <a href="{% url 'elimina_producto' id=p.id  %}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'imagenes/icons8-basura-30.png' %}"></a>                    </td>
                 </tr>
               {% endfor %}
               </tbody>
