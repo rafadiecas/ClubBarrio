@@ -26,7 +26,7 @@ def pagina_inicio(request):
     list_noticias = list_noticias[0:3]
     #mail = EmailMessage('Asunto', 'Cuerpo del mensaje', to=['safaclubbasket@gmail.com'])
     #mail.send()
-    return render(request, 'inicio_SR.html', {'noticias': list_noticias})
+    return render(request, 'inicio.html', {'noticias': list_noticias})
 
 def pagina_tienda(request):
     list_productos = Producto.objects.all()
