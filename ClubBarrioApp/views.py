@@ -1206,6 +1206,21 @@ def obtener_jugadores_por_partido(request):
 def producto(request, id):
     producto = Producto.objects.get(id=id)
     tallas = ProductoTalla.objects.filter(producto_id=id)
+    if request.method == 'POST':
+        carro = {}
+
+        # Comprobar si hay ya un carrito en sesión
+        if "carro" in request.session:
+            carro = request.session.get("carro", {})
+
+        # Comprobar que el producto está o no está en el carrito
+        if str(producto.id) in carro.keys():
+            carro[str(producto.id)] = int(carro[str(id)]) + int(request.POST.get('cantidad'))
+        else:
+            carro[str(producto.id)] = int(request.POST.get('cantidad'))
+        request.session["carro"] = carro
+
+        return redirect('tienda')
     return render(request, 'producto.html', {'producto': producto, 'tallas': tallas})
 
 def estadisticas_equipo(request, id):
@@ -1229,21 +1244,8 @@ def estadisticas_equipo(request, id):
     return render(request, 'lista_estadisticas_equipo.html', {'equipo': equipo, 'estadisticas_jugadores': estadisticas_jugadores})
 
 
-def add_carrito(request, id):
-    carro = {}
+# def add_carrito(request):
 
-    # Comprobar si hay ya un carrito en sesión
-    if "carro" in request.session:
-        carro = request.session.get("carro", {})
-
-    # Comprobar que el producto está o no está en el carrito
-    if str(id) in carro.keys():
-        carro[str(id)] = carro[str(id)] + 1
-    else:
-        carro[str(id)] = 1
-    request.session["carro"] = carro
-
-    return redirect('tienda')
 def anyadir_carrito(request, id):
     carro = request.session.get('carro', {})
     carro[str(id)] += 1

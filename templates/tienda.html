@@ -27,6 +27,7 @@
 </head>
 {% include "barra_navegacion.html" %}
 <body>
+<a href="{% url 'carrito' %}">carrito</a>
 <div class="container-fluid d-flex justify-content-center mt-5 mb-5 ">
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 mb-3 text-center w-75">
         {% for p in entity %}
