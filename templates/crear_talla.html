@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+{% include "barra_admin.html" %}
+
+<body>
+<head>
+    <title>Crear Productos</title>
+</head>
+
+<div class="container">
+
+
+    <h1 class="my-4">Crear Talla</h1>
+
+        {% if errores %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for error in errores %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+    <form action="" method="post">
+
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="producto" class="form-label">Producto:</label>
+                <select name="producto" id="producto" class="form-select">
+                    {% for p in productos %}
+                        <option value="{{ p.id }}"{% if p.id == productotalla.producto.id %} selected {% endif %}>{{ p.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+           
+            <div class="col-md-2" >
+                <label for="stock" class="form-label">Stock:</label>
+                <input type="number" step="1" name="stock" id="stock" class="form-control" value="{{ productotalla.stock }}">
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="talla" class="form-label">Talla</label>
+                <select name="talla" id="talla" class="form-select" >
+                    {% for t in tallas %}
+                        <option value="{{ t.id }}"{% if t.id == productotalla.talla.id %} selected {% endif %}>{{ t.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+           
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <a href="{% url 'administrador' %}" role="button" class="btn btn-secondary mt-3">Volver</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    var inputStock = document.getElementById('stock');
+    inputStock.addEventListener('input', function(){
+        if (this.value < 0 || this.value.length > 3) {
+            this.value = this.value.slice(0, 3);
+            if (this.value < 0) {
+                this.value = 0;
+            }
+        }
+    });
+</script>
+
+
+</body>
+
+</html>
