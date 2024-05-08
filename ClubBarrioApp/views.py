@@ -26,7 +26,7 @@ def pagina_inicio(request):
     list_noticias = list_noticias[0:3]
     #mail = EmailMessage('Asunto', 'Cuerpo del mensaje', to=['safaclubbasket@gmail.com'])
     #mail.send()
-    return render(request, 'inicio.html', {'noticias': list_noticias})
+    return render(request, 'inicio_SR.html', {'noticias': list_noticias})
 
 def pagina_tienda(request):
     list_productos = Producto.objects.all()
@@ -808,12 +808,12 @@ def pagina_usuario(request):
         tutor = TutorLegal.objects.get(usuario_id=usuario.id)
         hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
         if len(hijos) == 0:
-            return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijo_existe': True,'equipos_por_categoria': equipos_por_categoria})
-        return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijos': hijos,'equipos_por_categoria': equipos_por_categoria})
+            return render(request, 'inicio_usuario_tutor.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijo_existe': True, 'equipos_por_categoria': equipos_por_categoria})
+        return render(request, 'inicio_usuario_tutor.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijos': hijos, 'equipos_por_categoria': equipos_por_categoria})
     else:
 
 
-        return render(request, 'usuario.html', {'noticias': list_noticias, 'partidos': list_partidos,'equipos_por_categoria': equipos_por_categoria})
+        return render(request, 'inicio_usuario_tutor.html', {'noticias': list_noticias, 'partidos': list_partidos, 'equipos_por_categoria': equipos_por_categoria})
 
 def tarifas(request):
     return render(request, 'tarifas.html')
