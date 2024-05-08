@@ -755,6 +755,25 @@ def crear_producto(request):
         producto_talla_nuevo.save()
         return redirect('lista_tienda')
 
+def crear_producto_talla(request):
+    if request.method == 'GET':
+        tallas = Talla.objects.all()
+        productos = Producto.objects.all()
+        return render(request, 'crear_talla.html', {'tallas': tallas, 'productos': productos})
+    else:
+        try:
+            producto_talla = ProductoTalla.objects.get(producto_id=int(request.POST.get('producto')), talla=request.POST.get('talla'))
+            errores = []
+            errores.append("Ya existe ese producto con esa talla")
+            return render(request, 'crear_talla.html', {'errores': errores, 'tallas': Talla.objects.all(), 'productos': Producto.objects.all()})
+        except ObjectDoesNotExist:
+            productoTalla_nuevo = ProductoTalla()
+            productoTalla_nuevo.producto = Producto.objects.get(id=int(request.POST.get('producto')))
+            productoTalla_nuevo.talla = Talla.objects.get(id=int(request.POST.get('talla')))
+            productoTalla_nuevo.stock = request.POST.get('stock')
+            productoTalla_nuevo.save()
+            return redirect('lista_tienda')
+
 def elimina_producto(request, id):
     producto = Producto.objects.get(id=id)
     producto.delete()
@@ -768,20 +787,27 @@ def edita_producto(request, id):
         tipos = Tipo.objects.all()
         return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos, 'modo_edicion': True, 'productotalla': productotalla})
     else:
+        tallas = Talla.objects.all()
+        tipos = Tipo.objects.all()
         producto.nombre = request.POST.get('nombre')
         producto.precio = float(request.POST.get('precio'))
         producto.tipo = Tipo.objects.get(id=int(request.POST.get('tipo')))
         producto.url_imagen = request.POST.get('url_imagen')
         producto.save()
-        try:
-            producto_talla = ProductoTalla.objects.get(producto_id=id, talla=request.POST.get('talla'))
-            producto_talla.stock = request.POST.get('stock')
-            producto_talla.save()
-        except ObjectDoesNotExist:
-            productotalla.producto = producto
-            productotalla.talla = Talla.objects.get(id=int(request.POST.get('talla')))
+        new_talla = Talla.objects.get(id=int(request.POST.get('talla')))
+        if productotalla.talla == new_talla:
             productotalla.stock = request.POST.get('stock')
             productotalla.save()
+        else:
+            try:
+                producto_talla = ProductoTalla.objects.get(producto_id=producto.id, talla=new_talla)
+                errores = []
+                errores.append("Ya existe ese producto con esa talla")
+                return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos, 'modo_edicion': True, 'productotalla': productotalla, 'errores': errores})
+            except ObjectDoesNotExist:
+                productotalla.talla = new_talla
+                productotalla.stock = request.POST.get('stock')
+                productotalla.save()
 
         return redirect('lista_tienda')
 

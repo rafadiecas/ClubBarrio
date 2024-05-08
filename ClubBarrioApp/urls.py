@@ -73,5 +73,6 @@ urlpatterns = [
     path('contacto', pagina_contacto, name='contacto'),
     path('administrador/estadisticas_jugador/new/', obtener_jugadores_por_partido, name='obtener_jugadores_por_partido'),
     path('tienda/producto/<int:id>/', producto, name='producto'),
+    path('administrador/tienda/newTalla', crear_producto_talla, name='crear_tallaje'),
 
 ]
