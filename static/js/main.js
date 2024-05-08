@@ -1,3 +1,4 @@
+// Funcion para confirmar la eliminacion de un registro
 function confirmarEliminarUsuario(event) {
     var confirmacion = confirm('¿Seguro que desea eliminar?');
      if (!confirmacion) {
@@ -5,8 +6,9 @@ function confirmarEliminarUsuario(event) {
     }
 }
 
+// Usada datatable en la gestion de Tutor , para crear y editar sus hijos.
 $(document).ready(function(){
-    // Define el idioma de Moment.js a español
+
     moment.locale('es');
 
     // Obtiene los títulos de las columnas
@@ -49,12 +51,13 @@ $(document).ready(function(){
             }
         ]
     });
-
+    // Agrega un input para buscar en la tabla
     $("#inputBuscar").on("keyup", function() {
         tabla.search($(this).val()).draw();
     });
 });
 
+// Limita la cantidad de caracteres en los inputs
 $(document).ready(function() {
     $('input').attr('maxlength', '40');
 });
