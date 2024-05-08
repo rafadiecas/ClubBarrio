@@ -1033,10 +1033,41 @@ def add_carrito(request, id):
         carro[str(id)] = carro[str(id)] + 1
     else:
         carro[str(id)] = 1
-
     request.session["carro"] = carro
 
     return redirect('tienda')
+def anyadir_carrito(request, id):
+    carro = request.session.get('carro', {})
+    carro[str(id)] += 1
+    request.session["carro"] = carro
+    return redirect('carrito')
+
+def restar_carrito(request, id):
+    carro = request.session.get('carro', {})
+    carro[str(id)] -= 1
+    request.session["carro"] = carro
+    return redirect('carrito')
+def eliminar_carrito(request, id):
+    carro = request.session.get('carro', {})
+    carro.pop(str(id))
+    request.session["carro"] = carro
+    return redirect('carrito')
 
 def carrito(request):
-    return render(request, 'carrito.html')
+    carro = {}
+    carro_cliente = {}
+    total = 0.0
+    cantProductos = 0
+
+    if 'carro' in request.session:
+        carro_cliente = request.session.get('carro', {})
+
+    for key in carro_cliente.keys():
+        producto = Producto.objects.get(id=key)
+        cantidad = carro_cliente[key]
+        carro[producto] = cantidad
+        total += cantidad * producto.precio
+        cantProductos += 1
+
+
+    return render(request, 'carrito.html', {'carro': carro, 'total': total, 'cantProductos': cantProductos})
