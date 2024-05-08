@@ -1161,11 +1161,11 @@ def estadisticas_equipo(request, id):
 
     for jugador in jugadores:
         estadisticas = EstadisticasJugador.objects.filter(jugador=jugador).aggregate(
-            Sum('puntos'),
-            Sum('minutos'),
-            Sum('rebotes'),
-            Sum('asistencias'),
-            Sum('faltas')
+            total_puntos=Sum('puntos',default=0),
+            total_minutos= Sum('minutos',default=0),
+            total_rebotes = Sum('rebotes',default=0),
+            total_asistencias =Sum('asistencias',default=0),
+            total_faltas = Sum('faltas',default=0)
         )
         estadisticas_jugadores.append({
             'jugador': jugador,

@@ -41,11 +41,11 @@
               {% for est in estadisticas_jugadores %}
                 <tr>
                   <th scope="row">{{ est.jugador.nombre }}</th>
-                  <td>{{ est.estadisticas.minutos }}</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td>{{ est.estadisticas.total_minutos }}</td>
+                  <td>{{ est.estadisticas.total_puntos }}</td>
+                  <td>{{ est.estadisticas.total_asistencias }}</td>
+                    <td>{{ est.estadisticas.total_rebotes }}</td>
+                    <td>{{ est.estadisticas.total_faltas }}</td>
                 </tr>
               {% endfor %}
               </tbody>
