@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.sites import requests
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage, send_mail
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Sum
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import datetime, date
 import re
@@ -1120,7 +1120,7 @@ def pagina_equipo(request, id):
     clasificacion= saca_clasificacion(equipos_cat)
     response = requests.get(f"https://nominatim.openstreetmap.org/search?q={partidos_futuros[0].lugar}&format=json")
     if response.status_code != 200:
-        return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0],'equipos_entrenador': equipos, 'entrenamiento': entrenamientos.first(), 'mapa_fallo': True})
+        return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0],'equipos_entrenador': equipos, 'entrenamiento': entrenamientos.first(), 'mapa_fallo': True, 'modo_equipo':True})
     data = response.json()
     lat = data[0]['lat']
     lon = data[0]['lon']
@@ -1129,7 +1129,7 @@ def pagina_equipo(request, id):
     if entrenamientos.exists():
         primer_entrenamiento = entrenamientos.first()
 
-    return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon,'equipos_entrenador': equipos, 'entrenamiento': primer_entrenamiento})
+    return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon,'equipos_entrenador': equipos, 'entrenamiento': primer_entrenamiento,'modo_equipo':True})
 
 
 def equipos_entrenador(request):
@@ -1153,3 +1153,23 @@ def producto(request, id):
     producto = Producto.objects.get(id=id)
     tallas = ProductoTalla.objects.filter(producto_id=id)
     return render(request, 'producto.html', {'producto': producto, 'tallas': tallas})
+
+def estadisticas_equipo(request, id):
+    equipo = Equipo.objects.get(id=id)
+    jugadores = Jugador.objects.filter(equipo_id=equipo.id)
+    estadisticas_jugadores = []
+
+    for jugador in jugadores:
+        estadisticas = EstadisticasJugador.objects.filter(jugador=jugador).aggregate(
+            Sum('puntos'),
+            Sum('minutos'),
+            Sum('rebotes'),
+            Sum('asistencias'),
+            Sum('faltas')
+        )
+        estadisticas_jugadores.append({
+            'jugador': jugador,
+            'estadisticas': estadisticas
+        })
+
+    return render(request, 'lista_estadisticas_equipo.html', {'equipo': equipo, 'estadisticas_jugadores': estadisticas_jugadores})

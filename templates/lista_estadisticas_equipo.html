@@ -1,0 +1,55 @@
+{% load static %}
+{% include 'barra_admin.html' %}
+<head>
+    <title>Lista Estadisticas Equipo</title>
+    <style>
+    .btn-custom {
+        color: #00653d; /* Color del texto azul */
+    }
+    .table-responsive {
+        max-height: 400px; /* Ajusta la altura máxima según sea necesario */
+        overflow-y: auto; /* Agrega un scroll vertical */
+    }
+    </style>
+
+</head>
+<div class="container-fluid d-flex flex-column align-items-center">
+    <div class="container w-75 d-flex justify-content-start ">
+        <h1>Lista de estadísticas de {{ equipo.nombre }}:</h1>
+    </div>
+    <div class="container w-75 d-flex justify-content-between align-items-center ">
+
+        <div class="input-group w-25 h-50 ">
+          <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;" id="inputBuscar">
+
+        </div>
+    </div>
+    <div class="container w-75 m-4 ">
+        <div class="table-responsive">
+            <table class="table" id="tabla">
+                <thead>
+                <tr>
+                  <th scope="col">Jugador</th>
+                  <th scope="col">Minutos</th>
+                  <th scope="col">Puntos</th>
+                  <th scope="col">Asistencias</th>
+                  <th scope="col">Rebotes</th>
+                  <th scope="col">Faltas</th>
+                </tr>
+              </thead>
+              <tbody >
+              {% for est in estadisticas_jugadores %}
+                <tr>
+                  <th scope="row">{{ est.jugador.nombre }}</th>
+                  <td>{{ est.estadisticas.minutos }}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>

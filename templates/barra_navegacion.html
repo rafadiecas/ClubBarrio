@@ -71,7 +71,6 @@
     </style>
 
 
-    </style>
 </head>
 
 <body>
@@ -136,6 +135,13 @@
                         <a class="nav-link" href="{% url 'tarifas' %}">Tarifas</a>
                     </li>
                 {% endif %}
+            
+                {% if user.is_authenticated and user.rol == "Entrenador" and modo_equipo %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'equipo_estadisticas' id=equipo.id %}">Estadísticas</a>
+                    </li>
+                {% endif %}
+            
                 <a class="navbar-brand d-none d-md-block"
                    href="{% if user.is_authenticated and user.rol == "Tutor" or user.rol == "Usuario" %} {% url 'usuario' %} {% elif user.rol == "Jugador" %}
                        {% url 'inicio_jugador' %}{% elif user.is_authenticated and user.rol == "Entrenador" %}{% url 'entrenador' %} {% else %} {% url 'inicio' %} {% endif %} ">
