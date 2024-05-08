@@ -1033,9 +1033,28 @@ def inicio_jugador(request, id=None):
 
     clasificacion = saca_clasificacion(equipos)
 
+    fecha_actual = date.today()
+
     equipo3 = Equipo.objects.get(id=jugador.equipo.id)
+    partidos_futuros = Partido.objects.filter(
+        Q(equipo1_id=equipo3.id) | Q(equipo2_id=equipo3.id), fecha__gte=fecha_actual).order_by('fecha')
+
+    entrenamientos = Entrenamiento.objects.filter(equipo=equipo3, fecha__gte=fecha_actual).order_by('fecha')
+
+    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={partidos_futuros[0].lugar}&format=json")
+    if response.status_code != 200:
+        list_partidos = Partido.objects.filter(Q(equipo1_id=equipo3.id) | Q(equipo2_id=equipo3.id))
+        return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos,'mapa_fallo': True,'siguiente_partido': partidos_futuros[0], 'entrenamiento': entrenamientos.first()})
+    data = response.json()
+    lat = data[0]['lat']
+    lon = data[0]['lon']
+
+    primer_entrenamiento = None
+    if entrenamientos.exists():
+        primer_entrenamiento = entrenamientos.first()
+
     list_partidos = Partido.objects.filter(Q(equipo1_id= equipo3.id)| Q(equipo2_id= equipo3.id))
-    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos})
+    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon, 'entrenamiento': primer_entrenamiento,'mapa_fallo': False})
 
 
 def saca_clasificacion(equipos):
@@ -1103,7 +1122,6 @@ def pagina_equipo(request, id):
     if response.status_code != 200:
         return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0],'equipos_entrenador': equipos, 'entrenamiento': entrenamientos.first(), 'mapa_fallo': True})
     data = response.json()
-    print(response.content)
     lat = data[0]['lat']
     lon = data[0]['lon']
 
