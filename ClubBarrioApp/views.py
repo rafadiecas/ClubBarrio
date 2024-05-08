@@ -755,6 +755,25 @@ def crear_producto(request):
         producto_talla_nuevo.save()
         return redirect('lista_tienda')
 
+def crear_producto_talla(request):
+    if request.method == 'GET':
+        tallas = Talla.objects.all()
+        productos = Producto.objects.all()
+        return render(request, 'crear_talla.html', {'tallas': tallas, 'productos': productos})
+    else:
+        try:
+            producto_talla = ProductoTalla.objects.get(producto_id=int(request.POST.get('producto')), talla=request.POST.get('talla'))
+            errores = []
+            errores.append("Ya existe ese producto con esa talla")
+            return render(request, 'crear_talla.html', {'errores': errores, 'tallas': Talla.objects.all(), 'productos': Producto.objects.all()})
+        except ObjectDoesNotExist:
+            productoTalla_nuevo = ProductoTalla()
+            productoTalla_nuevo.producto = Producto.objects.get(id=int(request.POST.get('producto')))
+            productoTalla_nuevo.talla = Talla.objects.get(id=int(request.POST.get('talla')))
+            productoTalla_nuevo.stock = request.POST.get('stock')
+            productoTalla_nuevo.save()
+            return redirect('lista_tienda')
+
 def elimina_producto(request, id):
     producto = Producto.objects.get(id=id)
     producto.delete()
@@ -768,20 +787,27 @@ def edita_producto(request, id):
         tipos = Tipo.objects.all()
         return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos, 'modo_edicion': True, 'productotalla': productotalla})
     else:
+        tallas = Talla.objects.all()
+        tipos = Tipo.objects.all()
         producto.nombre = request.POST.get('nombre')
         producto.precio = float(request.POST.get('precio'))
         producto.tipo = Tipo.objects.get(id=int(request.POST.get('tipo')))
         producto.url_imagen = request.POST.get('url_imagen')
         producto.save()
-        try:
-            producto_talla = ProductoTalla.objects.get(producto_id=id, talla=request.POST.get('talla'))
-            producto_talla.stock = request.POST.get('stock')
-            producto_talla.save()
-        except ObjectDoesNotExist:
-            productotalla.producto = producto
-            productotalla.talla = Talla.objects.get(id=int(request.POST.get('talla')))
+        new_talla = Talla.objects.get(id=int(request.POST.get('talla')))
+        if productotalla.talla == new_talla:
             productotalla.stock = request.POST.get('stock')
             productotalla.save()
+        else:
+            try:
+                producto_talla = ProductoTalla.objects.get(producto_id=producto.id, talla=new_talla)
+                errores = []
+                errores.append("Ya existe ese producto con esa talla")
+                return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos, 'modo_edicion': True, 'productotalla': productotalla, 'errores': errores})
+            except ObjectDoesNotExist:
+                productotalla.talla = new_talla
+                productotalla.stock = request.POST.get('stock')
+                productotalla.save()
 
         return redirect('lista_tienda')
 
@@ -1007,9 +1033,28 @@ def inicio_jugador(request, id=None):
 
     clasificacion = saca_clasificacion(equipos)
 
+    fecha_actual = date.today()
+
     equipo3 = Equipo.objects.get(id=jugador.equipo.id)
+    partidos_futuros = Partido.objects.filter(
+        Q(equipo1_id=equipo3.id) | Q(equipo2_id=equipo3.id), fecha__gte=fecha_actual).order_by('fecha')
+
+    entrenamientos = Entrenamiento.objects.filter(equipo=equipo3, fecha__gte=fecha_actual).order_by('fecha')
+
+    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={partidos_futuros[0].lugar}&format=json")
+    if response.status_code != 200:
+        list_partidos = Partido.objects.filter(Q(equipo1_id=equipo3.id) | Q(equipo2_id=equipo3.id))
+        return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos,'mapa_fallo': True,'siguiente_partido': partidos_futuros[0], 'entrenamiento': entrenamientos.first()})
+    data = response.json()
+    lat = data[0]['lat']
+    lon = data[0]['lon']
+
+    primer_entrenamiento = None
+    if entrenamientos.exists():
+        primer_entrenamiento = entrenamientos.first()
+
     list_partidos = Partido.objects.filter(Q(equipo1_id= equipo3.id)| Q(equipo2_id= equipo3.id))
-    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos})
+    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon, 'entrenamiento': primer_entrenamiento,'mapa_fallo': False})
 
 
 def saca_clasificacion(equipos):
@@ -1077,7 +1122,6 @@ def pagina_equipo(request, id):
     if response.status_code != 200:
         return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0],'equipos_entrenador': equipos, 'entrenamiento': entrenamientos.first(), 'mapa_fallo': True})
     data = response.json()
-    print(response.content)
     lat = data[0]['lat']
     lon = data[0]['lon']
 
