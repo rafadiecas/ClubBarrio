@@ -1255,18 +1255,18 @@ def anyadir_carrito(request, id):
     carro = request.session.get('carro', {})
     carro[str(id)] += 1
     request.session["carro"] = carro
-    return redirect('carrito')
+    return JsonResponse({'status': 'success'})
 
 def restar_carrito(request, id):
     carro = request.session.get('carro', {})
     carro[str(id)] -= 1
     request.session["carro"] = carro
-    return redirect('carrito')
+    return JsonResponse({'status': 'success'})
 def eliminar_carrito(request, id):
     carro = request.session.get('carro', {})
     carro.pop(str(id))
     request.session["carro"] = carro
-    return redirect('carrito')
+    return JsonResponse({'status': 'success'})
 
 def carrito(request):
     carro = {}

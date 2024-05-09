@@ -41,6 +41,7 @@
         }
         }
     </style>
+
 </head>
 <body>
 <section class="h-100 h-custom" style="background-color: #f6f6f6;">
@@ -70,22 +71,23 @@
                       <h6 class="text-black mb-0">{{ k.nombre }}</h6>
                     </div>
                     <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                      <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2">
-                        <a href="{% url 'restar_carrito' id=k.id %}"><i class="fas fa-minus"></i></a>
-                      </button>
+                      <button class="btn btn-link px-2" data-product-id="{{ k.id }}" onclick="restarProducto(this)"><i class="fas fa-minus"></i></button>
+
+
 
                       <input id="form1" min="0" name="quantity" value="{{ v }}" type="text"
                         class="form-control form-control-sm" />
 
-                      <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2">
-                        <a href="{% url 'anyadir_carrito' id=k.id %}"><i class="fas fa-plus"></i></a>
-                      </button>
+                     <button class="btn btn-link px-2" data-product-id="{{ k.id }}" onclick="sumarProducto(this)"><i class="fas fa-plus"></i></button>
+
+
                     </div>
                     <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                       <h6 class="mb-0">€ {{ k.precio }}</h6>
                     </div>
                     <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                      <a href="{% url 'eliminar_carrito' id=k.id%}" class="text-muted"><i class="fas fa-times"></i></a>
+                     <button class="btn btn-link px-2" data-product-id="{{ k.id }}" onclick="eliminarProducto(this)"><i class="fas fa-times"></i></button>
+
                     </div>
                   </div>
 
@@ -146,6 +148,50 @@
   </div>
 </section>
 <script src="https://kit.fontawesome.com/3b1eee63d8.js" crossorigin="anonymous"></script>
+<script>
+    function restarProducto(button) {
+        var id = button.dataset.productId;
+        $.ajax({
+            url: '/ClubBarrioApp/tienda/carrito/restar/' + id,
+            type: 'GET',
+            success: function(data) {
+                location.reload();
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.log('Error:', errorThrown);
+            }
+        });
+    }
+    
+    function sumarProducto(button) {
+        var id = button.dataset.productId;
+        $.ajax({
+            url: '/ClubBarrioApp/tienda/carrito/anyadir/' + id,
+            type: 'GET',
+            success: function(data) {
+                location.reload();
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.log('Error:', errorThrown);
+            }
+        });
+    }
+
+    function eliminarProducto(button) {
+        var id = button.dataset.productId;
+        $.ajax({
+            url: '/ClubBarrioApp/tienda/carrito/eliminar/' + id,
+            type: 'GET',
+            success: function(data) {
+                location.reload();
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.log('Error:', errorThrown);
+            }
+        });
+    }
+</script>
+    
 </body>
 {% include 'footer.html' %}
 </html>
