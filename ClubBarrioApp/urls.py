@@ -78,8 +78,8 @@ urlpatterns = [
     path('entrenador/entrenamientos/', entrenamientos_listado_entrenador, name='entrenamientos_listado_entrenador'),
     # path('carrito/add/<int:id>', add_carrito, name='add_carrito'),
     path('tienda/carrito/', carrito, name='carrito'),
-    path('tienda/carrito/eliminar/<int:id>', eliminar_carrito, name='eliminar_carrito'),
-    path('tienda/carrito/anyadir/<int:id>', anyadir_carrito, name='anyadir_carrito'),
-    path('tienda/carrito/restar/<int:id>', restar_carrito, name='restar_carrito'),
+    path('tienda/carrito/eliminar/<int:id>/', eliminar_carrito, name='eliminar_carrito'),
+    path('tienda/carrito/anyadir/<int:id>/', anyadir_carrito, name='anyadir_carrito'),
+    path('tienda/carrito/restar/<int:id>/', restar_carrito, name='restar_carrito'),
 
 ]

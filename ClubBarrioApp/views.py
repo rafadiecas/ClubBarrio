@@ -1241,32 +1241,57 @@ def estadisticas_equipo(request, id):
             'estadisticas': estadisticas
         })
 
-    usuario = request.user
-    data={}
-
-    envio_datos_barra(data,request,usuario)
-
-    return render(request, 'lista_estadisticas_equipo.html', {'equipo': equipo, 'estadisticas_jugadores': estadisticas_jugadores, 'data': data})
+    return render(request, 'lista_estadisticas_equipo.html', {'equipo': equipo, 'estadisticas_jugadores': estadisticas_jugadores})
 
 
 # def add_carrito(request):
 
 def anyadir_carrito(request, id):
     carro = request.session.get('carro', {})
-    carro[str(id)] += 1
+    carro[str(id)] = carro.get(str(id), 0) + 1
     request.session["carro"] = carro
-    return JsonResponse({'status': 'success'})
 
+    # Calcular el total de items y el precio total
+    totalItems = sum(carro.values())
+    totalPrice = sum(Producto.objects.get(id=producto_id).precio * cantidad for producto_id, cantidad in carro.items())
+    productQuantities = {str(product_id): quantity for product_id, quantity in carro.items()}
+
+    # Devolver una respuesta JSON
+    return JsonResponse({'totalItems': totalItems, 'totalPrice': totalPrice, 'productQuantities': productQuantities})
 def restar_carrito(request, id):
     carro = request.session.get('carro', {})
-    carro[str(id)] -= 1
+    if str(id) in carro:
+        carro[str(id)] -= 1
+        if carro[str(id)] <= 0:
+            del carro[str(id)]
     request.session["carro"] = carro
-    return JsonResponse({'status': 'success'})
+
+    # Calcular el total de items y el precio total
+    totalItems = sum(carro.values())
+    totalPrice = sum(Producto.objects.get(id=producto_id).precio * cantidad for producto_id, cantidad in carro.items())
+
+    # Crear un diccionario que mapee cada ID de producto a su cantidad
+    productQuantities = {str(product_id): quantity for product_id, quantity in carro.items()}
+
+    # Devolver una respuesta JSON
+    return JsonResponse({'totalItems': totalItems, 'totalPrice': totalPrice, 'productQuantities': productQuantities})
+
+
 def eliminar_carrito(request, id):
     carro = request.session.get('carro', {})
-    carro.pop(str(id))
+    if str(id) in carro:
+        del carro[str(id)]
     request.session["carro"] = carro
-    return JsonResponse({'status': 'success'})
+
+    # Calcular el total de items y el precio total
+    totalItems = sum(carro.values())
+    totalPrice = sum(Producto.objects.get(id=producto_id).precio * cantidad for producto_id, cantidad in carro.items())
+
+    # Crear un diccionario que mapee cada ID de producto a su cantidad
+    productQuantities = {str(product_id): quantity for product_id, quantity in carro.items()}
+
+    # Devolver una respuesta JSON
+    return JsonResponse({'totalItems': totalItems, 'totalPrice': totalPrice, 'productQuantities': productQuantities})
 
 def carrito(request):
     carro = {}
