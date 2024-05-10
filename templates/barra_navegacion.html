@@ -1,3 +1,4 @@
+
 {% load static %}
 {% load bootstrap5 %}
 <html lang="">
@@ -12,6 +13,11 @@
     {% endif %}
     {% block bootstrap5_extra_head %}{% endblock %}
     <style>
+    * {
+    box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+    }
 
         .navbar-brand img {
             width: 80px;
