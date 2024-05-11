@@ -17,17 +17,72 @@
             cursor: default !important;
         }
 
-         .product-image {
-        width: 200px;  /* Ancho fijo */
-        height: 200px; /* Altura fija */
-        object-fit: cover; /* Esto hará que la imagen se recorte para llenar el contenedor, manteniendo su aspecto */
-    }
+        .product-image {
+            width: 200px; /* Ancho fijo */
+            height: 200px; /* Altura fija */
+            object-fit: cover; /* Esto hará que la imagen se recorte para llenar el contenedor, manteniendo su aspecto */
+        }
+
+        #cart-button {
+            position: absolute;
+            top: 30px;
+            right: 10px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 50%;
+            transition: transform 1s ease;
+        }
+
+        @media (max-width: 767px) {
+            #cart-button {
+
+                left: 50%;
+                right: auto;
+                top: 30px;
+
+                transform: translateX(-50%);
+            }
+}
+
+        #cart-button:hover {
+            transform: scale(1.1);
+        }
+
+        #cart-button a {
+            text-decoration: none;
+            color: black;
+        }
+
+        #cart-button i {
+            font-size: 24px;
+        }
+
+        #cart-button #cart-count {
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 14px;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+        }
+
+        #cart-button img {
+            width: 24px;
+            height: 24px;
+        }
 
     </style>
 </head>
 {% include "barra_navegacion.html" %}
 <body>
-<a href="{% url 'carrito' %}">carrito</a>
+<div id="cart-button">
+    <a href="{% url 'carrito' %}">
+        <img src="{% static 'imagenes/icons8-carrito-de-compras-50.png' %}" alt="Carrito">
+        <span id="cart-count">0</span>
+    </a>
+</div>
 <div class="container-fluid d-flex justify-content-center mt-5 mb-5 ">
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 mb-3 text-center w-75">
         {% for p in entity %}
@@ -54,3 +109,28 @@
 </body>
 {% include 'footer.html' %}
 </html>
+<script>
+    function updateCartCount() {
+        // Hacer una solicitud AJAX a la vista del carrito
+        fetch('{% url "carrito" %}', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Actualizar el contador del carrito con la cantidad de productos
+                var cartCountElement = document.getElementById('cart-count');
+                if (cartCountElement) {
+                    cartCountElement.textContent = data.cantProductos;
+                } else {
+                    console.error('Element with id "cart-count" not found');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Llamar a la función updateCartCount cada vez que la página se carga
+    window.onload = updateCartCount;
+
+</script>

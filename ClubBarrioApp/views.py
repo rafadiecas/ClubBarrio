@@ -1309,5 +1309,7 @@ def carrito(request):
         total += cantidad * producto.precio
         cantProductos += 1
 
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'cantProductos': cantProductos})
 
     return render(request, 'carrito.html', {'carro': carro, 'total': total, 'cantProductos': cantProductos})
