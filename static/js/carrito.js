@@ -1,27 +1,23 @@
 
-$(document).ready(function () {
-    // Para añadir al carrito
-    $(document).on('click', '.btn-add', function (e) {
-        e.preventDefault();
-        console.log("Botón añadir clicado");
-        var productTallaId = $(this).data('product-talla-id');  // Cambia 'product-id' a 'product-talla-id'
-        console.log("ProductTalla ID: " + productTallaId);
-        $.ajax({
-            url: '/ClubBarrioApp/tienda/carrito/anyadir/' + productTallaId + '/',  // Usa productTallaId en lugar de productId
-            type: 'POST',
-            beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-            },
-            success: function (response) {
-                // ...
-                // Actualiza el valor del campo de entrada
-                $('#form' + productTallaId).val(response.productQuantities[productTallaId]);  // Usa productTallaId en lugar de productId
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                console.log('Error:', errorThrown);
-            }
-        });
+// Para añadir al carrito
+$(document).on('click', '.btn-add', function (e) {
+    e.preventDefault();
+    var productTallaId = $(this).data('product-talla-id');
+    $.ajax({
+        url: '/ClubBarrioApp/tienda/carrito/anyadir/' + productTallaId + '/',
+        type: 'POST',
+        beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        },
+        success: function (response) {
+            $('#form' + productTallaId).val(response.productQuantities[productTallaId]);
+            $('.total').text('€ ' + response.totalPrice);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            console.log('Error:', errorThrown);
+        }
     });
+
 
     // Para restar del carrito
 $(document).on('click', '.btn-subtract', function (e) {
