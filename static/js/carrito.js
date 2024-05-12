@@ -16,12 +16,12 @@ $(document).ready(function () {
                 // Asigna IDs a los elementos
                 $('.mb-0.text-muted').attr('id', 'totalItemsText');
                 $('.text-uppercase').attr('id', 'totalItemsUpper');
-                $('h5:contains("€")').attr('id', 'totalPrice');
+                // $('h5:contains("€")').attr('id', 'totalPrice');
 
                 // Actualiza la interfaz del carrito aquí
                 $('#totalItemsText').text(response.totalItems + " productos");
                 $('#totalItemsUpper').text(response.totalItems + " Productos");
-                $('#totalPrice').text("€ " + response.totalPrice);
+                $('.total').text("€ " + response.totalPrice);
                 // Actualiza el valor del campo de entrada
                 $('#form' + productId).val(response.productQuantities[productId]);
             },
@@ -57,12 +57,12 @@ $(document).ready(function () {
                 // Asigna IDs a los elementos
                 $('.mb-0.text-muted').attr('id', 'totalItemsText');
                 $('.text-uppercase').attr('id', 'totalItemsUpper');
-                $('h5:contains("€")').attr('id', 'totalPrice');
+                // $('h5:contains("€")').attr('id', 'totalPrice');
 
                 // Actualiza la interfaz del carrito aquí
                 $('#totalItemsText').text(response.totalItems + " productos");
                 $('#totalItemsUpper').text(response.totalItems + " Productos");
-                $('#totalPrice').text("€ " + response.totalPrice);
+                $('.total').text('€ ' + response.totalPrice);
 
                 // Actualiza el valor del campo de entrada
                 formElement.val(response.productQuantities[productId]); // Reutiliza la variable en lugar del selector
@@ -91,12 +91,12 @@ $(document).ready(function () {
                 // Asigna IDs a los elementos
                 $('.mb-0.text-muted').attr('id', 'totalItemsText');
                 $('.text-uppercase').attr('id', 'totalItemsUpper');
-                $('h5:contains("€")').attr('id', 'totalPrice');
+                // $('h5:contains("€")').attr('id', 'totalPrice');
 
                 // Actualiza la interfaz del carrito aquí
                 $('#totalItemsText').text(response.totalItems + " productos");
                 $('#totalItemsUpper').text(response.totalItems + " Productos");
-                $('#totalPrice').text("€ " + response.totalPrice);
+                $('.total').text("€ " + response.totalPrice);
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log('Error:', errorThrown);
