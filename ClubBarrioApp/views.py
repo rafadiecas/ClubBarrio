@@ -1309,7 +1309,7 @@ def carrito(request):
         cantidad = carro_cliente[key]
         carro[producto] = cantidad
         total += cantidad * producto.producto.precio
-        cantProductos += 1
+        cantProductos += cantidad  # Suma la cantidad de cada producto
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({'cantProductos': cantProductos})
