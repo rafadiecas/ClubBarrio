@@ -1207,6 +1207,9 @@ def producto(request, id):
     producto = Producto.objects.get(id=id)
     tallas = ProductoTalla.objects.filter(producto_id=id)
     if request.method == 'POST':
+
+        producto_talla = ProductoTalla.objects.get(producto_id=id, talla=request.POST.get('tallas'))
+
         carro = {}
 
         # Comprobar si hay ya un carrito en sesión
@@ -1214,10 +1217,10 @@ def producto(request, id):
             carro = request.session.get("carro", {})
 
         # Comprobar que el producto está o no está en el carrito
-        if str(producto.id) in carro.keys():
-            carro[str(producto.id)] = int(carro[str(id)]) + int(request.POST.get('cantidad'))
+        if str(producto_talla.id) in carro.keys():
+            carro[str(producto_talla.id)] = int(carro[str(id)]) + int(request.POST.get('cantidad'))
         else:
-            carro[str(producto.id)] = int(request.POST.get('cantidad'))
+            carro[str(producto_talla.id)] = int(request.POST.get('cantidad'))
         request.session["carro"] = carro
 
         return redirect('tienda')
@@ -1253,7 +1256,7 @@ def anyadir_carrito(request, id):
 
     # Calcular el total de items y el precio total
     totalItems = sum(carro.values())
-    totalPrice = sum(Producto.objects.get(id=producto_id).precio * cantidad for producto_id, cantidad in carro.items())
+    totalPrice = sum(ProductoTalla.objects.get(id=producto_id).producto.precio * cantidad for producto_id, cantidad in carro.items())
     productQuantities = {str(product_id): quantity for product_id, quantity in carro.items()}
 
     # Devolver una respuesta JSON
@@ -1268,14 +1271,13 @@ def restar_carrito(request, id):
 
     # Calcular el total de items y el precio total
     totalItems = sum(carro.values())
-    totalPrice = sum(Producto.objects.get(id=producto_id).precio * cantidad for producto_id, cantidad in carro.items())
+    totalPrice = sum(ProductoTalla.objects.get(id=producto_id).producto.precio * cantidad for producto_id, cantidad in carro.items())
 
     # Crear un diccionario que mapee cada ID de producto a su cantidad
     productQuantities = {str(product_id): quantity for product_id, quantity in carro.items()}
 
     # Devolver una respuesta JSON
     return JsonResponse({'totalItems': totalItems, 'totalPrice': totalPrice, 'productQuantities': productQuantities})
-
 
 def eliminar_carrito(request, id):
     carro = request.session.get('carro', {})
@@ -1285,7 +1287,7 @@ def eliminar_carrito(request, id):
 
     # Calcular el total de items y el precio total
     totalItems = sum(carro.values())
-    totalPrice = sum(Producto.objects.get(id=producto_id).precio * cantidad for producto_id, cantidad in carro.items())
+    totalPrice = sum(ProductoTalla.objects.get(id=producto_id).producto.precio * cantidad for producto_id, cantidad in carro.items())
 
     # Crear un diccionario que mapee cada ID de producto a su cantidad
     productQuantities = {str(product_id): quantity for product_id, quantity in carro.items()}
@@ -1303,10 +1305,10 @@ def carrito(request):
         carro_cliente = request.session.get('carro', {})
 
     for key in carro_cliente.keys():
-        producto = Producto.objects.get(id=key)
+        producto = ProductoTalla.objects.get(id=key)
         cantidad = carro_cliente[key]
         carro[producto] = cantidad
-        total += cantidad * producto.precio
+        total += cantidad * producto.producto.precio
         cantProductos += 1
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
