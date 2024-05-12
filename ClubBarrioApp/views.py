@@ -1254,13 +1254,13 @@ def anyadir_carrito(request, id):
     carro[str(id)] = carro.get(str(id), 0) + 1
     request.session["carro"] = carro
 
-
     totalItems = sum(carro.values())
-    totalPrice = sum(ProductoTalla.objects.get(id=producto_id).producto.precio * cantidad for producto_id, cantidad in carro.items())
+    totalPrice = sum(ProductoTalla.objects.get(id=producto_id).producto.precio * quantity for producto_id, quantity in carro.items())
     productQuantities = {str(product_id): quantity for product_id, quantity in carro.items()}
 
     # Devolver una respuesta JSON
     return JsonResponse({'totalItems': totalItems, 'totalPrice': totalPrice, 'productQuantities': productQuantities})
+
 def restar_carrito(request, id):
     carro = request.session.get('carro', {})
     if str(id) in carro:
@@ -1287,7 +1287,7 @@ def eliminar_carrito(request, id):
 
     # Calcular el total de items y el precio total
     totalItems = sum(carro.values())
-    totalPrice = sum(ProductoTalla.objects.get(id=producto_id).producto.precio * cantidad for producto_id, cantidad in carro.items())
+    totalPrice = sum(ProductoTalla.objects.get(id=producto_id).producto.precio * quantity for producto_id, quantity in carro.items())
 
     # Crear un diccionario que mapee cada ID de producto a su cantidad
     productQuantities = {str(product_id): quantity for product_id, quantity in carro.items()}
