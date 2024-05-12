@@ -1218,7 +1218,7 @@ def producto(request, id):
 
         # Comprobar que el producto está o no está en el carrito
         if str(producto_talla.id) in carro.keys():
-            carro[str(producto_talla.id)] = int(carro[str(id)]) + int(request.POST.get('cantidad'))
+            carro[str(producto_talla.id)] = int(carro[str(producto_talla.id)]) + int(request.POST.get('cantidad'))
         else:
             carro[str(producto_talla.id)] = int(request.POST.get('cantidad'))
         request.session["carro"] = carro
@@ -1254,7 +1254,7 @@ def anyadir_carrito(request, id):
     carro[str(id)] = carro.get(str(id), 0) + 1
     request.session["carro"] = carro
 
-    # Calcular el total de items y el precio total
+
     totalItems = sum(carro.values())
     totalPrice = sum(ProductoTalla.objects.get(id=producto_id).producto.precio * cantidad for producto_id, cantidad in carro.items())
     productQuantities = {str(product_id): quantity for product_id, quantity in carro.items()}
