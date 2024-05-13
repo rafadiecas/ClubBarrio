@@ -1205,7 +1205,7 @@ def obtener_jugadores_por_partido(request):
 
 def producto(request, id):
     producto = Producto.objects.get(id=id)
-    tallas = ProductoTalla.objects.filter(producto_id=id)
+    tallas = ProductoTalla.objects.filter(producto_id=id).order_by('talla')
     if request.method == 'POST':
 
         producto_talla = ProductoTalla.objects.get(producto_id=id, talla=request.POST.get('tallas'))
