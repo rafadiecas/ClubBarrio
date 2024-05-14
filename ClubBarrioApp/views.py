@@ -856,6 +856,12 @@ def pagina_usuario(request):
     if usuario.rol == 'Tutor':
         tutor = TutorLegal.objects.get(usuario_id=usuario.id)
         hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+        list_partidos =[]
+        for hijo in hijos:
+            partidos = Partido.objects.filter(Q(equipo1=hijo.equipo) | Q(equipo2=hijo.equipo))
+            for partido in partidos:
+                if partido not in list_partidos:
+                    list_partidos.append(partido)
         if len(hijos) == 0:
             return render(request, 'inicio_usuario_tutor.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijo_existe': True, 'equipos_por_categoria': equipos_por_categoria})
         return render(request, 'inicio_usuario_tutor.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijos': hijos, 'equipos_por_categoria': equipos_por_categoria})

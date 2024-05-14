@@ -74,7 +74,7 @@
                 <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{{ usuario.fecha_nacimiento|date:'Y-m-d' }}" required>
             </div>
             <div class="col-md-6 select" id="tarifaSelect">
-                <label for="tarifa" class="form-label">Rol:</label>
+                <label for="tarifa" class="form-label">Tarifa:</label>
                 <select name="tarifa" id="tarifa" class="form-select">
                 {% for t in tarifas %}
                     {% if t|upper == datos.tarifa|upper %}
@@ -146,23 +146,27 @@
 $(document).ready(function() {
     var roleActions = {
         'Usuario': function() {
-            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField, #checkbox-activo').hide();
+            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField, #checkbox-activo,#tarifaSelect').hide();
             $('#nombre, #apellidos').removeAttr('required');
         },
         'Entrenador': function() {
-            $('#entrenadorSelect, #tutorSelect, #checkbox-activo').hide();
+            $('#entrenadorSelect, #tutorSelect, #checkbox-activo,#tarifaSelect').hide();
             $('#equipoSelect, #nombreField, #apellidosField').show();
             $('#nombre, #apellidos').attr('required', true);
         },
         'Jugador': function() {
-            $('#entrenadorSelect').hide();
+            $('#entrenadorSelect,#tarifaSelect').hide();
             $('#equipoSelect, #tutorSelect, #nombreField, #apellidosField, #checkbox-activo').show();
             $('#nombre, #apellidos').attr('required', true);
         },
         'Tutor': function() {
             $('#equipoSelect, #tutorSelect, #entrenadorSelect').hide();
-            $('#nombreField, #apellidosField, #checkbox-activo').show();
+            $('#nombreField, #apellidosField, #checkbox-activo,#tarifaSelect').show();
             $('#nombre, #apellidos').attr('required', true);
+        },
+        'Administrador': function() {
+            $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField, #checkbox-activo,#tarifaSelect').hide();
+            $('#nombre, #apellidos').removeAttr('required');
         }
     };
 
