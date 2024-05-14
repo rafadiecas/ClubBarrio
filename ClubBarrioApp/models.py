@@ -87,12 +87,16 @@ class Categoria(models.Model):
     def __str__(self):
         return self.tipo
 
-
+class metodoEnvio(models.TextChoices):
+    DOMICILIO = 'DOMICILIO', 'Domicilio'
+    CLUB = 'CLUB', 'Club'
 class Pedido(models.Model):
     numPedido = models.IntegerField()
     usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     fecha = models.DateField(default='1900-01-01')
     direccion = models.CharField(max_length=500, default='sin dirección')
+    metodoEnvio = models.CharField(max_length=50, choices=metodoEnvio.choices, default=metodoEnvio.CLUB)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
         return str(self.numPedido) + " " + self.usuario.nombre + " " + self.usuario.apellidos
@@ -128,11 +132,15 @@ class ProductoTalla(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     talla = models.ForeignKey(Talla, on_delete=models.DO_NOTHING, null=True)
     stock = models.IntegerField(default=0)
-    pedidos = models.ManyToManyField(Pedido)
 
     def __str__(self):
         return self.producto.nombre + " " + self.talla.nombre + " " + str(self.stock)
-
+class LineaPedido(models.Model):
+    prductoTalla = models.ForeignKey(ProductoTalla, on_delete=models.DO_NOTHING)
+    pedido = models.ForeignKey(Pedido, on_delete=models.DO_NOTHING)
+    cantidad = models.IntegerField(default=0)
+    def __str__(self):
+        return self.prductoTalla + self.pedido + self.cantidad
 
 class Administrador(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
