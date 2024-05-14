@@ -176,11 +176,11 @@ def perfil(request):
         if usuario.rol == 'Jugador':
             equipo = perfil.equipo  # Obtén el equipo asociado al perfil si el usuario es un jugador
             jugador = Jugador.objects.get(usuario_id=usuario.id)
-            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo, 'jugador':jugador, 'notificaciones': notificaciones,"data":data})
+            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo, 'jugador':jugador, 'notificaciones': notificaciones,"data":data, 'usuario': usuario})
 
-        return render(request, 'profile.html', {'perfil': perfil, 'notificaciones': notificaciones,"data":data})
+        return render(request, 'profile.html', {'perfil': perfil, 'notificaciones': notificaciones,"data":data, 'usuario': usuario})
 
-    return render(request, 'profile.html', {'notificaciones': notificaciones,"data":data})
+    return render(request, 'profile.html', {'notificaciones': notificaciones,"data":data, 'usuario': usuario})
 
 def perfil_pass(request):
     usuario = request.user
