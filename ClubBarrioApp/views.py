@@ -1328,3 +1328,34 @@ def carrito(request):
         return JsonResponse({'cantProductos': cantProductos})
 
     return render(request, 'carrito.html', {'carro': carro, 'total': total, 'cantProductos': cantProductos})
+
+def formulario_pago_pedido(request):
+    carro = {}
+    carro_cliente = {}
+    total = 0.0
+    cantProductos = 0
+
+    if 'carro' in request.session:
+        carro_cliente = request.session.get('carro', {})
+
+    for key in carro_cliente.keys():
+        producto = ProductoTalla.objects.get(id=key)
+        cantidad = carro_cliente[key]
+        carro[producto] = cantidad
+        total += cantidad * producto.producto.precio
+        cantProductos += cantidad
+
+    usuario = request.user
+    descuento= ""
+    if usuario.rol == "Tutor":
+        tutor = TutorLegal.objects.get(usuario=usuario)
+        if tutor.tarifa == 'PREMIUM':
+            total_descuento = total*0.90
+            descuento="10%"
+        else:
+            total_descuento = total*0.95
+            descuento ="5%"
+    else:
+        total_descuento = total
+
+    return render(request, 'formulario_pago.html', {'total': total, 'cantProductos': cantProductos, 'carro': carro, 'total_descuento': total_descuento,'descuento': descuento})
