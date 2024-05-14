@@ -62,7 +62,7 @@ class User(AbstractBaseUser):
     fecha_nacimiento = models.DateField(default='1900-01-01')
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-
+    foto = models.ImageField(upload_to='foto_perfil', default='foto_perfil/default.png')
     objects = UserManager()
 
     USERNAME_FIELD = 'username'

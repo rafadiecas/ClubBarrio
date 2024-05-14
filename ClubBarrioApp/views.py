@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.contrib.sites import requests
+from django.core.files.storage import FileSystemStorage
 from django.core.mail import EmailMessage
 from django.db.models import Count, Q, When, Value
 from django.db.models.functions import Coalesce
@@ -157,6 +158,19 @@ def perfil(request):
         if request.method == 'POST':
             perfil.nombre = request.POST.get('nombre')
             perfil.apellidos = request.POST.get('apellidos')
+
+            # Manejar la imagen de perfil subida
+            profile_image = request.FILES.get('profile_image')
+            if profile_image:
+                fs = FileSystemStorage(location='media/foto_perfil')
+                filename = fs.save(profile_image.name, profile_image)
+                usuario.foto = 'foto_perfil/' + filename  # Guarda el nombre del archivo en lugar de la URL
+                usuario.save()  # Guarda el objeto User después de actualizar el campo foto
+
+                # Si la petición es AJAX, devolver una respuesta JSON con la URL de la imagen
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'image_url': usuario.foto.url})
+
             perfil.save()
 
         if usuario.rol == 'Jugador':

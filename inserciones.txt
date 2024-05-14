@@ -1,21 +1,25 @@
 /*User*/
 
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (1, 'pbkdf2_sha256$600000$Lkur6xZGVrV9cqZe9fckwJ$4U31ueCaIXRG+6vX6DRXkm6CfR3Oxryyf/vzGhE1t3A=', '2024-04-10 14:22:29.604654', 'Luis', 'luis@luis.es', 'Administrador', '1990-01-01', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (2, 'pbkdf2_sha256$600000$nG3BeFq8AJIF6bBfTj8Dxz$565CHDqaP6jIKV7h6c7BlOBi3gBRQGwpABFwy1DKD4s=', null, 'Rafa', 'rafa@rafa.es', 'Usuario', '1988-10-13', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (3, 'pbkdf2_sha256$600000$xodAkavCRjKkowpLeESDzZ$hmYDc0ixaGmjy8YVhcYp5HpRceoxcwQEDDcTdhaSEL0=', null, 'Nahuel', 'nahuel@nahuel.es', 'Usuario', '2000-01-01', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (4, 'pbkdf2_sha256$600000$R5YhxEh1ehUF0VOwSaNSCV$bOcNEuj1VyxtXeENe0+ZV9R1ulGzrSgyUVDarPn7OSY=', null, 'Mario', 'mario@mario.es', 'Usuario', '2000-01-01', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (8, 'pbkdf2_sha256$600000$yS30zZKqcgQV6KH2oz9WjC$b2RoIJysvqPXV5Hw7N3d1O/6X7+vBk+bZo0nfVwLBuE=', null, 'Tutor1', 'jose@jose.es', 'Tutor', '1980-04-11', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (9, 'pbkdf2_sha256$600000$ScEnbcmEdP73LBTKPObCIR$5w5zs1/Nox0guuSQnMjlnaNdU+q7PBltyhodbTIH77k=', null, 'Tutor2', 'lj@lf.es', 'Tutor', '2000-01-01', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (10, 'pbkdf2_sha256$600000$sON20tm3hqTz07ODgpO0Pl$UZKDKN0ZgRvsA9XFOhV5qFcB5ox2fXn+F7oKsXKPih0=', null, 'Tutor3', 'alba@alba.es', 'Tutor', '1980-01-01', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (11, 'pbkdf2_sha256$600000$VAfHr9KvTFJcL1qIlXiDCc$AA8ehZ4JGYxWY0zvPuz0Sd1vQX0u8GnwaARcxonOjlM=', null, 'Entrenador1', 'elquegrita@elquegrita.es', 'Entrenador', '2001-01-01', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (12, 'pbkdf2_sha256$600000$o6PZooOLWZIjKswQZipW2g$ybQUxkIpYQHsBjwBoB3ckTs7CuPM5eoUOxlmavW/p3o=', null, 'Entrenador2', 'eltranquilo@eltranquilo.es', 'Entrenador', '2000-01-01', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (13, 'pbkdf2_sha256$600000$ARJtYLqSTnfpZy51WHMOZv$4LbjUcnrkeyug78NLECChOghWaw1zmqf//21WnjgwFk=', null, 'Entrenador3', 'elmejor@elmejor.es', 'Entrenador', '2000-01-01', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (14, 'pbkdf2_sha256$600000$Wj2KNeLIXsdSE7ZV4gmEfV$paxCERMrJjt8HL8A2D65D/lCBFN5f/poenlNg7Iz48w=', null, 'Cristiano', 'cr7@cr7.es', 'Jugador', '2015-07-01', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (20, 'pbkdf2_sha256$600000$ARJtYLqSTnfpZy51WHMOZv$4LbjUcnrkeyug78NLECChOghWaw1zmqf//21WnjgwFk=', null, 'Jugador11', 'usuario11@example.com', 'Jugador', '2000-01-01', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (21, 'pbkdf2_sha256$600000$ARJtYLqSTnfpZy51WHMOZv$4LbjUcnrkeyug78NLECChOghWaw1zmqf//21WnjgwFk=', null, 'Jugador12', 'usuario12@example.com', 'Jugador', '1999-05-15', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (22, 'pbkdf2_sha256$600000$ARJtYLqSTnfpZy51WHMOZv$4LbjUcnrkeyug78NLECChOghWaw1zmqf//21WnjgwFk=', null, 'Jugador13', 'usuario13@example.com', 'Jugador', '2001-07-20', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (23, 'pbkdf2_sha256$600000$ARJtYLqSTnfpZy51WHMOZv$4LbjUcnrkeyug78NLECChOghWaw1zmqf//21WnjgwFk=', null, 'Jugador14', 'usuario14@example.com', 'Jugador', '2003-02-10', 1, 0);
-INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff) VALUES (24, 'pbkdf2_sha256$600000$ARJtYLqSTnfpZy51WHMOZv$4LbjUcnrkeyug78NLECChOghWaw1zmqf//21WnjgwFk=', null, 'Jugador15', 'usuario15@example.com', 'Jugador', '1998-11-28', 1, 0);
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (1, 'pbkdf2_sha256$600000$Lkur6xZGVrV9cqZe9fckwJ$4U31ueCaIXRG+6vX6DRXkm6CfR3Oxryyf/vzGhE1t3A=', '2024-05-13 16:47:24.653587', 'Luis', 'luis@luis.es', 'Administrador', '1990-01-01', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (2, 'pbkdf2_sha256$600000$nG3BeFq8AJIF6bBfTj8Dxz$565CHDqaP6jIKV7h6c7BlOBi3gBRQGwpABFwy1DKD4s=', null, 'Rafa', 'rafa@rafa.es', 'Usuario', '1988-10-13', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (3, 'pbkdf2_sha256$600000$xodAkavCRjKkowpLeESDzZ$hmYDc0ixaGmjy8YVhcYp5HpRceoxcwQEDDcTdhaSEL0=', '2024-05-14 16:06:44.456545', 'Nahuel', 'nahuel@nahuel.es', 'Usuario', '2000-01-01', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (4, 'pbkdf2_sha256$600000$R5YhxEh1ehUF0VOwSaNSCV$bOcNEuj1VyxtXeENe0+ZV9R1ulGzrSgyUVDarPn7OSY=', null, 'Mario', 'mario@mario.es', 'Usuario', '2000-01-01', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (8, 'pbkdf2_sha256$600000$IRVdd3ajGw86fKbfY6D8Sd$ZqkQeXmEKagP4XL65j30WqI5rUHGVPAeKHeRDVxtOMs=', '2024-05-14 18:02:44.246932', 'Tutor1', 'jose@jose.es', 'Tutor', '1980-04-11', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (9, 'pbkdf2_sha256$600000$ScEnbcmEdP73LBTKPObCIR$5w5zs1/Nox0guuSQnMjlnaNdU+q7PBltyhodbTIH77k=', null, 'Tutor2', 'lj@lf.es', 'Tutor', '2000-01-01', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (10, 'pbkdf2_sha256$600000$sON20tm3hqTz07ODgpO0Pl$UZKDKN0ZgRvsA9XFOhV5qFcB5ox2fXn+F7oKsXKPih0=', '2024-05-13 17:29:59.496575', 'Tutor3', 'alba@alba.es', 'Tutor', '1980-01-01', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (11, 'pbkdf2_sha256$600000$VAfHr9KvTFJcL1qIlXiDCc$AA8ehZ4JGYxWY0zvPuz0Sd1vQX0u8GnwaARcxonOjlM=', null, 'Entrenador1', 'elquegrita@elquegrita.es', 'Entrenador', '2001-01-01', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (12, 'pbkdf2_sha256$600000$o6PZooOLWZIjKswQZipW2g$ybQUxkIpYQHsBjwBoB3ckTs7CuPM5eoUOxlmavW/p3o=', null, 'Entrenador2', 'eltranquilo@eltranquilo.es', 'Entrenador', '2000-01-01', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (13, 'pbkdf2_sha256$600000$OwmY6VaaweLwQozEuRkDLc$Qn0h2e3Qs/sZern/e3MMHfPfeXvKkXnvIr02Ow2jnYU=', '2024-05-07 17:06:05.317177', 'Entrenador3', 'elmejor@elmejor.es', 'Entrenador', '2000-01-01', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (14, 'pbkdf2_sha256$600000$Wj2KNeLIXsdSE7ZV4gmEfV$paxCERMrJjt8HL8A2D65D/lCBFN5f/poenlNg7Iz48w=', '2024-05-08 18:05:55.786597', 'Cristiano', 'cr7@cr7.es', 'Jugador', '2015-07-01', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (20, 'pbkdf2_sha256$600000$ARJtYLqSTnfpZy51WHMOZv$4LbjUcnrkeyug78NLECChOghWaw1zmqf//21WnjgwFk=', null, 'Jugador11', 'usuario11@example.com', 'Jugador', '2000-01-01', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (21, 'pbkdf2_sha256$600000$ARJtYLqSTnfpZy51WHMOZv$4LbjUcnrkeyug78NLECChOghWaw1zmqf//21WnjgwFk=', null, 'Jugador12', 'usuario12@example.com', 'Jugador', '1999-05-15', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (22, 'pbkdf2_sha256$600000$ARJtYLqSTnfpZy51WHMOZv$4LbjUcnrkeyug78NLECChOghWaw1zmqf//21WnjgwFk=', null, 'Jugador13', 'usuario13@example.com', 'Jugador', '2001-07-20', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (23, 'pbkdf2_sha256$600000$ARJtYLqSTnfpZy51WHMOZv$4LbjUcnrkeyug78NLECChOghWaw1zmqf//21WnjgwFk=', null, 'Jugador14', 'usuario14@example.com', 'Jugador', '2003-02-10', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (24, 'pbkdf2_sha256$600000$ARJtYLqSTnfpZy51WHMOZv$4LbjUcnrkeyug78NLECChOghWaw1zmqf//21WnjgwFk=', null, 'Jugador15', 'usuario15@example.com', 'Jugador', '1998-11-28', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (25, 'pbkdf2_sha256$600000$LcdHj4bgxnAPrmDlZ6HEJk$IOxIRlOZKoQS4lKpMFopcyB5HtyP0bjJco2IR3W15tg=', null, 'Felipito222', 'asdasda@asdasd', 'Jugador', '2010-07-13', 1, 0, 'foto_perfil/default.png');
+INSERT INTO ClubBarrioApp_user (id, password, last_login, username, email, rol, fecha_nacimiento, is_active, is_staff, foto) VALUES (26, 'pbkdf2_sha256$600000$R7Q5hdJJFI7FWVINZQXbkl$/YaUeqhCOR5z0z5CdBS9MClBcvQ2nVYyGreep3DMr+U=', '2024-05-13 18:25:56.911229', 'Demo1', 'lmarincarmona@safareyes.es', 'Usuario', '1988-07-13', 1, 0, 'foto_perfil/default.png');
+
+
 
 
 
@@ -249,24 +253,25 @@ INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (4, 'Sudadera');
 
 
 /* Notificaciones */
-INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id)
-VALUES
-(1, 1, 1, 1, 1),
-(2, 1, 1, 1, 2),
-(3, 1, 1, 1, 3),
-(4, 1, 1, 1, 4),
-(5, 1, 1, 1, 5),
-(6, 1, 1, 1, 6),
-(7, 1, 1, 1, 7),
-(8, 1, 1, 1, 8),
-(9, 1, 1, 1, 9),
-(10, 1, 1, 1, 10),
-(11, 1, 1, 1, 11),
-(12, 1, 1, 1, 12),
-(13, 1, 1, 1, 13),
-(14, 1, 1, 1, 14),
-(15, 1, 1, 1, 15),
-(16, 1, 1, 1, 16);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (1, 1, 1, 1, 1);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (2, 1, 1, 1, 2);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (3, 1, 1, 1, 3);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (4, 1, 1, 1, 4);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (8, 1, 1, 1, 8);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (9, 1, 1, 1, 9);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (10, 1, 0, 0, 10);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (11, 1, 1, 1, 11);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (12, 1, 1, 1, 12);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (13, 1, 1, 1, 13);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (14, 1, 1, 1, 14);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (20, 0, 0, 0, 20);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (21, 0, 0, 0, 21);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (22, 1, 1, 1, 22);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (23, 1, 1, 1, 23);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (24, 1, 1, 1, 24);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (25, 1, 1, 1, 25);
+INSERT INTO ClubBarrioApp_notificaciones (id, password_change, weekly_newsletter, new_training, usuario_id) VALUES (26, 0, 0, 0, 26);
+
 
 /* Productos */
 

@@ -45,9 +45,10 @@
               <div class="card-header text-bg-primary">Bienvenido {{ perfil.usuario.username }}</div>
               <div class="card-body">
                 <div class="text-center mb-3">
-                  <img src="https://i.ibb.co/hY5nY5D/prueba-logo2.png" class="img-fluid rounded-circle" alt="INTRODUCE FOTO">
+                    <img id="profileImage" src={{ perfil.usuario.foto.url }} class="img-fluid rounded-circle"
+                    alt="INTRODUCE FOTO">
                 </div>
-                <h5 class="text-center mb-1">{{perfil.nombre}} {{ perfil.apellidos }}</h5>
+                  <h5 class="text-center mb-1">{{perfil.nombre}} {{ perfil.apellidos }}</h5>
                 <p class="text-center text-secondary mb-4">En construccion</p>
 
               </div>
@@ -162,33 +163,38 @@
               </div>
 
               <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                <form action="{% url 'perfil' %}" method="post" class="row gy-3 gy-xxl-4">
-                    {% csrf_token %}
-                    <div class="col-12">
-                        <div class="row gy-2">
-                            <label class="col-12 form-label m-0">Profile Image</label>
-                            <div class="col-12">
-                                <img src="{{ tutor.usuario.profile_image_url }}" class="img-fluid" alt="{{ perfil.nombre }}">
-                            </div>
-                            <div class="col-12">
-                                <a href="#!" class="d-inline-block bg-primary link-light lh-1 p-2 rounded">
-                                    <i class="bi bi-upload"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label for="inputFirstName" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="inputNombre" name="nombre" value="{{ perfil.nombre }}">
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label for="inputLastName" class="form-label">Apellidos</label>
-                        <input type="text" class="form-control" id="inputApellidos" name="apellidos" value="{{ perfil.apellidos }}">
-                    </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                    </div>
-                </form>
+                  <form action="{% url 'perfil' %}" method="post" class="row gy-3 gy-xxl-4"
+                        enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="col-12">
+                          <div class="row gy-2">
+                              <label class="col-12 form-label m-0">Selecciona tu imagen de perfil</label>
+
+                              <div class="col-12">
+                                  <input type="file" id="fileInput" name="profile_image" style="display: none;"
+                                         accept="image/png, image/jpeg, image/jpg"/>
+                                  <a href="#!" class="d-inline-block bg-primary link-light lh-1 p-2 rounded"
+                                     id="uploadButton">
+                                      <i class="bi bi-upload"></i>
+                                  </a>
+
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                          <label for="inputFirstName" class="form-label">Nombre</label>
+                          <input type="text" class="form-control" id="inputNombre" name="nombre"
+                                 value="{{ perfil.nombre }}">
+                      </div>
+                      <div class="col-12 col-md-6">
+                          <label for="inputLastName" class="form-label">Apellidos</label>
+                          <input type="text" class="form-control" id="inputApellidos" name="apellidos"
+                                 value="{{ perfil.apellidos }}">
+                      </div>
+                      <div class="col-12">
+                          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                      </div>
+                  </form>
             </div>
               <div class="tab-pane fade" id="email-tab-pane" role="tabpanel" aria-labelledby="email-tab" tabindex="0">
                 <form action="{% url 'notificaciones' %}" method="POST" id="form-notificaciones" class="ajax-form">
@@ -277,7 +283,7 @@
 });
 </script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <script>
     $('.ajax-form').on('submit', function(e) {
     e.preventDefault();
@@ -346,6 +352,40 @@
                         $('#error-messages').append('<p>' + error + '</p>');
                     });
                 }
+            }
+        });
+    });
+});
+    document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('uploadButton').addEventListener('click', function() {
+        // Simula un clic en el campo de entrada de archivos cuando se hace clic en el botón de carga
+        document.getElementById('fileInput').click();
+    });
+
+    document.getElementById('fileInput').addEventListener('change', function() {
+        // Actualiza la imagen de perfil cuando se selecciona un nuevo archivo
+        var file = this.files[0];
+        var reader = new FileReader();
+        reader.onloadend = function() {
+            document.getElementById('profileImage').src = reader.result;
+        }
+        reader.readAsDataURL(file);
+    });
+});
+    $(document).ready(function() {
+    $('#fileInput').on('change', function() {
+        var fileInput = $(this)[0];
+        var formData = new FormData();
+        formData.append('profile_image', fileInput.files[0]);
+
+        $.ajax({
+            url: '/ClubBarrioApp/usuario/perfil/',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $('#profileImage').attr('src', data.image_url);
             }
         });
     });
