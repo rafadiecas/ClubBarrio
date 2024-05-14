@@ -856,6 +856,12 @@ def pagina_usuario(request):
     if usuario.rol == 'Tutor':
         tutor = TutorLegal.objects.get(usuario_id=usuario.id)
         hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+        list_partidos =[]
+        for hijo in hijos:
+            partidos = Partido.objects.filter(Q(equipo1=hijo.equipo) | Q(equipo2=hijo.equipo))
+            for partido in partidos:
+                if partido not in list_partidos:
+                    list_partidos.append(partido)
         if len(hijos) == 0:
             return render(request, 'inicio_usuario_tutor.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijo_existe': True, 'equipos_por_categoria': equipos_por_categoria})
         return render(request, 'inicio_usuario_tutor.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijos': hijos, 'equipos_por_categoria': equipos_por_categoria})
@@ -1326,6 +1332,36 @@ def info_carrito(request):
         cantProductos += cantidad  # Suma la cantidad de cada producto
     return cantProductos, carro, total
 
+def formulario_pago_pedido(request):
+    carro = {}
+    carro_cliente = {}
+    total = 0.0
+    cantProductos = 0
+
+    if 'carro' in request.session:
+        carro_cliente = request.session.get('carro', {})
+
+    for key in carro_cliente.keys():
+        producto = ProductoTalla.objects.get(id=key)
+        cantidad = carro_cliente[key]
+        carro[producto] = cantidad
+        total += cantidad * producto.producto.precio
+        cantProductos += cantidad
+
+    usuario = request.user
+    descuento= ""
+    if usuario.rol == "Tutor":
+        tutor = TutorLegal.objects.get(usuario=usuario)
+        if tutor.tarifa == 'PREMIUM':
+            total_descuento = total*0.90
+            descuento="10%"
+        else:
+            total_descuento = total*0.95
+            descuento ="5%"
+    else:
+        total_descuento = total
+
+    return render(request, 'formulario_pago.html', {'total': total, 'cantProductos': cantProductos, 'carro': carro, 'total_descuento': total_descuento,'descuento': descuento})
 
 def crear_pedido(request):
     usuario = request.user
