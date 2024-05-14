@@ -870,6 +870,12 @@ def pagina_usuario(request):
     if usuario.rol == 'Tutor':
         tutor = TutorLegal.objects.get(usuario_id=usuario.id)
         hijos = Jugador.objects.filter(tutorLegal_id=tutor.id)
+        list_partidos =[]
+        for hijo in hijos:
+            partidos = Partido.objects.filter(Q(equipo1=hijo.equipo) | Q(equipo2=hijo.equipo))
+            for partido in partidos:
+                if partido not in list_partidos:
+                    list_partidos.append(partido)
         if len(hijos) == 0:
             return render(request, 'inicio_usuario_tutor.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijo_existe': True, 'equipos_por_categoria': equipos_por_categoria})
         return render(request, 'inicio_usuario_tutor.html', {'noticias': list_noticias, 'partidos': list_partidos, 'hijos': hijos, 'equipos_por_categoria': equipos_por_categoria})
@@ -980,6 +986,9 @@ def crea_hijos(request):
 
 
 def filtro_equipos_plaza(categoria, errors, lista_equipos):
+    # plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
+    # equipos = Equipo.objects.filter(categoria=categoria)
+
     for equipo in Equipo.objects.all():
         if categoria == equipo.categoria.tipo and equipo.es_safa:
             plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
@@ -1333,3 +1342,34 @@ def carrito(request):
         return JsonResponse({'cantProductos': cantProductos})
 
     return render(request, 'carrito.html', {'carro': carro, 'total': total, 'cantProductos': cantProductos})
+
+def formulario_pago_pedido(request):
+    carro = {}
+    carro_cliente = {}
+    total = 0.0
+    cantProductos = 0
+
+    if 'carro' in request.session:
+        carro_cliente = request.session.get('carro', {})
+
+    for key in carro_cliente.keys():
+        producto = ProductoTalla.objects.get(id=key)
+        cantidad = carro_cliente[key]
+        carro[producto] = cantidad
+        total += cantidad * producto.producto.precio
+        cantProductos += cantidad
+
+    usuario = request.user
+    descuento= ""
+    if usuario.rol == "Tutor":
+        tutor = TutorLegal.objects.get(usuario=usuario)
+        if tutor.tarifa == 'PREMIUM':
+            total_descuento = total*0.90
+            descuento="10%"
+        else:
+            total_descuento = total*0.95
+            descuento ="5%"
+    else:
+        total_descuento = total
+
+    return render(request, 'formulario_pago.html', {'total': total, 'cantProductos': cantProductos, 'carro': carro, 'total_descuento': total_descuento,'descuento': descuento})

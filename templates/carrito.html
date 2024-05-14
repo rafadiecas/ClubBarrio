@@ -145,12 +145,10 @@
                                             <h5 class="text-uppercase">Total</h5>
                                             <h5 class = "total">€ {{ total }}</h5>
                                         </div>
-
-                                        <button type="button" data-mdb-button-init data-mdb-ripple-init
-                                                class="btn btn-dark btn-block btn-lg"
-                                                data-mdb-ripple-color="dark">Comprar
-                                        </button>
-
+                                       
+                                        <a data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-block btn-lg"
+                                           data-mdb-ripple-color="dark" {% if user.is_authenticated %} href="{% url 'pago_pedido' %}
+                                        {% else %}{% url 'carrito' %} {% endif %}">Comprar</a>
                                     </div>
                                 </div>
                             </div>
