@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="container">
-    <div class="row">
+    <div class="row mt-4 mb-4">
         <div class="col-md-4 order-md-2 mb-4">
             <h4 class="d-flex justify-content-between align-items-center mb-3"><span
                     class="text-muted">tu carrito</span> <span class="badge badge-secondary badge-pill">{{ cantProductos }}</span></h4>
@@ -19,7 +19,7 @@
                         <h6 class="my-0">{{ k.producto.nombre }}</h6>
                         <small class="text-muted">{{ k.talla.nombre }}</small>
                     </div>
-                    <span class="text-muted">${{ k.producto.precio }}</span></li>
+                    <span class="text-muted">€{{ k.producto.precio }}</span></li>
                
                 {% endfor %}
             
@@ -176,4 +176,6 @@
     </div>
 </div>
 </body>
+
+{% include "footer.html" %}
 </html>
