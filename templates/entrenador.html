@@ -107,8 +107,8 @@
                                 <td>{{ e.lugarEntrenamiento.nombre }}</td>
                               <td>{{ e.equipo.nombre }}</td>
                                 <td>
-                                    <a href="{% url 'entrenador' id=e.id %}"> <img src="{% static 'icons8-edit-30.png' %}" alt=""></a>
-                                    <a href="{% url 'elimina_entrenamiento' id=e.id%}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'icons8-basura-30.png' %}" alt=""></a>
+                                    <a href="{% url 'entrenador' id=e.id %}"> <img src="{% static 'imagenes/icons8-edit-30.png' %}" alt=""></a>
+                                    <a href="{% url 'elimina_entrenamiento' id=e.id%}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'imagenes/icons8-basura-30.png' %}" alt=""></a>
                                 </td>
                             </tr>
                             {% endfor %}

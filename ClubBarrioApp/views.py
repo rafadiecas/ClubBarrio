@@ -966,6 +966,9 @@ def crea_hijos(request):
 
 
 def filtro_equipos_plaza(categoria, errors, lista_equipos):
+    # plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
+    # equipos = Equipo.objects.filter(categoria=categoria)
+
     for equipo in Equipo.objects.all():
         if categoria == equipo.categoria.tipo and equipo.es_safa:
             plazas_libres = 20 - Jugador.objects.filter(equipo_id=equipo.id).count()
