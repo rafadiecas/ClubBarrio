@@ -1,7 +1,87 @@
 {% load static %}
 {% include 'barra_admin.html' %}
-{#asadas#}
 <head>
     <title>Admin</title>
+    <style>
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .card:hover {
+            transform: scale(1.05);
+            transition: transform 0.5s;
+            border-color: #006b1b !important;
+        }
+        
+    </style>
 </head>
-{#prueba#}
+<body>
+    <div class="container mb-3">
+        <div class="row row-cols-sm-2 row-cols-md-3 row-cols-xl-4 mt-3">
+            <a href="{% url 'usuarios' %}" class="d-flex justify-content-center">
+                <div class="card mt-3 shadow-lg" style="width: 13rem;">
+                  <img src="{% static 'imagenes/icons8-usuario-100.png' %}" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title text-center">Usuarios</h5>
+                  </div>
+                </div>
+            </a>
+            
+            <a href="{% url 'equipos' %}" class="d-flex justify-content-center">
+                <div class="card mt-3 shadow-lg" style="width: 13rem;">
+                  <img src="{% static 'imagenes/icons8-escudo-100.png' %}" class="card-img-top p-2" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title text-center" style="text-decoration: none">Equipos</h5>
+                  </div>
+                </div>
+            </a>
+            
+            <a href="{% url 'entrenamientos_listado' %}" class="d-flex justify-content-center">
+                <div class="card mt-3 shadow-lg" style="width: 13rem;">
+                  <img src="{% static 'imagenes/icons8-vlc-100.png' %}" class="card-img-top p-2" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title text-center" style="text-decoration: none">Entrenamientos</h5>
+                  </div>
+                </div>
+            </a>
+            
+            <a href="{% url 'lista_tienda' %}" class="d-flex justify-content-center">
+                <div class="card mt-3 shadow-lg" style="width: 13rem;">
+                  <img src="{% static 'imagenes/icons8-shop-100.png' %}" class="card-img-top p-2" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title text-center" style="text-decoration: none">Tienda</h5>
+                  </div>
+                </div>
+            </a>
+            
+            <a href="{% url 'partidos_listado' %}" class="d-flex justify-content-center">
+                <div class="card mt-3 shadow-lg" style="width: 13rem;">
+                  <img src="{% static 'imagenes/icons8-baloncesto-100.png' %}" class="card-img-top p-2" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title text-center" style="text-decoration: none">Partidos</h5>
+                  </div>
+                </div>
+            </a>
+            
+            <a href="{% url 'noticias_admin' %}" class="d-flex justify-content-center">
+                <div class="card mt-3 shadow-lg" style="width: 13rem;">
+                  <img src="{% static 'imagenes/icons8-noticias-100.png' %}" class="card-img-top p-2" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title text-center" style="text-decoration: none">Noticias</h5>
+                  </div>
+                </div>
+            </a>
+            
+            
+            
+            <a href="{% url 'estadisticas_jugador_listado' %}" class="d-flex justify-content-center">
+                <div class="card mt-3 shadow-lg" style="width: 13rem;">
+                  <img src="{% static 'imagenes/icons8-reequilibrar-la-cartera-100.png' %}" class="card-img-top p-2" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title text-center" style="text-decoration: none">Estadísticas</h5>
+                  </div>
+                </div>
+            </a>
+        </div>
+    </div>
