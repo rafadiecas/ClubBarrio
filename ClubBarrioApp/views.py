@@ -1303,22 +1303,51 @@ def eliminar_carrito(request, id):
     return JsonResponse({'totalItems': totalItems, 'totalPrice': totalPrice, 'productQuantities': productQuantities})
 
 def carrito(request):
+    cantProductos, carro, total = info_carrito(request)
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'cantProductos': cantProductos})
+
+    return render(request, 'carrito.html', {'carro': carro, 'total': total, 'cantProductos': cantProductos})
+
+
+def info_carrito(request):
     carro = {}
     carro_cliente = {}
     total = 0.0
     cantProductos = 0
-
     if 'carro' in request.session:
         carro_cliente = request.session.get('carro', {})
-
     for key in carro_cliente.keys():
         producto = ProductoTalla.objects.get(id=key)
         cantidad = carro_cliente[key]
         carro[producto] = cantidad
         total += cantidad * producto.producto.precio
         cantProductos += cantidad  # Suma la cantidad de cada producto
+    return cantProductos, carro, total
 
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'cantProductos': cantProductos})
 
-    return render(request, 'carrito.html', {'carro': carro, 'total': total, 'cantProductos': cantProductos})
+def crear_pedido(request):
+    usuario = request.user
+    cantProductos, carro, total = info_carrito(request)
+    carro_cliente = request.session.get('carro', {})
+    nuevo_pedido = Pedido()
+
+    nuevo_pedido.fecha = datetime.now()
+    nuevo_pedido.numPedido = int(str(usuario.id)+ str(nuevo_pedido.fecha.year) + str(nuevo_pedido.fecha.month) + str(nuevo_pedido.fecha.day))
+    nuevo_pedido.direccion = request.POST.get('')
+    nuevo_pedido.metodoEnvio = request.POST.get
+    nuevo_pedido.total = total
+
+    for k in carro_cliente.keys():
+        nueva_linea_pedido = LineaPedido()
+        nueva_linea_pedido.pedido = Pedido.objects.get(id=nuevo_pedido.id)
+        nueva_linea_pedido.prductoTalla = ProductoTalla.objects.get(id=int(k))
+        nueva_linea_pedido.cantidad = carro_cliente[k]
+        nueva_linea_pedido.save()
+
+def eliminar_pedido(request, id):
+    pedido = Pedido.objects.get(id=id)
+    pedido.delete()
+    return redirect('tienda')
+
