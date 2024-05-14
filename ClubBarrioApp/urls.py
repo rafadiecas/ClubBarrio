@@ -82,5 +82,5 @@ urlpatterns = [
     path('tienda/carrito/anyadir/<int:id>/', anyadir_carrito, name='anyadir_carrito'),
     path('tienda/carrito/restar/<int:id>/', restar_carrito, name='restar_carrito'),
     path('tienda/carrito/pago/', formulario_pago_pedido, name='pago_pedido'),
-
+    path('usuario/inscripcion/pagar', pago_inscripcion, name='pago_inscripciones'),
 ]

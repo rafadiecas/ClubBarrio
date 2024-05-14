@@ -877,14 +877,40 @@ def inscripciones(request):
     if request.method == 'GET':
         return render(request, 'inscripcion_tarifa.html')
     else:
+        datos_inscripcion = {'nombre': request.POST.get('nombre'), 'apellidos': request.POST.get('apellidos'),'tarifa': request.POST.get('tarifa_seleccionada')}
+        request.session["datos_inscripccion"] = datos_inscripcion
+        #usuario = request.user
+        #usuario.rol = 'Tutor'
+        #usuario.save()
+        #tutor = TutorLegal()
+        #tutor.usuario = usuario
+        #tutor.nombre = request.POST.get('nombre')
+        #tutor.apellidos = request.POST.get('apellidos')
+        #tutor.tarifa = request.POST.get('tarifa_seleccionada')
+        #tutor.save()
+
+
+        #mensaje = ("Gracias por suscribirte, " + usuario.username + ". Tu suscripción se ha completado con éxito."
+                   #+ "<br><br>" + "Algunos datos importantes: " + "<br>"
+                   #+ "Tarifa selecionada: " + tutor.tarifa + "<br>" + "Pagos los dias " + str(datetime.now().day)+ " de cada mes." + "<br><br>" + "Un saludo, SafaClubBasket.")
+        #correo = EmailMessage('Suscripción en SafaClubBasket', mensaje, to=[usuario.email])
+        #correo.content_subtype = "html"
+        #correo.send()
+
+        return render(request, 'pago_inscripcion.html')
+def pago_inscripcion(request):
+
+    if request.method == 'POST':
+
+        datos_inscripcion = request.session["datos_inscripccion"]
         usuario = request.user
         usuario.rol = 'Tutor'
         usuario.save()
         tutor = TutorLegal()
         tutor.usuario = usuario
-        tutor.nombre = request.POST.get('nombre')
-        tutor.apellidos = request.POST.get('apellidos')
-        tutor.tarifa = request.POST.get('tarifa_seleccionada')
+        tutor.nombre = datos_inscripcion['nombre']
+        tutor.apellidos = datos_inscripcion['apellidos']
+        tutor.tarifa = datos_inscripcion['tarifa']
         tutor.save()
 
         mensaje = ("Gracias por suscribirte, " + usuario.username + ". Tu suscripción se ha completado con éxito."
@@ -893,7 +919,6 @@ def inscripciones(request):
         correo = EmailMessage('Suscripción en SafaClubBasket', mensaje, to=[usuario.email])
         correo.content_subtype = "html"
         correo.send()
-
         return redirect('usuario')
 def terminos_y_servicios(request):
     return render(request, 'terminos_y_servicios.html')
@@ -1358,4 +1383,4 @@ def formulario_pago_pedido(request):
     else:
         total_descuento = total
 
-    return render(request, 'formulario_pago.html', {'total': total, 'cantProductos': cantProductos, 'carro': carro, 'total_descuento': total_descuento,'descuento': descuento})
+    return render(request, 'formulario_pago.html', {'total': total, 'cantProductos': cantProductos, 'carro': carro, 'total_descuento': total_descuento,'descuento': descuento,'carrito':True})
