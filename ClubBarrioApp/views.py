@@ -1333,47 +1333,44 @@ def info_carrito(request):
     return cantProductos, carro, total
 
 def formulario_pago_pedido(request):
-    carro = {}
-    carro_cliente = {}
-    total = 0.0
-    cantProductos = 0
-
-    if 'carro' in request.session:
-        carro_cliente = request.session.get('carro', {})
-
-    for key in carro_cliente.keys():
-        producto = ProductoTalla.objects.get(id=key)
-        cantidad = carro_cliente[key]
-        carro[producto] = cantidad
-        total += cantidad * producto.producto.precio
-        cantProductos += cantidad
-
+    cantProductos, carro, total = info_carrito(request)
     usuario = request.user
-    descuento= ""
+    descuento, total_descuento = filtro_descuento(total, usuario)
+    if request.method == 'GET':
+        return render(request, 'formulario_pago.html', {'total': total, 'cantProductos': cantProductos, 'carro': carro, 'total_descuento': total_descuento,'descuento': descuento})
+    else:
+        crear_pedido(request)
+        request.session.pop('carro')
+        return redirect('tienda')
+def filtro_descuento(total, usuario):
+    descuento = ""
     if usuario.rol == "Tutor":
         tutor = TutorLegal.objects.get(usuario=usuario)
         if tutor.tarifa == 'PREMIUM':
-            total_descuento = total*0.90
-            descuento="10%"
+            total_descuento = total * 0.90
+            descuento = "10%"
         else:
-            total_descuento = total*0.95
-            descuento ="5%"
+            total_descuento = total * 0.95
+            descuento = "5%"
     else:
         total_descuento = total
+    return descuento, total_descuento
 
-    return render(request, 'formulario_pago.html', {'total': total, 'cantProductos': cantProductos, 'carro': carro, 'total_descuento': total_descuento,'descuento': descuento})
 
 def crear_pedido(request):
     usuario = request.user
     cantProductos, carro, total = info_carrito(request)
+    descuento, total_descuento = filtro_descuento(total, usuario)
     carro_cliente = request.session.get('carro', {})
-    nuevo_pedido = Pedido()
 
+    nuevo_pedido = Pedido()
     nuevo_pedido.fecha = datetime.now()
+    nuevo_pedido.usuario = User.objects.get(id=usuario.id)
     nuevo_pedido.numPedido = int(str(usuario.id)+ str(nuevo_pedido.fecha.year) + str(nuevo_pedido.fecha.month) + str(nuevo_pedido.fecha.day))
-    nuevo_pedido.direccion = request.POST.get('')
-    nuevo_pedido.metodoEnvio = request.POST.get
-    nuevo_pedido.total = total
+    nuevo_pedido.direccion = "C/ " + request.POST.get('direccion') + ", " + request.POST.get('codigoPostal') + ", " + request.POST.get('provincia')
+    # nuevo_pedido.metodoEnvio = request.POST.get
+    nuevo_pedido.total = total_descuento
+    nuevo_pedido.save()
 
     for k in carro_cliente.keys():
         nueva_linea_pedido = LineaPedido()
