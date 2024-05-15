@@ -536,6 +536,7 @@ def edita_usuario(request, id):
             entrenador.nombre = request.POST.get('nombre')
             entrenador.apellidos = request.POST.get('apellidos')
             entrenador.save()
+            entrenador.equipo_set.clear()
             list_equipos = request.POST.getlist('equipos')
             for e in list_equipos:
                 equipo = Equipo.objects.get(id=e)
