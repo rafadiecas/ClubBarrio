@@ -130,6 +130,18 @@
     </div>
 
 </div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="toastNotification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="fa-solid fa-truck" style="color: #63E6BE;"></i>
+                <strong class="me-auto">Pedido realizado</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Puedes consultar los detalles de tu pedido accediendo a tu <a href="{% url 'perfil' %}">perfil</a>
+            </div>
+        </div>
+</div>
 {% include 'paginator.html' %}
 </body>
 {% include 'footer.html' %}
@@ -159,3 +171,18 @@
     window.onload = updateCartCount;
 
 </script>
+<script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Verificar si el indicador está presente en sessionStorage
+            if (sessionStorage.getItem('showToast') === 'true') {
+                // Mostrar el toast
+                var toastEl = document.getElementById('toastNotification');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+
+                // Remover el indicador para que no se muestre de nuevo en futuras visitas
+                sessionStorage.removeItem('showToast');
+            }
+        });
+</script>
+<script src="https://kit.fontawesome.com/3b1eee63d8.js" crossorigin="anonymous"></script>

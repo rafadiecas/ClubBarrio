@@ -124,6 +124,16 @@
                 <label for="is_active" class="form-label" style="margin: 0"> Es Activo:</label>
                 <input type="checkbox" name="is_active" id="is_active" {% if datos.es_activo %} checked {% endif %}>
             </div>
+            <div class="row">
+                <div class="col-md-6 select" id="equiposSelect">
+                    <label for="equipos" class="form-label">Equipos:</label>
+                    <select id="equipos" name="equipos" class="form-select" multiple>
+                        {% for e in Equipos %}
+                            <option value="{{ e.id }}">{{ e.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
         </div>
         
 
@@ -150,8 +160,8 @@ $(document).ready(function() {
             $('#nombre, #apellidos').removeAttr('required');
         },
         'Entrenador': function() {
-            $('#entrenadorSelect, #tutorSelect, #checkbox-activo,#tarifaSelect').hide();
-            $('#equipoSelect, #nombreField, #apellidosField').show();
+            $('#entrenadorSelect, #tutorSelect, #checkbox-activo,#tarifaSelect,#equipoSelect').hide();
+            $('#equiposSelect, #nombreField, #apellidosField').show();
             $('#nombre, #apellidos').attr('required', true);
         },
         'Jugador': function() {
