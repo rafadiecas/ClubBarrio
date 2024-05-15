@@ -42,6 +42,7 @@ def pagina_inicio(request):
 def pagina_tienda(request):
     list_productos = Producto.objects.all()
     page = request.GET.get('page', 1)
+    tipo_producto = Tipo.objects.all()
 
     try:
         paginator = Paginator(list_productos, 9) # Muestra la cantidad de productor por pagina
@@ -51,6 +52,26 @@ def pagina_tienda(request):
 
     data = {
         'entity': list_productos,
+        'tipo_producto': tipo_producto,
+        'paginator': paginator
+    }
+
+    return render(request, 'tienda.html', data)
+
+def pagina_tienda_filtro(request,id):
+    list_productos = Producto.objects.filter(tipo_id=id)
+    page = request.GET.get('page', 1)
+    tipo_producto = Tipo.objects.all()
+
+    try:
+        paginator = Paginator(list_productos, 9) # Muestra la cantidad de productor por pagina
+        list_productos = paginator.page(page)
+    except:
+        raise Http404
+
+    data = {
+        'entity': list_productos,
+        'tipo_producto': tipo_producto,
         'paginator': paginator
     }
 
@@ -891,14 +912,40 @@ def inscripciones(request):
     if request.method == 'GET':
         return render(request, 'inscripcion_tarifa.html')
     else:
+        datos_inscripcion = {'nombre': request.POST.get('nombre'), 'apellidos': request.POST.get('apellidos'),'tarifa': request.POST.get('tarifa_seleccionada')}
+        request.session["datos_inscripccion"] = datos_inscripcion
+        #usuario = request.user
+        #usuario.rol = 'Tutor'
+        #usuario.save()
+        #tutor = TutorLegal()
+        #tutor.usuario = usuario
+        #tutor.nombre = request.POST.get('nombre')
+        #tutor.apellidos = request.POST.get('apellidos')
+        #tutor.tarifa = request.POST.get('tarifa_seleccionada')
+        #tutor.save()
+
+
+        #mensaje = ("Gracias por suscribirte, " + usuario.username + ". Tu suscripción se ha completado con éxito."
+                   #+ "<br><br>" + "Algunos datos importantes: " + "<br>"
+                   #+ "Tarifa selecionada: " + tutor.tarifa + "<br>" + "Pagos los dias " + str(datetime.now().day)+ " de cada mes." + "<br><br>" + "Un saludo, SafaClubBasket.")
+        #correo = EmailMessage('Suscripción en SafaClubBasket', mensaje, to=[usuario.email])
+        #correo.content_subtype = "html"
+        #correo.send()
+
+        return render(request, 'pago_inscripcion.html')
+def pago_inscripcion(request):
+
+    if request.method == 'POST':
+
+        datos_inscripcion = request.session["datos_inscripccion"]
         usuario = request.user
         usuario.rol = 'Tutor'
         usuario.save()
         tutor = TutorLegal()
         tutor.usuario = usuario
-        tutor.nombre = request.POST.get('nombre')
-        tutor.apellidos = request.POST.get('apellidos')
-        tutor.tarifa = request.POST.get('tarifa_seleccionada')
+        tutor.nombre = datos_inscripcion['nombre']
+        tutor.apellidos = datos_inscripcion['apellidos']
+        tutor.tarifa = datos_inscripcion['tarifa']
         tutor.save()
 
         mensaje = ("Gracias por suscribirte, " + usuario.username + ". Tu suscripción se ha completado con éxito."
@@ -907,7 +954,6 @@ def inscripciones(request):
         correo = EmailMessage('Suscripción en SafaClubBasket', mensaje, to=[usuario.email])
         correo.content_subtype = "html"
         correo.send()
-
         return redirect('usuario')
 def terminos_y_servicios(request):
     return render(request, 'terminos_y_servicios.html')
@@ -1336,8 +1382,10 @@ def info_carrito(request):
     carro_cliente = {}
     total = 0.0
     cantProductos = 0
+
     if 'carro' in request.session:
         carro_cliente = request.session.get('carro', {})
+
     for key in carro_cliente.keys():
         producto = ProductoTalla.objects.get(id=key)
         cantidad = carro_cliente[key]
@@ -1356,6 +1404,7 @@ def formulario_pago_pedido(request):
         crear_pedido(request)
         request.session.pop('carro')
         return redirect('tienda')
+
 def filtro_descuento(total, usuario):
     descuento = ""
     if usuario.rol == "Tutor":

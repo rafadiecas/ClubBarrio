@@ -8,6 +8,7 @@
 <body>
 <div class="container">
     <div class="row mt-4 mb-4">
+    
         <div class="col-md-4 order-md-2 mb-4">
             <h4 class="d-flex justify-content-between align-items-center mb-3"><span
                     class="text-muted">tu carrito</span> <span class="badge badge-secondary badge-pill">{{ cantProductos }}</span></h4>
@@ -34,14 +35,11 @@
                     {% endif %} 
                     <li class="list-group-item d-flex justify-content-between"><span>Total (€)</span> <strong>€{{ total_descuento }}</strong>
                     </li>
-                
-            
-                
             </ul>
         </div>
         <div class="col-md-8 order-md-1">
             <h4 class="mb-3">Dirección de Envio</h4>
-            <form class="needs-validation was-validated" novalidate="" method="post">
+            <form novalidate="" method="post" action="{% url 'pago_inscripciones' %}">
                 {% csrf_token %}
                 <div class="row">
                     
