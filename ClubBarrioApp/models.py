@@ -63,6 +63,9 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     foto = models.ImageField(upload_to='foto_perfil', default='foto_perfil/default.png')
+    email_verified = models.BooleanField(default=False)
+    email_verification_token = models.CharField(max_length=50, null=True, blank=True)
+    email_verification_token_expiration = models.DateTimeField(null=True, blank=True)
     objects = UserManager()
 
     USERNAME_FIELD = 'username'

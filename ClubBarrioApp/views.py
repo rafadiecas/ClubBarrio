@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
@@ -11,13 +13,15 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage, send_mail
 from django.db.models import Count, Q, Sum
 from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.utils import timezone
 from django.utils.datetime_safe import datetime, date
 import re
 import requests
 from collections import defaultdict
 from .models import *
 from django.core.paginator import Paginator
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.http import JsonResponse
 from .decorator import user_required, rol_requerido
 from django.contrib import messages
@@ -29,6 +33,11 @@ from .models import Partido
 from django.conf import settings
 
 from django.db.models import F, Count, Case, When, Value, IntegerField
+from PIL import Image
+import os
+import secrets
+from django.urls import reverse
+from django.contrib.sites.shortcuts import get_current_site
 
 # Create your views here.
 
@@ -365,21 +374,74 @@ def registro(request):
         else:
             usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email,
                                           fecha_nacimiento=fecha_nacimiento, rol=rol)
+            usuario.email_verification_token = generate_verification_token()
+            usuario.email_verification_token_expiration = datetime.now() + timedelta(hours=24)
             usuario.save()
+            send_verification_email(request, usuario)  # Asegúrate de pasar 'request' como primer argumento
 
             # Crea un objeto Notificaciones para el nuevo usuario
             notificaciones = Notificaciones.objects.create(id=usuario.id, usuario=usuario, password_change=False,
                                                            weekly_newsletter=False, new_training=False)
             notificaciones.save()
 
-            mensaje = ("Bienvenido a SafaClubBasket, " + nombre_usuario + ". Tu registro se ha completado con éxito."
-                       + "<br><br>" + "Tus credenciales de acceso son: " + "<br>"
-                       + "Usuario: " + nombre_usuario + "<br>" + "Contraseña: " + contrasenya + "<br><br>" + "Un saludo, SafaClubBasket.")
-            correo = EmailMessage('Registro en SafaClubBasket', mensaje, to=[email])
-            correo.content_subtype = "html"
-            correo.send()
+
             return JsonResponse({'success': 'Usuario registrado con éxito'})
             # return redirect('login')
+
+def generate_verification_token():
+    return secrets.token_urlsafe(20)
+
+
+def send_verification_email(request, usuario):
+    # Obtén el nombre de dominio actual
+    domain = get_current_site(request).domain
+
+    # Genera la ruta de verificación
+    verification_route = reverse('verify_email', args=[usuario.username, usuario.email_verification_token])
+
+    # Combina el nombre de dominio y la ruta para obtener la URL completa
+    verification_url = 'http://' + domain + verification_route
+
+    message = f'Por favor verifica tu correo electrónico haciendo clic en el siguiente enlace: {verification_url}'
+    send_mail('Verifica tu correo electrónico', message, 'safaclubbasket@gmail.com', [usuario.email])
+from django.contrib import messages
+
+def verify_email(request, username, token):
+    verification_status = ""
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        verification_status = 'Usuario no encontrado'
+        messages.add_message(request, messages.INFO, verification_status)
+        return redirect('login')
+
+    if user.email_verification_token != token:
+        user.delete()
+        verification_status = 'Token inválido'
+        messages.add_message(request, messages.INFO, verification_status)
+        return redirect('login')
+
+    if timezone.now() > user.email_verification_token_expiration:
+        user.delete()
+        verification_status = 'Token expirado'
+        messages.add_message(request, messages.INFO, verification_status)
+        return redirect('login')
+
+    user.email_verified = True
+    user.email_verification_token = None
+    user.email_verification_token_expiration = None
+    user.save()
+    mensaje = ("Bienvenido a SafaClubBasket, " + user.username + ". Tu registro se ha completado con éxito."
+               + "<br><br>" + "Tus credenciales de acceso son: " + "<br>"
+               + "Usuario: " + user.username + "<br>" + "Contraseña: " + user.password + "<br><br>" + "Un saludo, SafaClubBasket.")
+    correo = EmailMessage('Registro en SafaClubBasket', mensaje, to=[user.email])
+    correo.content_subtype = "html"
+    correo.send()
+
+    verification_status = 'Correo electrónico verificado con éxito'
+    messages.add_message(request, messages.INFO, verification_status)
+
+    return redirect('login')
 
 def logear(request):
     if request.method == 'POST':
@@ -388,7 +450,7 @@ def logear(request):
 
         user = authenticate(request, username=nombre_usuario, password=contrasenya)
 
-        if user is not None:
+        if user is not None and user.email_verified == True:
             login(request, user)
 
             if user.rol== "Administrador":
@@ -405,6 +467,9 @@ def logear(request):
             # Redirección tras un login exitoso
             return redirect('inicio')
         else:
+            if user is not None and user.email_verified == False:
+                return render(request, 'login.html',
+                              {"error": "Usuario no verificado, consulte su email o contacte con nosotros", "nombre_usuario": nombre_usuario})
             # Mensaje de error si la autenticación falla
             return render(request, 'login.html',{"error": "Usuario o contraseña incorrectos", "nombre_usuario": nombre_usuario})
 
