@@ -29,6 +29,8 @@ from .models import Partido
 from django.conf import settings
 
 from django.db.models import F, Count, Case, When, Value, IntegerField
+from PIL import Image
+import os
 
 # Create your views here.
 
