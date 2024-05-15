@@ -81,6 +81,11 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link {% if error_en_cambio_de_contraseña %}active{% endif %}" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">Contraseña</button>
                 </li>
+                {% if perfil.usuario.rol == 'Tutor' or perfil.usuario.rol == 'Entrenador' %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pedidos-tab" data-bs-toggle="tab" data-bs-target="#pedidos-tab-pane" type="button" role="tab" aria-controls="pedidos-tab-pane" aria-selected="false">Pedidos</button>
+                </li>
+                {% endif %}
             </ul>
             <div class="tab-content pt-4" id="profileTabContent">
               <div class="tab-pane fade show active" id="overview-tab-pane" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
@@ -258,6 +263,29 @@
                     </div>
                 </form>
               </div>
+                <div class="tab-pane fade" id="pedidos-tab-pane" role="tabpanel" aria-labelledby="pedidos-tab" tabindex="0">
+                    <div class="accordion" id="accordionPanelsStayOpenExample">
+                    {% for p in pedidos %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{ p.id }}">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapse{{ p.id }}" aria-expanded="false" aria-controls="collapse{{ p.id }}">
+                                    {{ p.numPedido }}, {{ p.fecha }}, {{ p.direccion }}, {{ p.metodoEnvio }}, {{ p.total }}€
+                                </button>
+                            </h2>
+                            <div id="collapse{{ p.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ p.id }}"
+                                 data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    {% for lp in p.lineapedido_set.all %}
+                                        <p style="margin: 0">{{ lp.prductoTalla.producto.tipo.nombre }}, {{ lp.prductoTalla.producto.nombre }}, Unidades: {{ lp.cantidad }}</p>
+
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
             </div>
           </div>
         </div>

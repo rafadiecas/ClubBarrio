@@ -168,8 +168,7 @@ def perfil(request):
         'Jugador': Jugador,
         'Entrenador': Entrenador
     }
-
-    usuario = request.user
+    pedidos = Pedido.objects.prefetch_related('lineapedido_set').filter(usuario_id=usuario.id).order_by('-fecha')
     data={}
     envio_datos_barra(data,request,usuario)
 
@@ -199,9 +198,9 @@ def perfil(request):
             jugador = Jugador.objects.get(usuario_id=usuario.id)
             return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo, 'jugador':jugador, 'notificaciones': notificaciones,"data":data, 'usuario': usuario})
 
-        return render(request, 'profile.html', {'perfil': perfil, 'notificaciones': notificaciones,"data":data, 'usuario': usuario})
+        return render(request, 'profile.html', {'perfil': perfil, 'notificaciones': notificaciones,"data":data, 'usuario': usuario, 'pedidos':pedidos})
 
-    return render(request, 'profile.html', {'notificaciones': notificaciones,"data":data, 'usuario': usuario})
+    return render(request, 'profile.html', {'notificaciones': notificaciones,"data":data, 'usuario': usuario, 'pedidos':pedidos})
 
 def perfil_pass(request):
     usuario = request.user
@@ -1396,10 +1395,11 @@ def info_carrito(request):
 
 def formulario_pago_pedido(request):
     cantProductos, carro, total = info_carrito(request)
+    metodo= metodoEnvio.choices
     usuario = request.user
     descuento, total_descuento = filtro_descuento(total, usuario)
     if request.method == 'GET':
-        return render(request, 'formulario_pago.html', {'total': total, 'cantProductos': cantProductos, 'carro': carro, 'total_descuento': total_descuento,'descuento': descuento})
+        return render(request, 'formulario_pago.html', {'total': total, 'cantProductos': cantProductos, 'carro': carro, 'total_descuento': total_descuento,'descuento': descuento, 'metodo_envio': metodo})
     else:
         crear_pedido(request)
         request.session.pop('carro')
@@ -1431,7 +1431,7 @@ def crear_pedido(request):
     nuevo_pedido.usuario = User.objects.get(id=usuario.id)
     nuevo_pedido.numPedido = int(str(usuario.id)+ str(nuevo_pedido.fecha.year) + str(nuevo_pedido.fecha.month) + str(nuevo_pedido.fecha.day))
     nuevo_pedido.direccion = "C/ " + request.POST.get('direccion') + ", " + request.POST.get('codigoPostal') + ", " + request.POST.get('provincia')
-    # nuevo_pedido.metodoEnvio = request.POST.get
+    nuevo_pedido.metodoEnvio = request.POST.get('metodo_envio')
     nuevo_pedido.total = total_descuento
     nuevo_pedido.save()
 

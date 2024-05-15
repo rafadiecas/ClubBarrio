@@ -113,11 +113,20 @@
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="zip">Codigo Postal</label>
+                        <label for="zip">Código Postal</label>
                         <input type="text" class="form-control" id="zip" placeholder="" required="" name="codigoPostal">
                         <div class="invalid-feedback">
                             Código postal requerido.
                         </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="state">Método de envío</label>
+                        <select class="form-select d-block w-100" id="metodo_envio" required="" name="metodo_envio">
+                            <option value="">Elige método de envío</option>
+                            {% for me in metodo_envio %}
+                                <option value="{{ me.0 }}">{{ me.1 }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
                 </div>
@@ -168,11 +177,19 @@
                     </div>
                 </div>
                 <hr class="mb-4">
-                <button class="btn btn-primary btn-lg btn-block" type="submit">Continuar a la comprobación</button>
+                <button class="btn btn-primary btn-lg btn-block" type="submit" id="showToastButton">Continuar a la comprobación</button>
             </form>
         </div>
     </div>
 </div>
+<script>
+        document.getElementById('showToastButton').addEventListener('click', function() {
+            // Guardar indicador en sessionStorage
+            sessionStorage.setItem('showToast', 'true');
+            // Redirigir a la Página 2
+            window.location.href = 'tienda.html';
+        });
+    </script>
 </body>
 
 {% include "footer.html" %}
