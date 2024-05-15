@@ -15,7 +15,7 @@
         background-color: #00653D !important; /* Cambia este valor al color que desees */
     }
     .btn-primary {
-        background-color: #00653D !important; /* Cambia este valor al color que desees */
+        {#background-color: #00653D !important; /* Cambia este valor al color que desees */#}
         border-color: #00653D !important; /* Cambia este valor al color que desees */
     }
     .nav-item .nav-link.active {
@@ -163,7 +163,7 @@
               </div>
 
               <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                  <form action="{% url 'perfil' %}" method="post" class="row gy-3 gy-xxl-4"
+                  <form action="{% url 'perfil' %}" method="post" class="row gy-3 gy-xxl-4" id="formDatosPersonales"
                         enctype="multipart/form-data">
                       {% csrf_token %}
                       <div class="col-12">
@@ -372,22 +372,36 @@
         reader.readAsDataURL(file);
     });
 });
-    $(document).ready(function() {
-    $('#fileInput').on('change', function() {
-        var fileInput = $(this)[0];
-        var formData = new FormData();
-        formData.append('profile_image', fileInput.files[0]);
+$(document).ready(function() {
+    var validExtensions = ['.jpg', '.png', '.jpeg']; // Las extensiones permitidas
 
-        $.ajax({
-            url: '/ClubBarrioApp/usuario/perfil/',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(data) {
-                $('#profileImage').attr('src', data.image_url);
-            }
-        });
+    $('#fileInput').on('change', function(event) {
+        var fileInput = $(this)[0];
+        var file = fileInput.files[0];
+        var fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+
+        if (validExtensions.includes(fileExtension)) {
+            var formData = new FormData();
+            formData.append('profile_image', file);
+
+            $.ajax({
+                url: '/ClubBarrioApp/usuario/perfil/',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    $('#profileImage').attr('src', data.image_url);
+                },
+                error: function(jqXHR) {
+                    var errorJson = JSON.parse(jqXHR.responseText);
+                    alert(errorJson.error);
+                }
+            });
+        } else {
+            alert('Extension no soportada');
+            $(this).val(''); // Limpia el campo de entrada del archivo
+        }
     });
 });
 </script>
