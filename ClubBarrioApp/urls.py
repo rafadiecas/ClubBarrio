@@ -56,6 +56,7 @@ urlpatterns = [
     path('tarifas/', tarifas, name='tarifas'),
     path('usuario/inscripcion', inscripciones, name='inscripciones'),
     path('tienda/', pagina_tienda, name='tienda'),
+    path('tienda/<int:id>/', pagina_tienda_filtro, name='tienda_filtro'),
     path('inicio_jugador/<int:id>/', inicio_jugador, name='inicio_jugador'),
     path('inicio_jugador/', inicio_jugador, name='inicio_jugador'),
     path('estadisticas/<int:id>/', estadisticas_jugador, name='estadisticas_jugador'),

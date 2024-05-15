@@ -42,6 +42,7 @@ def pagina_inicio(request):
 def pagina_tienda(request):
     list_productos = Producto.objects.all()
     page = request.GET.get('page', 1)
+    tipo_producto = Tipo.objects.all()
 
     try:
         paginator = Paginator(list_productos, 9) # Muestra la cantidad de productor por pagina
@@ -51,6 +52,26 @@ def pagina_tienda(request):
 
     data = {
         'entity': list_productos,
+        'tipo_producto': tipo_producto,
+        'paginator': paginator
+    }
+
+    return render(request, 'tienda.html', data)
+
+def pagina_tienda_filtro(request,id):
+    list_productos = Producto.objects.filter(tipo_id=id)
+    page = request.GET.get('page', 1)
+    tipo_producto = Tipo.objects.all()
+
+    try:
+        paginator = Paginator(list_productos, 9) # Muestra la cantidad de productor por pagina
+        list_productos = paginator.page(page)
+    except:
+        raise Http404
+
+    data = {
+        'entity': list_productos,
+        'tipo_producto': tipo_producto,
         'paginator': paginator
     }
 
