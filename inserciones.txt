@@ -242,6 +242,8 @@ INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (3, 'M');
 INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (4, 'L');
 INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (5, 'XL');
 INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (6, 'XXL');
+INSERT INTO ClubBarrioApp_talla (id, nombre) VALUES (7, 'Entrada');
+
 
 
 /* tipo producto */
@@ -250,6 +252,8 @@ INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (1, 'Camiseta');
 INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (2, 'Equipacion');
 INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (3, 'Calzonas');
 INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (4, 'Sudadera');
+INSERT INTO ClubBarrioApp_tipo (id, nombre) VALUES (5, 'Entrada');
+
 
 
 /* Notificaciones */
@@ -280,6 +284,7 @@ INSERT INTO ClubBarrioApp_producto (id, nombre, precio, tipo_id, url_imagen, des
 INSERT INTO ClubBarrioApp_producto (id, nombre, precio, tipo_id, url_imagen, descripcion) VALUES (7, 'Camiseta entrenamiento', 40, 1, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkAqjt2OCqZRDNMZ2gjgITpTGz74tw6HWcengCuL6t2A&s', 'sin descripción');
 INSERT INTO ClubBarrioApp_producto (id, nombre, precio, tipo_id, url_imagen, descripcion) VALUES (8, 'Sudadera Betis', 100, 1, 'https://shop.realbetisbalompie.es/cdn/shop/files/5700499971458_-_-RAW-1.jpg?v=1714663359', 'sin descripción');
 INSERT INTO ClubBarrioApp_producto (id, nombre, precio, tipo_id, url_imagen, descripcion) VALUES (9, 'Segunda Equipación', 80, 1, 'https://cdn.grupoelcorteingles.es/SGFM/dctm/MEDIA03/202307/13/00110410225006____7__1200x1200.jpg', 'sin descripción');
+INSERT INTO ClubBarrioApp_producto (id, nombre, precio, tipo_id, url_imagen, descripcion) VALUES (10, 'entrada sabado', 15, 5, 'https://img.freepik.com/vector-premium/entradas-partido-futbol_80590-3666.jpg', 'Entrada para el partido del domingo');
 
 /* Producto Talla */
 

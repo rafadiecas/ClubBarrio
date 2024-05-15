@@ -1395,9 +1395,9 @@ def info_carrito(request):
     return cantProductos, carro, total
 
 def formulario_pago_pedido(request):
+    usuario= request.user
     cantProductos, carro, total = info_carrito(request)
-    usuario = request.user
-    descuento, total_descuento = filtro_descuento(total, usuario)
+    descuento, total_descuento = filtro_descuento(total,usuario)
     if request.method == 'GET':
         return render(request, 'formulario_pago.html', {'total': total, 'cantProductos': cantProductos, 'carro': carro, 'total_descuento': total_descuento,'descuento': descuento})
     else:
@@ -1431,7 +1431,6 @@ def crear_pedido(request):
     nuevo_pedido.usuario = User.objects.get(id=usuario.id)
     nuevo_pedido.numPedido = int(str(usuario.id)+ str(nuevo_pedido.fecha.year) + str(nuevo_pedido.fecha.month) + str(nuevo_pedido.fecha.day))
     nuevo_pedido.direccion = "C/ " + request.POST.get('direccion') + ", " + request.POST.get('codigoPostal') + ", " + request.POST.get('provincia')
-    # nuevo_pedido.metodoEnvio = request.POST.get
     nuevo_pedido.total = total_descuento
     nuevo_pedido.save()
 
