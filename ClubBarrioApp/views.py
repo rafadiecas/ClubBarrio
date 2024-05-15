@@ -1435,10 +1435,13 @@ def crear_pedido(request):
     nuevo_pedido.save()
 
     for k in carro_cliente.keys():
+        productoTalla = ProductoTalla.objects.get(id=int(k))
         nueva_linea_pedido = LineaPedido()
         nueva_linea_pedido.pedido = Pedido.objects.get(id=nuevo_pedido.id)
-        nueva_linea_pedido.prductoTalla = ProductoTalla.objects.get(id=int(k))
+        nueva_linea_pedido.prductoTalla = productoTalla
         nueva_linea_pedido.cantidad = carro_cliente[k]
+        productoTalla.stock = productoTalla.stock - carro_cliente[k]
+        productoTalla.save()
         nueva_linea_pedido.save()
 
 def eliminar_pedido(request, id):
