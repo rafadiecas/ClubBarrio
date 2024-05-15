@@ -86,4 +86,5 @@ urlpatterns = [
     path('tienda/carrito/nuevo_pedido/', crear_pedido, name='crear_pedido'),
 
     path('usuario/inscripcion/pagar', pago_inscripcion, name='pago_inscripciones'),
+    path('verify_email/<str:username>/<str:token>/', verify_email, name='verify_email'),
 ]

@@ -77,6 +77,13 @@
                           <input type="password" id="contrasenya" class="form-control" name="contrasenya"/>
                       </div>
                         <p>{{ error }}</p>
+{#                        {% if messages %}#}
+{#                            <ul class="messages">#}
+{#                                {% for message in messages %}#}
+{#                                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>#}
+{#                                {% endfor %}#}
+{#                            </ul>#}
+{#                        {% endif %}#}
 
                       <div class="text-center pt-1 mb-5 pb-1">
                         <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">
