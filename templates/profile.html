@@ -28,6 +28,14 @@
     label {
     padding-top: 0px !important;
     }
+    #profileImage {
+        width: 300px !important;
+        height: 300px !important;
+        object-fit: cover   !important;
+    }
+    #uploadButton {
+        cursor: pointer;
+    }
 </style>
 <body>
 {% include "barra_navegacion.html" with hijos=data.hijos equipos_entrenador=data.equipos_entrenador %}
@@ -41,7 +49,7 @@
       <div class="col-12 col-lg-4 col-xl-3">
         <div class="row gy-4">
           <div class="col-12">
-            <div class="card widget-card border-light shadow-sm">
+            <div class="card widget-card border-light shadow-sm h-100">
               <div class="card-header text-bg-primary">Bienvenido {{ perfil.usuario.username }}</div>
               <div class="card-body">
                 <div class="text-center mb-3">
@@ -60,7 +68,7 @@
         </div>
       </div>
       <div class="col-12 col-lg-8 col-xl-9">
-        <div class="card widget-card border-light shadow-sm">
+        <div class="card widget-card border-light shadow-sm h-100">
           <div class="card-body p-4">
             <ul class="nav nav-tabs" id="profileTab" role="tablist">
 
@@ -87,8 +95,8 @@
                 </li>
                 {% endif %}
             </ul>
-            <div class="tab-content pt-4" id="profileTabContent">
-              <div class="tab-pane fade show active" id="overview-tab-pane" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
+            <div class="tab-content pt-4 h-100" id="profileTabContent">
+              <div class="tab-pane fade show active h-100" id="overview-tab-pane" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
                 <h5 class="mb-3">Perfil</h5>
                 {% if perfil.usuario.rol == 'Tutor' or perfil.usuario.rol == 'Jugador' or perfil.usuario.rol == 'Entrenador' %}
                 <div class="row g-0">
@@ -168,20 +176,21 @@
               </div>
 
               <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                  <form action="{% url 'perfil' %}" method="post" class="row gy-3 gy-xxl-4" id="formDatosPersonales"
+                  <form action="{% url 'perfil' %}" method="post" class="row gy-3 gy-xxl-4 h-100" id="formDatosPersonales"
                         enctype="multipart/form-data">
                       {% csrf_token %}
                       <div class="col-12">
-                          <div class="row gy-2">
+                          <div class="row gy-2 d-flex flex-column justify-content-between">
                               <label class="col-12 form-label m-0">Selecciona tu imagen de perfil</label>
 
                               <div class="col-12">
                                   <input type="file" id="fileInput" name="profile_image" style="display: none;"
                                          accept="image/png, image/jpeg, image/jpg"/>
-                                  <a href="#!" class="d-inline-block bg-primary link-light lh-1 p-2 rounded"
+                                  <label for="fileInput" class="d-inline-block bg-success link-light lh-1 p-2 rounded "
                                      id="uploadButton">
                                       <i class="bi bi-upload"></i>
-                                  </a>
+                                        <span class="ms-2">Subir Imagen</span>
+                                  </label>
 
                               </div>
                           </div>
@@ -294,6 +303,8 @@
   </div>
 
 </section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 {#<script src="https://unpkg.com/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>#}
 <script>
     $(function() {
@@ -317,6 +328,8 @@
     e.preventDefault();
 
     var formId = $(this).attr('id');
+
+
 
     $.ajax({
         url: $(this).attr('action'),
@@ -350,6 +363,18 @@
 
 </script>
 <script>
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 6000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+
     $(document).ready(function() {
     $('#new-ajax-form').on('submit', function(e) {
         e.preventDefault();
@@ -385,13 +410,18 @@
     });
 });
     document.addEventListener('DOMContentLoaded', (event) => {
-    document.getElementById('uploadButton').addEventListener('click', function() {
-        // Simula un clic en el campo de entrada de archivos cuando se hace clic en el botón de carga
-        document.getElementById('fileInput').click();
-    });
 
     document.getElementById('fileInput').addEventListener('change', function() {
         // Actualiza la imagen de perfil cuando se selecciona un nuevo archivo
+        var validExtensions = ['.jpg', '.png', '.jpeg']; // Las extensiones permitidas
+        var fileInput = $(this)[0];
+        var file = fileInput.files[0];
+        var fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+
+        if (!validExtensions.includes(fileExtension)) {
+            return;
+        }
+
         var file = this.files[0];
         var reader = new FileReader();
         reader.onloadend = function() {
@@ -427,7 +457,10 @@ $(document).ready(function() {
                 }
             });
         } else {
-            alert('Extension no soportada');
+            Toast.fire({
+              icon: "error",
+              title: "El archivo seleccionado no es una imagen"
+            });
             $(this).val(''); // Limpia el campo de entrada del archivo
         }
     });
