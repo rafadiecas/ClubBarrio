@@ -25,8 +25,8 @@
 
         #cart-button {
             position: absolute;
-            top: 30px;
-            right: 10px;
+            top: 170px;
+            right: 60px;
             padding: 15px;
             background-color: #f8f9fa;
             border-radius: 50%;
@@ -38,11 +38,25 @@
 
                 left: 50%;
                 right: auto;
-                top: 30px;
+                top: 170px;
 
                 transform: translateX(-50%);
             }
-}
+        }
+        @media (max-width: 285px){
+            #cart-button {
+                left: 50%;
+                right: auto;
+                top: 210px;
+            }
+        }
+        @media (max-width: 175px){
+            #cart-button {
+                left: 50%;
+                right: auto;
+                top: 250px;
+            }
+        }
 
         #cart-button:hover {
             transform: scale(1.1);

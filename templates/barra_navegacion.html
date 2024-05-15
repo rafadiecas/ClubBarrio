@@ -161,18 +161,26 @@
                         <a class="nav-link" href="{% url 'tienda' %}">Tienda</a>
                     </li>
                 {% endif %}
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'perfil' %}">Mi perfil</a>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'desloguear' %}">Salir</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    </li>
-                {% endif %}
+
             </ul>
+        </div>
+        <div class="barra-perfil">
+            {% if user.is_authenticated %}
+                <div class="dropdown collapse-toggle">
+                    <a class="nav-link" aria-current="page" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false" style="color: white">
+                        ¡Hola {{ user.username }}!
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'perfil' %}">Mi perfil</a></li>
+                        <li><a class="dropdown-item" href="{% url 'desloguear' %}">Salir</a></li>
+                    </ul>
+                </div>
+            {% else %}
+                <div class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
+                </div>
+            {% endif %}
         </div>
     </div>
 </nav>
