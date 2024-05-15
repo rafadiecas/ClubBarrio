@@ -405,21 +405,27 @@ def send_verification_email(request, usuario):
 
     message = f'Por favor verifica tu correo electrónico haciendo clic en el siguiente enlace: {verification_url}'
     send_mail('Verifica tu correo electrónico', message, 'safaclubbasket@gmail.com', [usuario.email])
+from django.contrib import messages
+
 def verify_email(request, username, token):
+    verification_status = ""
     try:
         user = User.objects.get(username=username)
     except User.DoesNotExist:
-        messages.error(request, 'Usuario no encontrado')
+        verification_status = 'Usuario no encontrado'
+        messages.add_message(request, messages.INFO, verification_status)
         return redirect('login')
 
     if user.email_verification_token != token:
         user.delete()
-        messages.error(request, 'Token inválido')
+        verification_status = 'Token inválido'
+        messages.add_message(request, messages.INFO, verification_status)
         return redirect('login')
 
     if timezone.now() > user.email_verification_token_expiration:
         user.delete()
-        messages.error(request, 'Token expirado')
+        verification_status = 'Token expirado'
+        messages.add_message(request, messages.INFO, verification_status)
         return redirect('login')
 
     user.email_verified = True
@@ -433,7 +439,9 @@ def verify_email(request, username, token):
     correo.content_subtype = "html"
     correo.send()
 
-    messages.success(request, 'Correo electrónico verificado con éxito')
+    verification_status = 'Correo electrónico verificado con éxito'
+    messages.add_message(request, messages.INFO, verification_status)
+
     return redirect('login')
 
 def logear(request):
@@ -443,7 +451,7 @@ def logear(request):
 
         user = authenticate(request, username=nombre_usuario, password=contrasenya)
 
-        if user is not None:
+        if user is not None and user.email_verified == True:
             login(request, user)
 
             if user.rol== "Administrador":
@@ -460,6 +468,9 @@ def logear(request):
             # Redirección tras un login exitoso
             return redirect('inicio')
         else:
+            if user is not None and user.email_verified == False:
+                return render(request, 'login.html',
+                              {"error": "Usuario no verificado, consulte su email o contacte con nosotros", "nombre_usuario": nombre_usuario})
             # Mensaje de error si la autenticación falla
             return render(request, 'login.html',{"error": "Usuario o contraseña incorrectos", "nombre_usuario": nombre_usuario})
 
