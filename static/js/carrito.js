@@ -1,5 +1,10 @@
+
+
+
+
 $(document).ready(function () {
-    // Para añadir al carrito
+
+
     $(document).on('click', '.btn-add', function (e) {
         e.preventDefault();
         console.log("Botón añadir clicado");
@@ -24,6 +29,11 @@ $(document).ready(function () {
                 $('#totalPrice').text("€ " + response.totalPrice);
                 // Actualiza el valor del campo de entrada
                 $('#form' + productId).val(response.productQuantities[productId]);
+
+                // Verifica si la cantidad del producto es 5 o más
+                if (response.productQuantities[productId] >= 5) {
+                    $('.btn-add[data-product-id="' + productId + '"]').prop('disabled', true);
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log('Error:', errorThrown);
@@ -35,8 +45,6 @@ $(document).ready(function () {
     $(document).on('click', '.btn-subtract', function (e) {
         e.preventDefault();
         var productId = $(this).data('product-id');
-        var productElement = $('#product' + productId); // Almacena el resultado del selector en una variable
-        var formElement = $('#form' + productId); // Almacena el resultado del selector en una variable
         $.ajax({
             url: '/ClubBarrioApp/tienda/carrito/restar/' + productId + '/',
             type: 'POST',
@@ -66,6 +74,11 @@ $(document).ready(function () {
 
                 // Actualiza el valor del campo de entrada
                 formElement.val(response.productQuantities[productId]); // Reutiliza la variable en lugar del selector
+
+                // Verifica si la cantidad del producto es menos que 5
+                if (response.productQuantities[productId] < 5) {
+                    $('.btn-add[data-product-id="' + productId + '"]').prop('disabled', false);
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log('Error:', errorThrown);
@@ -103,6 +116,17 @@ $(document).ready(function () {
             }
         });
     });
+    $('.input-limit').each(function () {
+        var productId = $(this).data('product-id');
+        var currentQuantity = parseInt($(this).val());
+        console.log("Initial check - Product ID:", productId, "Quantity:", currentQuantity);
+
+        if (currentQuantity >= 5) {
+            var button = $('.btn-add[data-product-id="' + productId + '"]');
+            console.log("Button to disable:", button);
+            button.prop('disabled', true);
+        }
+    });
 });
 
 function getCookie(name) {
@@ -119,3 +143,4 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+//LIMITADOR DE INPUTS

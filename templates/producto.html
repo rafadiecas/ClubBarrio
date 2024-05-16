@@ -33,7 +33,7 @@
                         <div class="col-sm-6 ps-0">
                         <label for="cantidad" class="form-label">Cantidad:</label>
                         
-                            <input type="number" max="" min="0" value="1" id="cantidad" class="form-control" name="cantidad">
+                            <input type="number" max="5" min="1" value="1" id="cantidad" class="form-control" name="cantidad">
                         </div>
             
                     </div>
@@ -52,25 +52,16 @@
 </div>
 
     <script>
-       document.addEventListener('DOMContentLoaded', function() {
-            var selectElement = document.getElementById('tallas');
+        document.addEventListener('DOMContentLoaded', function () {
             var inputElement = document.getElementById('cantidad');
-            if (selectElement && inputElement) {
-                selectElement.addEventListener('change', function() {
-                    var selectedOption = this.options[this.selectedIndex];
-                    var maxStock = selectedOption.getAttribute('data-stock');
-                    inputElement.setAttribute('max', maxStock);
-                });
-                var event = new Event('change');
-                selectElement.dispatchEvent(event);
-        
-                inputElement.addEventListener('input', function() {
+            if (inputElement) {
+                inputElement.addEventListener('input', function () {
                     var max = parseInt(this.getAttribute('max'));
                     if (this.value > max) {
                         this.value = max;
                     }
-                    if (this.value < 0) {
-                        this.value = 0;
+                    if (this.value < this.getAttribute('min')) {
+                        this.value = this.getAttribute('min');
                     }
                 });
             }
