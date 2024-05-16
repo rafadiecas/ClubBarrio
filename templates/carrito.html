@@ -41,6 +41,25 @@
                 border-bottom-right-radius: 16px;
             }
         }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"].input-limit {
+            pointer-events: none;
+        }
+
+        input[type="number"].input-limit:disabled {
+            color: initial;
+            background-color: initial;
+        }
     </style>
 
 </head>
@@ -82,9 +101,11 @@
                                                             class="fas fa-minus"></i></button>
 
 
-                                                    <input id="form{{ k.id }}" min="0" name="quantity" value="{{ v }}"
-                                                           type="text"
-                                                           class="form-control form-control-sm"/>
+                                                    <input id="form{{ k.id }}" min="0" max="5" name="quantity"
+                                                           value="{{ v }}"
+                                                           type="number"
+                                                           class="input-limit form-control form-control-sm"
+                                                           data-product-id="{{ k.id }}"/>
 
                                                     <button class="btn-add btn-link px-2" data-product-id="{{ k.id }}">
                                                         <i class="fas fa-plus"></i></button>

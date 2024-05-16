@@ -1326,7 +1326,7 @@ def obtener_jugadores_por_partido(request):
 @rol_prohibido('Administrador','Jugador')
 def producto(request, id):
     producto = Producto.objects.get(id=id)
-    tallas = ProductoTalla.objects.filter(producto_id=id).order_by('talla')
+    tallas = ProductoTalla.objects.filter(producto_id=id, stock__gt=5).order_by('talla')
     if request.method == 'POST':
 
         producto_talla = ProductoTalla.objects.get(producto_id=id, talla=request.POST.get('tallas'))
