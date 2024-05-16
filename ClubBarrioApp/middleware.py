@@ -9,4 +9,10 @@ class AdminRequiredMiddleware(MiddlewareMixin):
         if 'administrador' in url_path:
             return user_required(rol_requerido('Administrador')(view_func))(request, *view_args, **view_kwargs)
         elif 'usuario' in url_path:
-            return login_required(user_required(view_func))(request, *view_args, **view_kwargs)
+            return login_required(user_required(rol_requerido('Usuario', 'Tutor')(view_func)))(request, *view_args,
+                                                                                               **view_kwargs)
+        elif 'entrenador' in url_path:
+            return user_required(rol_requerido('Entrenador')(view_func))(request, *view_args, **view_kwargs)
+        elif 'estadisticas' in url_path:
+            return login_required(user_required(rol_requerido('Usuario', 'Tutor')(view_func)))(request, *view_args,
+                                                                                               **view_kwargs)

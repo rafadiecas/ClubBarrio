@@ -934,7 +934,7 @@ def edita_producto(request, id):
 
         return redirect('lista_tienda')
 
-
+@login_required
 def pagina_usuario(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     list_noticias = list_noticias[0:3]

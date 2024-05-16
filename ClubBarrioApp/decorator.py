@@ -14,10 +14,10 @@ def user_required(view_func):
             return view_func(request, *args, **kwargs)
     return wrapper
 
-def rol_requerido(rol_requerido):
+def rol_requerido(*roles_requeridos):
     def decorator(view_func):
         def wrapper(request, *args, **kwargs):
-            if not request.user.is_authenticated or request.user.rol != rol_requerido:
+            if not request.user.is_authenticated or request.user.rol not in roles_requeridos:
                 return redirect('error')
             else:
                 return view_func(request, *args, **kwargs)
