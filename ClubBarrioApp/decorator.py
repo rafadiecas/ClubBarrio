@@ -27,7 +27,7 @@ def rol_requerido(*roles_requeridos):
 def rol_prohibido(*roles_prohibidos):
     def decorator(view_func):
         def wrapper(request, *args, **kwargs):
-            if request.user.rol in roles_prohibidos:
+            if  request.user.is_authenticated and request.user.rol in roles_prohibidos:
                 return redirect('error')
             else:
                 return view_func(request, *args, **kwargs)
