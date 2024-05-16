@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Página Restringida</title>
+    <style>
+        /* Aquí puedes agregar tus estilos CSS para la barra de navegación, el pie de página y el cuerpo */
+    </style>
+</head>
+
+<body>
+{% include 'barra_navegacion.html' %}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <main class="w-50 h-50 d-flex flex-column align-items-center"> <!-- Cambiado a w-25 y h-25 para hacer el elemento main más pequeño -->
+    <div class="container">
+    <h1 class="text-center">No puedes acceder aquí</h1>
+    <p class="text-center">Pero puedes jugar si quieres entretenerte.</p>
+    <div id="scoreboard" class="d-flex justify-content-center">
+        <div id="score" class="me-5">Puntuación: 0</div>
+        <div id="highscore">Récord: 0</div>
+    </div>
+
+</div>
+    <button id="start-button" class="btn btn-primary p-1 m-2" style="display: none;">Start</button>
+<button id="restart-button" class="btn btn-primary p-1 m-2" style="display: none;">Volver a Jugar</button>
+    <canvas id="game" width="400" height="400" class="border border-dark bg-light"></canvas>
+</main>
+</div>
+
+{% include 'footer.html' %}
+<script>
+let canvas = document.getElementById('game');
+let context = canvas.getContext('2d');
+let startButton = document.getElementById('start-button');
+let restartButton = document.getElementById('restart-button');
+
+let gridSize = 30;
+let tileSize = canvas.width / gridSize;
+
+let snake = [{x: gridSize / 2, y: gridSize / 2}];
+let direction = 'right';
+let apple = null;
+let gameInterval = null;
+let nextDirection = null;
+let puntuacion = 0; // Puntuación actual
+let scoreElement = document.getElementById('score');
+let highScoreElement = document.getElementById('highscore');
+
+// Recuperar el récord del almacenamiento local
+let record = localStorage.getItem('record');
+if (record === null) {
+  record = 0;
+} else {
+  record = parseInt(record);
+}
+highScoreElement.textContent = 'Récord: ' + record;
+
+function gameLoop() {
+  let head = Object.assign({}, snake[0]);
+  switch(direction) {
+    case 'left':
+      head.x -= 1;
+      break;
+    case 'up':
+      head.y -= 1;
+      break;
+    case 'right':
+      head.x += 1;
+      break;
+    case 'down':
+      head.y += 1;
+      break;
+  }
+
+  for (let i = 0; i < snake.length; i++) {
+    if (snake[i].x === head.x && snake[i].y === head.y) {
+      endGame();
+      return;
+    }
+  }
+
+  snake.unshift(head);
+
+  if (apple && apple.x === head.x && apple.y === head.y) {
+    apple = null;
+    puntuacion += 1; // Incrementa la puntuación
+    if (puntuacion > record) {
+      record = puntuacion; // Actualiza el récord
+      localStorage.setItem('record', record); // Guarda el nuevo récord en LocalStorage
+    }
+    // Aumenta la velocidad cuando se recoge una manzana
+    clearInterval(gameInterval);
+    gameInterval = setInterval(gameLoop, 1000 / (5 + puntuacion * 0.1)); // La velocidad aumenta con la puntuación
+  } else {
+    snake.pop();
+  }
+
+  if (apple === null) {
+    let newApplePosition;
+    do {
+      newApplePosition = {x: Math.floor(Math.random() * gridSize), y: Math.floor(Math.random() * gridSize)};
+    } while (snake.some(cell => cell.x === newApplePosition.x && cell.y === newApplePosition.y));
+    apple = newApplePosition;
+  }
+
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = 'green';
+  snake.forEach(function(cell) {
+    context.fillRect(cell.x*tileSize, cell.y*tileSize, tileSize, tileSize);
+  });
+  context.fillStyle = 'red';
+  context.fillRect(apple.x*tileSize, apple.y*tileSize, tileSize, tileSize);
+
+  if (head.x < 0 || head.y < 0 || head.x >= gridSize || head.y >= gridSize) {
+    endGame();
+  }
+
+  if (nextDirection) {
+    direction = nextDirection;
+    nextDirection = null;
+  }
+
+  // Actualiza la puntuación y el récord en el HTML
+  scoreElement.textContent = 'Puntuación: ' + puntuacion;
+  highScoreElement.textContent = 'Récord: ' + record;
+}
+
+function startGame() {
+  // Recuperar el récord del almacenamiento local
+  let record = localStorage.getItem('record');
+  if (record === null) {
+    record = 0;
+  } else {
+    record = parseInt(record);
+  }
+
+  startButton.style.display = 'none';
+  restartButton.style.display = 'none';
+  snake = [{x: gridSize / 2, y: gridSize / 2}];
+  direction = 'right';
+  apple = null;
+  puntuacion = 0; // Restablece la puntuación a 0
+  gameInterval = setInterval(gameLoop, 1000 / (5 + puntuacion * 0.1)); // La velocidad inicial depende de la puntuación
+}
+
+function endGame() {
+  clearInterval(gameInterval);
+  restartButton.style.display = 'block';
+  context.fillStyle = 'black';
+  context.font = '20px Arial';
+  let text = 'Has perdido';
+  let textWidth = context.measureText(text).width;
+  let x = (canvas.width - textWidth) / 2;
+  let y = canvas.height / 2;
+  context.fillText(text, x, y);
+}
+
+window.addEventListener('keydown', function(e) {
+  let newDirection;
+  switch(e.key) {
+    case 'ArrowLeft':
+      newDirection = 'left';
+      break;
+    case 'ArrowUp':
+      newDirection = 'up';
+      break;
+    case 'ArrowRight':
+      newDirection = 'right';
+      break;
+    case 'ArrowDown':
+      newDirection = 'down';
+      break;
+  }
+
+  let isOpposite;
+  switch(direction) {
+    case 'left':
+      isOpposite = newDirection === 'right';
+      break;
+    case 'up':
+      isOpposite = newDirection === 'down';
+      break;
+    case 'right':
+      isOpposite = newDirection === 'left';
+      break;
+    case 'down':
+      isOpposite = newDirection === 'up';
+      break;
+  }
+
+  if (!isOpposite) {
+    nextDirection = newDirection;
+  }
+
+  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+    e.preventDefault();
+  }
+});
+
+startButton.addEventListener('click', startGame);
+restartButton.addEventListener('click', startGame);
+
+startButton.style.display = 'block';
+</script>
+</body>
+</html>

@@ -142,8 +142,8 @@ def pagina_contacto(request):
     return render(request, 'contacto.html')
 
 
-#@user_required
-#@rol_requerido('Administrador')
+@user_required
+@rol_requerido('Administrador')
 def administrador(request):
     return render(request, 'administrador.html')
 
@@ -1515,4 +1515,7 @@ def eliminar_pedido(request, id):
     pedido = Pedido.objects.get(id=id)
     pedido.delete()
     return redirect('tienda')
+
+def pagina_error(request):
+    return render(request, 'error.html')
 
