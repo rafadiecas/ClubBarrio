@@ -17,15 +17,19 @@
             <h3>{{ producto.nombre }}</h3>
             <p>{{ producto.descripcion }}</p>
             <div class="row m-0 p-0 d-flex justify-content-start">
-                <div class="col-sm-6 ps-0">
+                {% if producto.tipo.id != 5 %}
+                    <div class="col-sm-6 ps-0">
                         <label for="tallas" class="form-label">Tallas:</label>
-                        
-                            <select name="tallas" id="tallas" class="form-select">
-                                {% for talla in tallas %}
-                                    <option value="{{ talla.talla.id }}" data-stock="{{ talla.stock }}">{{ talla.talla.nombre }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                        <select name="tallas" id="tallas" class="form-select">
+                            {% for talla in tallas %}
+                                <option value="{{ talla.talla.id }}"
+                                        data-stock="{{ talla.stock }}">{{ talla.talla.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% else %}
+                    <input type="hidden" name="tallas" value="7">
+                {% endif %}
                         <div class="col-sm-6 ps-0">
                         <label for="cantidad" class="form-label">Cantidad:</label>
                         
