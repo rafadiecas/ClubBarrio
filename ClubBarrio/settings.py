@@ -140,3 +140,5 @@ EMAIL_HOST_USER = 'safaclubbasket@gmail.com'
 EMAIL_HOST_PASSWORD = 'nzju izcq kpmf biqn'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+LOGIN_URL = 'login'

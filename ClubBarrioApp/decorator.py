@@ -9,9 +9,7 @@ from django.shortcuts import redirect
 def user_required(view_func):
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return redirect('error')
-        elif not request.user.is_active:
-            return redirect('error')
+            return redirect('login')
         else:
             return view_func(request, *args, **kwargs)
     return wrapper
