@@ -107,7 +107,7 @@
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
+        <li class="collapse navbar-collapse" id="navbarNav" style="list-style: none !important;">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="{% url 'noticias' %}">Noticias</a>
@@ -157,7 +157,7 @@
                         <a class="nav-link" href="{% url 'tarifas' %}">Tarifas</a>
                     </li>
                 {% endif %}
-            
+
                 {% if user.is_authenticated and user.rol == "Entrenador" and modo_equipo %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'equipo_estadisticas' id=equipo.id %}">Estadísticas</a>
@@ -176,36 +176,41 @@
                         <a class="nav-link" href="{% url 'tienda' %}">Tienda</a>
                     </li>
                 {% endif %}
+            {% if user.is_authenticated %}
 
-            </ul>
-        </div>
-        <nav class="barra-perfil">
-            <div class="row">
-                {% if user.is_authenticated %}
-
-                    <div class="col d-flex align-items-center">
-                        <div class="dropdown">
+                    <li class="nav-item dropdown d-none d-sm-block">
                             <a class="nav-link dropdown" aria-current="page" role="button" data-bs-toggle="dropdown"
                                aria-expanded="false" style="color: white">
-                                Bienvenido {{ user.username }}
+                                <div class="container d-flex align-items-center">
+                                <img src="{{ user.foto.url }}" alt="" id="foto_perfil"
+                             style="width: 40px; height: 40px; object-fit: cover;">
+                                <p class="m-0 ps-1">{{ user.username }}</p>
+                                    </div>
                             </a>
                             <ul class="dropdown-menu">
+                                <li><a class="dropdown-item fw-bold" style="cursor: not-allowed;pointer-events: none">Bienvenido </a></li>
                                 <li><a class="dropdown-item" href="{% url 'perfil' %}">Mi perfil</a></li>
                                 <li><a class="dropdown-item" href="{% url 'desloguear' %}">Salir</a></li>
                             </ul>
-                        </div>
-                        <img src="{{ user.foto.url }}" alt="" id="foto_perfil"
-                             style="width: 30px; height: 30px; object-fit: cover;">
-                    </div>
+                    </li>
+                    <li class="nav-item d-block d-sm-none">
+                        <a class="nav-link" href="{% url 'perfil' %}">Mi perfil</a>
+                    </li>
+                    <li class="nav-item d-block d-sm-none">
+                        <a class="nav-link" href="{% url 'desloguear' %}">Salir</a>
+                    </li>
                 {% else %}
-                    <div class="col">
                         <div class="nav-item">
                             <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
                         </div>
-                    </div>
+                  
                 {% endif %}
-            </div>
-        </nav>
+
+            </ul>
+        </div>
+
+          
+                
     </div>
 </nav>
 

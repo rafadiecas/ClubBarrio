@@ -505,7 +505,7 @@ def edita_usuario(request, id):
             entrenador = Entrenador.objects.filter(usuario_id=usuario.id)
             return render(request, 'editar_usuarios.html',
                           {'usuario': usuario, 'Equipos': Equipos, 'roles': roles, 'id_equipos': id_equipos,
-                           'Tutores': Tutores})
+                           'Tutores': Tutores, 'datos': entrenador})
         if usuario.rol == 'Tutor':
             tutor = TutorLegal.objects.get(usuario_id=usuario.id)
             tarifas = tarifa.labels
@@ -934,7 +934,7 @@ def edita_producto(request, id):
 
         return redirect('lista_tienda')
 
-
+@login_required
 def pagina_usuario(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     list_noticias = list_noticias[0:3]

@@ -6,7 +6,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <style>
-        #equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField {
+        #equipoSelect,#equiposSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField {
             display: none;
         }
 
@@ -52,11 +52,11 @@
             </div>
             <div class="col-md-4" id="nombreField">
                 <label for="nombre" class="form-label">Nombre:</label>
-                <input type="text" name="nombre" maxlength="20" id="nombre" class="form-control" value="{{ datos.nombre }}">
+                <input type="text" name="nombre" maxlength="20" id="nombre" class="form-control" value="{{ datos.0.nombre }}">
             </div>
             <div class="col-md-4" id="apellidosField">
                 <label for="apellidos" class="form-label">Apellidos:</label>
-                <input type="text" name="apellidos" maxlength="50" id="apellidos" class="form-control" value="{{ datos.apellidos }}">
+                <input type="text" name="apellidos" maxlength="50" id="apellidos" class="form-control" value="{{ datos.0.apellidos }}">
             </div>
         </div>
 
@@ -129,7 +129,7 @@
                     <label for="equipos" class="form-label">Equipos:</label>
                     <select id="equipos" name="equipos" class="form-select" multiple>
                         {% for e in Equipos %}
-                            <option value="{{ e.id }}">{{ e.nombre }}</option>
+                            <option value="{{ e.id }}"{% if e.id in id_equipos %} selected {% endif %}>{{ e.nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
