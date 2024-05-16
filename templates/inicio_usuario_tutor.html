@@ -252,6 +252,34 @@
         </button>
     </div>
 </div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="toastNotification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="fa-solid fa-basketball" style="color: #63E6BE;"></i>
+                <strong class="me-auto">Pago realizado</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Ahora puedes disfrutar de todos los servicios de SAFA Club, prueba a añadir a tus hijos a un equipo
+                en <a href="{% url 'gestion_familia' %}">Gestión</a>
+            </div>
+        </div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Verificar si el indicador está presente en sessionStorage
+            if (sessionStorage.getItem('showToastInscripcion') === 'true') {
+                // Mostrar el toast
+                var toastEl = document.getElementById('toastNotification');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+
+                // Remover el indicador para que no se muestre de nuevo en futuras visitas
+                sessionStorage.removeItem('showToastInscripcion');
+            }
+        });
+</script>
+<script src="https://kit.fontawesome.com/3b1eee63d8.js" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function () {
         $('#calendar').fullCalendar({

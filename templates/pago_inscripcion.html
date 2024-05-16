@@ -60,13 +60,18 @@
                     </div>
                 </div>
                 <hr class="mb-4">
-                <button class="btn btn-primary btn-lg btn-block" type="submit" onclick="function pagorealizado() {
-            alert('Pago realizado con éxito');
-        }
-        pagorealizado()">Continuar a la comprobación</button>
+                <button class="btn btn-primary btn-lg btn-block" type="submit" id="showToastButtonInscripcion">Continuar a la comprobación</button>
             </div>
             </form>
         </div>
+<script>
+        document.getElementById('showToastButtonInscripcion').addEventListener('click', function() {
+            // Guardar indicador en sessionStorage
+            sessionStorage.setItem('showToastInscripcion', 'true');
+            // Redirigir a la Página 2
+            window.location.href = 'inicio_usuario_tutor.html';
+        });
+    </script>
 </body>
 
 {% include "footer.html" %}
