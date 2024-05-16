@@ -33,8 +33,8 @@
 
         <div class="row">
             <div class="col-sm-12 col-md-6">
-                <div class="table-responsive">
-                <table class="table" id="tabla" >
+                <div class="table-responsive mt-1">
+                <table class="table border" id="tabla" >
                     <thead>
                     <tr>
                       <th scope="col">#</th>
@@ -61,11 +61,11 @@
 
             </div>
             </div>
-        <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12 col-md-6 border mt-1">
             <div class="row">
                 <div class="col col-12">
                     <h2 class="text-center">Proximo partido</h2>
-                     <div class="row align-items-center">
+                     <div class="row align-items-center border mx-1">
                         <div class="col-4">
                             <img src="{{ siguiente_partido.equipo1.escudo }}" alt="" class="img-fluid img-equipo">
                         </div>
@@ -103,14 +103,14 @@
             
         </div>
         <div class="container d-flex justify-content-center w-100 mt-3">
-        <div class="row row-cols-1 row-cols-md-2 w-75 jornadas">
+        <div class="row row-cols-1 row-cols-md-2 w-75 jornadas border mb-3">
             <div class="col">
                 <div class="text-center">
                     <h2>Partidos anteriores</h2>
                     {% if partidos_anteriores|length == 0 %}
                         <p>No hay partidos anteriores</p>
                     {% endif %}
-                    <ul class="list-group list-group-flush">
+                    <ul class="list-group list-group-flush border mb-3">
                         {% for p in partidos_anteriores %}
                             <li class="list-group-item">
                                 <div class="row align-items-center">
@@ -133,7 +133,7 @@
             <div class="col">
                 <div class="text-center">
                     <h2>Proximos partidos</h2>
-                    <ul class="list-group list-group-flush">
+                    <ul class="list-group list-group-flush border mb-3">
                         {% for p in partidos_futuros %}
                             <li class="list-group-item">
                                 <div class="row align-items-center">
