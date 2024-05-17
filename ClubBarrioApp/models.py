@@ -257,3 +257,10 @@ class EstadisticasJugador(models.Model):
     def __str__(self):
         return self.jugador.nombre + " " + self.jugador.apellidos + " " + self.partido.equipo1.nombre + " vs " + self.partido.equipo2.nombre + " " + str(
             self.puntos) + " puntos"
+
+class Convocatoria(models.Model):
+    jugador = models.ForeignKey(Jugador, on_delete=models.CASCADE)
+    partido = models.ForeignKey(Partido, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.jugador.nombre + " " + self.jugador.apellidos + " " + self.partido.equipo1.nombre + " vs " + self.partido.equipo2.nombre
