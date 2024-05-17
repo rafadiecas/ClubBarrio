@@ -120,23 +120,28 @@
                                 {% if mapa_fallo %}
                                     <p class="text-center">{{ siguiente_partido.lugar }}</p>
                                 {% else %}
-                                    <div class="container w-50" id="map" style="height: 200px;"></div>
+                                    <div class="container w-50" id="map" style="height: 180px;"></div>
                                 {% endif %}
                             </div>
 
                         </div>
 
                         <div class="tab-pane fade" id="convocatoria" role="tabpanel" aria-labelledby="convocatoria-tab">
-                            <div class="row row-cols-1 row-cols-lg-2 pt-5">
-                            <form action="" method="post">
-                                <label for="entrenadores" class="form-label">Entrenadores:</label>
-                                <select name="jugadores" id="jugadores" class="form-select" multiple>
+                            <div class="flex-container" style="height: 25vh">
+                            <form action="" method="post" class="w-100 h-100">
+                                {% csrf_token %}
+                            <div class="container-fluid d-flex justify-content-center">
+                                <label for="entrenadores" class="form-label h3">Lista de jugadores para convocar</label>
+                            </div>
+                                <select name="jugadores" id="jugadores" class="form-select h-100" multiple>
                                     {% for j in jugadores %}
                                         <option value="{{ j.id }}"{% if j.id in convocatoria %}
                                                 selected {% endif %}>{{ j }}</option>
                                     {% endfor %}
                                 </select>
+                            <div class="container-fluid d-flex justify-content-center">
                                 <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+                                </div>
                             </form>
                             </div>
                         </div>

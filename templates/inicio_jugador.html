@@ -67,6 +67,11 @@
             display: block;
             border-radius: 20%;
         }
+        
+        #color_convocatoria {
+            background-color: {% if convocatoria == "Convocado" %}#00a256 {% else %}#fcd89c {% endif %};
+            color: {% if convocatoria == "Convocado" %}white {% else %}black {% endif %};
+        }
 
     </style>
     <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
@@ -88,10 +93,10 @@
         </div>
         <img src="{% static 'imagenes/6207a0fe26ab99000460a356.png' %}" alt="weather" style="display: none;max-width: 90px; padding-inline: 10px"/>
     </div>
-    <div class="container-fluid" id="contenedor">
-    <div class="row">
-        <h3>Convocatoria: </h3>
-        <p>{{ convocatoria }}</p>
+    <div class="container-fluid px-0 mt-0" id="contenedor">
+    <div class="flex-container d-flex ms-0 mx-0" id="color_convocatoria">
+        <h3 class="ps-2">Convocatoria: </h3>
+        <p class="mb-0 ms-2 align-self-center">{{ convocatoria }}</p>
     </div>
         <div class="row row-cols-md-2 row-cols-lg-2 row-cols-sm-1 row-cols-1 mb-3 d-flex align-items-start">
             <div class="col d-flex flex-column text-center px-5">
