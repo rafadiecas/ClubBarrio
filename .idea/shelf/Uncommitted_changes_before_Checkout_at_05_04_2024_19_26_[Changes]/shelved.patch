@@ -1,0 +1,221 @@
+Index: ClubBarrioApp/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"\r\nURL configuration for ClubBarrio project.\r\n\r\nThe `urlpatterns` list routes URLs to views. For more information please see:\r\n    https://docs.djangoproject.com/en/4.2/topics/http/urls/\r\nExamples:\r\nFunction views\r\n    1. Add an import:  from my_app import views\r\n    2. Add a URL to urlpatterns:  path('', views.home, name='home')\r\nClass-based views\r\n    1. Add an import:  from other_app.views import Home\r\n    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')\r\nIncluding another URLconf\r\n    1. Import the include() function: from django.urls import include, path\r\n    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))\r\n\"\"\"\r\nfrom django.urls import path\r\nfrom .views import *\r\n\r\nurlpatterns = [\r\n    path('inicio/', pagina_inicio, name='inicio'),\r\n    path('login/', login, name='login'),\r\n]\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ClubBarrioApp/urls.py b/ClubBarrioApp/urls.py
+--- a/ClubBarrioApp/urls.py	
++++ b/ClubBarrioApp/urls.py	
+@@ -20,4 +20,5 @@
+ urlpatterns = [
+     path('inicio/', pagina_inicio, name='inicio'),
+     path('login/', login, name='login'),
++    path('noticias/', pagina_noticias, name='noticias'),
+ ]
+Index: .idea/misc.xml
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/misc.xml	
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Black">
++    <option name="sdkName" value="Python 3.9 (ClubBarrio2)" />
++  </component>
++  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9 (ClubBarrio2)" project-jdk-type="Python SDK" />
++</project>
+\ No newline at end of file
+Index: .idea/dataSources.xml
+===================================================================
+diff --git a/.idea/dataSources.xml b/.idea/dataSources.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/dataSources.xml	
+@@ -0,0 +1,29 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
++    <data-source source="LOCAL" name="db" uuid="6f1ca941-dcd3-478b-a163-2473a21683b2">
++      <driver-ref>sqlite.xerial</driver-ref>
++      <synchronize>true</synchronize>
++      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
++      <jdbc-url>jdbc:sqlite:C:\Users\rafa-\PycharmProjects\ClubBarrio2\db.sqlite3</jdbc-url>
++      <working-dir>$ProjectFileDir$</working-dir>
++      <libraries>
++        <library>
++          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.45.1/org/xerial/sqlite-jdbc/3.45.1.0/sqlite-jdbc-3.45.1.0.jar</url>
++        </library>
++        <library>
++          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.45.1/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar</url>
++        </library>
++      </libraries>
++    </data-source>
++    <data-source source="LOCAL" name="Django default" uuid="65a01ea5-ec99-43da-86dd-27db349fed88">
++      <driver-ref>sqlite.xerial</driver-ref>
++      <synchronize>true</synchronize>
++      <imported>true</imported>
++      <remarks>$PROJECT_DIR$/ClubBarrio/settings.py</remarks>
++      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
++      <jdbc-url>jdbc:sqlite:C:\Users\rafa-\PycharmProjects\ClubBarrio2\db.sqlite3</jdbc-url>
++      <working-dir>$ProjectFileDir$</working-dir>
++    </data-source>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/.gitignore
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+new file mode 100644
+--- /dev/null	
++++ b/.idea/.gitignore	
+@@ -0,0 +1,8 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Editor-based HTTP Client requests
++/httpRequests/
++# Datasource local storage ignored files
++/dataSources/
++/dataSources.local.xml
+Index: .idea/inspectionProfiles/Project_Default.xml
+===================================================================
+diff --git a/.idea/inspectionProfiles/Project_Default.xml b/.idea/inspectionProfiles/Project_Default.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/inspectionProfiles/Project_Default.xml	
+@@ -0,0 +1,22 @@
++<component name="InspectionProjectProfileManager">
++  <profile version="1.0">
++    <option name="myName" value="Project Default" />
++    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
++      <option name="ignoredPackages">
++        <value>
++          <list size="1">
++            <item index="0" class="java.lang.String" itemvalue="Django" />
++          </list>
++        </value>
++      </option>
++    </inspection_tool>
++    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
++      <option name="ignoredIdentifiers">
++        <list>
++          <option value="int.find" />
++          <option value="int.index" />
++        </list>
++      </option>
++    </inspection_tool>
++  </profile>
++</component>
+\ No newline at end of file
+Index: .idea/.name
+===================================================================
+diff --git a/.idea/.name b/.idea/.name
+new file mode 100644
+--- /dev/null	
++++ b/.idea/.name	
+@@ -0,0 +1,1 @@
++ClubBarrio
+\ No newline at end of file
+Index: .idea/inspectionProfiles/profiles_settings.xml
+===================================================================
+diff --git a/.idea/inspectionProfiles/profiles_settings.xml b/.idea/inspectionProfiles/profiles_settings.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/inspectionProfiles/profiles_settings.xml	
+@@ -0,0 +1,6 @@
++<component name="InspectionProjectProfileManager">
++  <settings>
++    <option name="USE_PROJECT_PROFILE" value="false" />
++    <version value="1.0" />
++  </settings>
++</component>
+\ No newline at end of file
+Index: .idea/modules.xml
+===================================================================
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/modules.xml	
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/.idea/ClubBarrio.iml" filepath="$PROJECT_DIR$/.idea/ClubBarrio.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/jsLibraryMappings.xml
+===================================================================
+diff --git a/.idea/jsLibraryMappings.xml b/.idea/jsLibraryMappings.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/jsLibraryMappings.xml	
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="JavaScriptLibraryMappings">
++    <file url="file://$PROJECT_DIR$" libraries="{@popperjs/core, bootstrap, jquery, popper.js}" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/vcs.xml
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/vcs.xml	
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/ClubBarrio.iml
+===================================================================
+diff --git a/.idea/ClubBarrio.iml b/.idea/ClubBarrio.iml
+new file mode 100644
+--- /dev/null	
++++ b/.idea/ClubBarrio.iml	
+@@ -0,0 +1,33 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="PYTHON_MODULE" version="4">
++  <component name="FacetManager">
++    <facet type="django" name="Django">
++      <configuration>
++        <option name="rootFolder" value="$MODULE_DIR$" />
++        <option name="settingsModule" value="ClubBarrio/settings.py" />
++        <option name="manageScript" value="$MODULE_DIR$/manage.py" />
++        <option name="environment" value="&lt;map/&gt;" />
++        <option name="doNotUseTestRunner" value="false" />
++        <option name="trackFilePattern" value="migrations" />
++      </configuration>
++    </facet>
++  </component>
++  <component name="NewModuleRootManager">
++    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/venv" />
++    </content>
++    <orderEntry type="jdk" jdkName="Python 3.9 (ClubBarrio2)" jdkType="Python SDK" />
++    <orderEntry type="sourceFolder" forTests="false" />
++    <orderEntry type="library" name="bootstrap" level="application" />
++    <orderEntry type="library" name="popper.js" level="application" />
++    <orderEntry type="library" name="jquery" level="application" />
++    <orderEntry type="library" name="@popperjs/core" level="application" />
++  </component>
++  <component name="PyDocumentationSettings">
++    <option name="format" value="PLAIN" />
++    <option name="myDocStringFormat" value="Plain" />
++  </component>
++  <component name="TemplatesService">
++    <option name="TEMPLATE_CONFIGURATION" value="Django" />
++  </component>
++</module>
+\ No newline at end of file

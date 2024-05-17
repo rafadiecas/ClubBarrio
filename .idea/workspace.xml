@@ -1,0 +1,745 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ce6198a9-d3e4-46ce-ace7-911560b84db1" name="Changes" comment="modal en errores de registro y toast al registrarme">
+      <change beforePath="$PROJECT_DIR$/templates/equipo.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/equipo.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="origin/testing" />
+  </component>
+  <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="rafa" />
+                <branch-info repo="$PROJECT_DIR$" source="testing" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;rafadiecas&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/rafadiecas/ClubBarrio.git&quot;,
+    &quot;accountId&quot;: &quot;b4abb3c9-db4a-4a66-a2fe-461dd414ae8f&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/ClubBarrioApp/views.py" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2eYDJFFi2AsyNUIzSfAPGxiahVp" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Django Server.ClubBarrio2.executor": "Run",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "database.data.extractors.current.export.id": "SQL Inserts",
+    "django.template.preview.state": "SHOW_EDITOR",
+    "git-widget-placeholder": "rafa",
+    "last_opened_file_path": "C:/Users/rafa-/PycharmProjects/ClubBarrio2/static/imagenes",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\rafa-\PycharmProjects\ClubBarrio2\static\imagenes" />
+      <recent name="C:\Users\rafa-\PycharmProjects\ClubBarrio2\ClubBarrioApp" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\rafa-\PycharmProjects\ClubBarrio2\static\imagenes" />
+      <recent name="C:\Users\rafa-\PycharmProjects\ClubBarrio2\static" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="ClubBarrio2" type="Python.DjangoServer" factoryName="Django server">
+      <module name="ClubBarrio2" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="ClubBarrio.settings" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="localhost" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-PY-241.14494.241" />
+        <option value="bundled-python-sdk-0509580d9d50-28c9f5db9ffe-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.14494.241" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ce6198a9-d3e4-46ce-ace7-911560b84db1" name="Changes" comment="" />
+      <created>1712072543809</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1712072543809</updated>
+      <workItem from="1712072544987" duration="902000" />
+      <workItem from="1712075772653" duration="4576000" />
+      <workItem from="1712080664389" duration="1496000" />
+      <workItem from="1712148866136" duration="16878000" />
+      <workItem from="1712234898919" duration="366000" />
+      <workItem from="1712321525702" duration="9051000" />
+      <workItem from="1712338060603" duration="472000" />
+      <workItem from="1712580628854" duration="874000" />
+      <workItem from="1712594345985" duration="621000" />
+      <workItem from="1712609092656" duration="1022000" />
+      <workItem from="1712650624197" duration="3783000" />
+      <workItem from="1712667091693" duration="5149000" />
+      <workItem from="1712672400762" duration="253000" />
+      <workItem from="1712672658219" duration="14967000" />
+      <workItem from="1712696384154" duration="4075000" />
+      <workItem from="1712739096671" duration="5523000" />
+      <workItem from="1712753460771" duration="20980000" />
+      <workItem from="1712784463400" duration="2791000" />
+      <workItem from="1712826232705" duration="3869000" />
+      <workItem from="1712839928052" duration="62000" />
+      <workItem from="1712849539245" duration="153000" />
+      <workItem from="1712850096372" duration="750000" />
+      <workItem from="1712853368612" duration="5646000" />
+      <workItem from="1712865376767" duration="3259000" />
+      <workItem from="1712868777497" duration="103000" />
+      <workItem from="1712869018698" duration="2236000" />
+      <workItem from="1712871485892" duration="356000" />
+      <workItem from="1712928027799" duration="7289000" />
+      <workItem from="1712936063380" duration="1379000" />
+      <workItem from="1712939694614" duration="4489000" />
+      <workItem from="1713262226962" duration="2652000" />
+      <workItem from="1713457022707" duration="2556000" />
+      <workItem from="1713473909786" duration="2354000" />
+      <workItem from="1713519746598" duration="265000" />
+      <workItem from="1713698040720" duration="578000" />
+      <workItem from="1713699679802" duration="398000" />
+      <workItem from="1713712125443" duration="2606000" />
+      <workItem from="1713779127517" duration="337000" />
+      <workItem from="1713802230369" duration="9557000" />
+      <workItem from="1713817820396" duration="4990000" />
+      <workItem from="1713876737976" duration="935000" />
+      <workItem from="1713877954181" duration="71000" />
+      <workItem from="1713880039173" duration="4676000" />
+      <workItem from="1713889090021" duration="101000" />
+      <workItem from="1713889282442" duration="366000" />
+      <workItem from="1713904511813" duration="4216000" />
+      <workItem from="1713963231024" duration="22425000" />
+      <workItem from="1713989530128" duration="7516000" />
+      <workItem from="1714036456472" duration="3315000" />
+      <workItem from="1714050270172" duration="175000" />
+      <workItem from="1714123675067" duration="1214000" />
+      <workItem from="1714135806180" duration="11478000" />
+      <workItem from="1714298785241" duration="4345000" />
+      <workItem from="1714313436838" duration="997000" />
+      <workItem from="1714314646375" duration="732000" />
+      <workItem from="1714408444785" duration="8040000" />
+      <workItem from="1714422566982" duration="2427000" />
+      <workItem from="1714483917014" duration="5721000" />
+      <workItem from="1714493641599" duration="9807000" />
+      <workItem from="1714584812549" duration="995000" />
+      <workItem from="1714593518491" duration="5502000" />
+      <workItem from="1714654616010" duration="220000" />
+      <workItem from="1714660064562" duration="1081000" />
+      <workItem from="1714671674101" duration="2910000" />
+      <workItem from="1714678269430" duration="3366000" />
+      <workItem from="1714740525776" duration="15721000" />
+      <workItem from="1714758238754" duration="450000" />
+      <workItem from="1715013172633" duration="7674000" />
+      <workItem from="1715072803242" duration="3657000" />
+      <workItem from="1715086182037" duration="6819000" />
+      <workItem from="1715094896495" duration="97000" />
+      <workItem from="1715095058290" duration="677000" />
+      <workItem from="1715096146002" duration="2380000" />
+      <workItem from="1715099638662" duration="4455000" />
+      <workItem from="1715105165257" duration="757000" />
+      <workItem from="1715172908127" duration="12002000" />
+      <workItem from="1715191527366" duration="1763000" />
+      <workItem from="1715205078780" duration="1180000" />
+      <workItem from="1715259433804" duration="71000" />
+      <workItem from="1715289570637" duration="3873000" />
+      <workItem from="1715527512494" duration="4489000" />
+      <workItem from="1715535384754" duration="1474000" />
+      <workItem from="1715604628033" duration="1332000" />
+      <workItem from="1715618060319" duration="6326000" />
+      <workItem from="1715677607152" duration="3411000" />
+      <workItem from="1715698809729" duration="801000" />
+      <workItem from="1715700135573" duration="12525000" />
+      <workItem from="1715764662172" duration="3914000" />
+      <workItem from="1715777951637" duration="5392000" />
+      <workItem from="1715783588516" duration="6326000" />
+      <workItem from="1715794573830" duration="4551000" />
+      <workItem from="1715847512659" duration="4183000" />
+      <workItem from="1715863749333" duration="797000" />
+      <workItem from="1715883776089" duration="2018000" />
+      <workItem from="1715893956139" duration="4161000" />
+      <workItem from="1715935804832" duration="4540000" />
+      <workItem from="1715944772708" duration="177000" />
+      <workItem from="1715950180663" duration="16790000" />
+    </task>
+    <task id="LOCAL-00111" summary="estilo producto.html">
+      <option name="closed" value="true" />
+      <created>1715089709038</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1715089709038</updated>
+    </task>
+    <task id="LOCAL-00112" summary="cambio estilo tienda.html">
+      <option name="closed" value="true" />
+      <created>1715092409008</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1715092409008</updated>
+    </task>
+    <task id="LOCAL-00113" summary="estilos para tienda y producto.html">
+      <option name="closed" value="true" />
+      <created>1715092931371</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1715092931371</updated>
+    </task>
+    <task id="LOCAL-00114" summary="insercion de productos y productotalla">
+      <option name="closed" value="true" />
+      <created>1715095465908</created>
+      <option name="number" value="00114" />
+      <option name="presentableId" value="LOCAL-00114" />
+      <option name="project" value="LOCAL" />
+      <updated>1715095465909</updated>
+    </task>
+    <task id="LOCAL-00115" summary="estilo para tienda, cuadros no son iguales">
+      <option name="closed" value="true" />
+      <created>1715095674505</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1715095674505</updated>
+    </task>
+    <task id="LOCAL-00116" summary="que aparezcan jugadores en todos las ventanas">
+      <option name="closed" value="true" />
+      <created>1715099500953</created>
+      <option name="number" value="00116" />
+      <option name="presentableId" value="LOCAL-00116" />
+      <option name="project" value="LOCAL" />
+      <updated>1715099500953</updated>
+    </task>
+    <task id="LOCAL-00117" summary="imagenes tienda.html">
+      <option name="closed" value="true" />
+      <created>1715101341643</created>
+      <option name="number" value="00117" />
+      <option name="presentableId" value="LOCAL-00117" />
+      <option name="project" value="LOCAL" />
+      <updated>1715101341643</updated>
+    </task>
+    <task id="LOCAL-00118" summary="añadido textarea en producto y solucion de bugs en editar">
+      <option name="closed" value="true" />
+      <created>1715102853670</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1715102853670</updated>
+    </task>
+    <task id="LOCAL-00119" summary="metiendo otra vez el gradiente to guapo">
+      <option name="closed" value="true" />
+      <created>1715103824445</created>
+      <option name="number" value="00119" />
+      <option name="presentableId" value="LOCAL-00119" />
+      <option name="project" value="LOCAL" />
+      <updated>1715103824445</updated>
+    </task>
+    <task id="LOCAL-00120" summary="metiendo otra vez el gradiente to guapo">
+      <option name="closed" value="true" />
+      <created>1715173116392</created>
+      <option name="number" value="00120" />
+      <option name="presentableId" value="LOCAL-00120" />
+      <option name="project" value="LOCAL" />
+      <updated>1715173116392</updated>
+    </task>
+    <task id="LOCAL-00121" summary="arreglado productos en admin">
+      <option name="closed" value="true" />
+      <created>1715176757454</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1715176757454</updated>
+    </task>
+    <task id="LOCAL-00122" summary="cambio en jugador en el carrusel para mostrar proximo partido y proximo entrenamiento">
+      <option name="closed" value="true" />
+      <created>1715182222440</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1715182222440</updated>
+    </task>
+    <task id="LOCAL-00123" summary="inicio, estadisticas de equipo">
+      <option name="closed" value="true" />
+      <created>1715184110876</created>
+      <option name="number" value="00123" />
+      <option name="presentableId" value="LOCAL-00123" />
+      <option name="project" value="LOCAL" />
+      <updated>1715184110876</updated>
+    </task>
+    <task id="LOCAL-00124" summary="terminado estadisticas equipo">
+      <option name="closed" value="true" />
+      <created>1715193172971</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1715193172971</updated>
+    </task>
+    <task id="LOCAL-00125" summary="Entrenador terminado 100%">
+      <option name="closed" value="true" />
+      <created>1715205657384</created>
+      <option name="number" value="00125" />
+      <option name="presentableId" value="LOCAL-00125" />
+      <option name="project" value="LOCAL" />
+      <updated>1715205657384</updated>
+    </task>
+    <task id="LOCAL-00126" summary="carrito js">
+      <option name="closed" value="true" />
+      <created>1715293387468</created>
+      <option name="number" value="00126" />
+      <option name="presentableId" value="LOCAL-00126" />
+      <option name="project" value="LOCAL" />
+      <updated>1715293387468</updated>
+    </task>
+    <task id="LOCAL-00127" summary="camcio a agregar productoTalla por producto">
+      <option name="closed" value="true" />
+      <created>1715529682023</created>
+      <option name="number" value="00127" />
+      <option name="presentableId" value="LOCAL-00127" />
+      <option name="project" value="LOCAL" />
+      <updated>1715529682023</updated>
+    </task>
+    <task id="LOCAL-00128" summary="camcio a agregar productoTalla por producto ya funciona">
+      <option name="closed" value="true" />
+      <created>1715531034590</created>
+      <option name="number" value="00128" />
+      <option name="presentableId" value="LOCAL-00128" />
+      <option name="project" value="LOCAL" />
+      <updated>1715531034590</updated>
+    </task>
+    <task id="LOCAL-00129" summary="meter dos iguales ya funciona">
+      <option name="closed" value="true" />
+      <created>1715531989607</created>
+      <option name="number" value="00129" />
+      <option name="presentableId" value="LOCAL-00129" />
+      <option name="project" value="LOCAL" />
+      <updated>1715531989607</updated>
+    </task>
+    <task id="LOCAL-00130" summary="footer se pisa en contacto">
+      <option name="closed" value="true" />
+      <created>1715536804161</created>
+      <option name="number" value="00130" />
+      <option name="presentableId" value="LOCAL-00130" />
+      <option name="project" value="LOCAL" />
+      <updated>1715536804162</updated>
+    </task>
+    <task id="LOCAL-00131" summary="arreglos en estadisticas_jugador.html pero buscador no funciona">
+      <option name="closed" value="true" />
+      <created>1715605085712</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1715605085713</updated>
+    </task>
+    <task id="LOCAL-00132" summary="arreglos en estadisticas_jugador.html, ya funciona">
+      <option name="closed" value="true" />
+      <created>1715605908212</created>
+      <option name="number" value="00132" />
+      <option name="presentableId" value="LOCAL-00132" />
+      <option name="project" value="LOCAL" />
+      <updated>1715605908212</updated>
+    </task>
+    <task id="LOCAL-00133" summary="arreglos de mierda del merge">
+      <option name="closed" value="true" />
+      <created>1715619256456</created>
+      <option name="number" value="00133" />
+      <option name="presentableId" value="LOCAL-00133" />
+      <option name="project" value="LOCAL" />
+      <updated>1715619256457</updated>
+    </task>
+    <task id="LOCAL-00134" summary="menu en administrador.html">
+      <option name="closed" value="true" />
+      <created>1715700173702</created>
+      <option name="number" value="00134" />
+      <option name="presentableId" value="LOCAL-00134" />
+      <option name="project" value="LOCAL" />
+      <updated>1715700173702</updated>
+    </task>
+    <task id="LOCAL-00135" summary="arreglo bugs">
+      <option name="closed" value="true" />
+      <created>1715702397589</created>
+      <option name="number" value="00135" />
+      <option name="presentableId" value="LOCAL-00135" />
+      <option name="project" value="LOCAL" />
+      <updated>1715702397589</updated>
+    </task>
+    <task id="LOCAL-00136" summary="inserciones.txt con stats">
+      <option name="closed" value="true" />
+      <created>1715705872348</created>
+      <option name="number" value="00136" />
+      <option name="presentableId" value="LOCAL-00136" />
+      <option name="project" value="LOCAL" />
+      <updated>1715705872348</updated>
+    </task>
+    <task id="LOCAL-00137" summary="plantilla formulario pago">
+      <option name="closed" value="true" />
+      <created>1715709330109</created>
+      <option name="number" value="00137" />
+      <option name="presentableId" value="LOCAL-00137" />
+      <option name="project" value="LOCAL" />
+      <updated>1715709330109</updated>
+    </task>
+    <task id="LOCAL-00138" summary="plantilla formulario pago pequeños retoques">
+      <option name="closed" value="true" />
+      <created>1715709522735</created>
+      <option name="number" value="00138" />
+      <option name="presentableId" value="LOCAL-00138" />
+      <option name="project" value="LOCAL" />
+      <updated>1715709522735</updated>
+    </task>
+    <task id="LOCAL-00139" summary="formulario de pago para las inscripciones">
+      <option name="closed" value="true" />
+      <created>1715713077414</created>
+      <option name="number" value="00139" />
+      <option name="presentableId" value="LOCAL-00139" />
+      <option name="project" value="LOCAL" />
+      <updated>1715713077414</updated>
+    </task>
+    <task id="LOCAL-00140" summary="filtro tienda">
+      <option name="closed" value="true" />
+      <created>1715778520710</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1715778520711</updated>
+    </task>
+    <task id="LOCAL-00141" summary="arreglo rapido">
+      <option name="closed" value="true" />
+      <created>1715779559368</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1715779559368</updated>
+    </task>
+    <task id="LOCAL-00142" summary="arreglos varios">
+      <option name="closed" value="true" />
+      <created>1715784492820</created>
+      <option name="number" value="00142" />
+      <option name="presentableId" value="LOCAL-00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1715784492821</updated>
+    </task>
+    <task id="LOCAL-00143" summary="ya avisa de la verificacion">
+      <option name="closed" value="true" />
+      <created>1715797597684</created>
+      <option name="number" value="00143" />
+      <option name="presentableId" value="LOCAL-00143" />
+      <option name="project" value="LOCAL" />
+      <updated>1715797597684</updated>
+    </task>
+    <task id="LOCAL-00144" summary="cambios en edita entrenador, ya funciona">
+      <option name="closed" value="true" />
+      <created>1715798956100</created>
+      <option name="number" value="00144" />
+      <option name="presentableId" value="LOCAL-00144" />
+      <option name="project" value="LOCAL" />
+      <updated>1715798956100</updated>
+    </task>
+    <task id="LOCAL-00145" summary="edita entrenador funcional y cambios en foto de la barra navegacion">
+      <option name="closed" value="true" />
+      <created>1715850712864</created>
+      <option name="number" value="00145" />
+      <option name="presentableId" value="LOCAL-00145" />
+      <option name="project" value="LOCAL" />
+      <updated>1715850712865</updated>
+    </task>
+    <task id="LOCAL-00146" summary="carrito aariba a la derecha como españa y cuadros en equipo">
+      <option name="closed" value="true" />
+      <created>1715864469220</created>
+      <option name="number" value="00146" />
+      <option name="presentableId" value="LOCAL-00146" />
+      <option name="project" value="LOCAL" />
+      <updated>1715864469221</updated>
+    </task>
+    <task id="LOCAL-00147" summary="intento decorator">
+      <option name="closed" value="true" />
+      <created>1715885746259</created>
+      <option name="number" value="00147" />
+      <option name="presentableId" value="LOCAL-00147" />
+      <option name="project" value="LOCAL" />
+      <updated>1715885746259</updated>
+    </task>
+    <task id="LOCAL-00148" summary="funcion roles prohibidos en decorator y admin y jugador limitados">
+      <option name="closed" value="true" />
+      <created>1715895935726</created>
+      <option name="number" value="00148" />
+      <option name="presentableId" value="LOCAL-00148" />
+      <option name="project" value="LOCAL" />
+      <updated>1715895935726</updated>
+    </task>
+    <task id="LOCAL-00149" summary="tienda arreglada">
+      <option name="closed" value="true" />
+      <created>1715896827850</created>
+      <option name="number" value="00149" />
+      <option name="presentableId" value="LOCAL-00149" />
+      <option name="project" value="LOCAL" />
+      <updated>1715896827850</updated>
+    </task>
+    <task id="LOCAL-00150" summary="toast en pago inscripcion">
+      <option name="closed" value="true" />
+      <created>1715897357982</created>
+      <option name="number" value="00150" />
+      <option name="presentableId" value="LOCAL-00150" />
+      <option name="project" value="LOCAL" />
+      <updated>1715897357982</updated>
+    </task>
+    <task id="LOCAL-00151" summary="añadido cascade a tabla de linea_pedido, aññadida lista de pedidos y borrar pedido">
+      <option name="closed" value="true" />
+      <created>1715937922904</created>
+      <option name="number" value="00151" />
+      <option name="presentableId" value="LOCAL-00151" />
+      <option name="project" value="LOCAL" />
+      <updated>1715937922904</updated>
+    </task>
+    <task id="LOCAL-00152" summary="añadida tabla convocatoria">
+      <option name="closed" value="true" />
+      <created>1715950323910</created>
+      <option name="number" value="00152" />
+      <option name="presentableId" value="LOCAL-00152" />
+      <option name="project" value="LOCAL" />
+      <updated>1715950323910</updated>
+    </task>
+    <task id="LOCAL-00153" summary="comienzo de convocatoria">
+      <option name="closed" value="true" />
+      <created>1715952135469</created>
+      <option name="number" value="00153" />
+      <option name="presentableId" value="LOCAL-00153" />
+      <option name="project" value="LOCAL" />
+      <updated>1715952135469</updated>
+    </task>
+    <task id="LOCAL-00154" summary="backend convocatoria y migrate">
+      <option name="closed" value="true" />
+      <created>1715952918610</created>
+      <option name="number" value="00154" />
+      <option name="presentableId" value="LOCAL-00154" />
+      <option name="project" value="LOCAL" />
+      <updated>1715952918610</updated>
+    </task>
+    <task id="LOCAL-00155" summary="backend terminado de convocatoria">
+      <option name="closed" value="true" />
+      <created>1715953815209</created>
+      <option name="number" value="00155" />
+      <option name="presentableId" value="LOCAL-00155" />
+      <option name="project" value="LOCAL" />
+      <updated>1715953815209</updated>
+    </task>
+    <task id="LOCAL-00156" summary="backend terminado de convocatoria">
+      <option name="closed" value="true" />
+      <created>1715954798716</created>
+      <option name="number" value="00156" />
+      <option name="presentableId" value="LOCAL-00156" />
+      <option name="project" value="LOCAL" />
+      <updated>1715954798716</updated>
+    </task>
+    <task id="LOCAL-00157" summary="ya funciona la convocatoria">
+      <option name="closed" value="true" />
+      <created>1715958055191</created>
+      <option name="number" value="00157" />
+      <option name="presentableId" value="LOCAL-00157" />
+      <option name="project" value="LOCAL" />
+      <updated>1715958055191</updated>
+    </task>
+    <task id="LOCAL-00158" summary="regulado el admin para que sea todopoderoso otra vez">
+      <option name="closed" value="true" />
+      <created>1715959721103</created>
+      <option name="number" value="00158" />
+      <option name="presentableId" value="LOCAL-00158" />
+      <option name="project" value="LOCAL" />
+      <updated>1715959721104</updated>
+    </task>
+    <task id="LOCAL-00159" summary="modal en errores de registro y toast al registrarme">
+      <option name="closed" value="true" />
+      <created>1715967176036</created>
+      <option name="number" value="00159" />
+      <option name="presentableId" value="LOCAL-00159" />
+      <option name="project" value="LOCAL" />
+      <updated>1715967176036</updated>
+    </task>
+    <option name="localTasksCounter" value="160" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+        <option value="GitHub.CommitStatus" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/testing" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="*" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="menu en administrador.html" />
+    <MESSAGE value="arreglo bugs" />
+    <MESSAGE value="inserciones.txt con stats" />
+    <MESSAGE value="plantilla formulario pago" />
+    <MESSAGE value="plantilla formulario pago pequeños retoques" />
+    <MESSAGE value="formulario de pago para las inscripciones" />
+    <MESSAGE value="filtro tienda" />
+    <MESSAGE value="arreglo rapido" />
+    <MESSAGE value="arreglos varios" />
+    <MESSAGE value="ya avisa de la verificacion" />
+    <MESSAGE value="cambios en edita entrenador, ya funciona" />
+    <MESSAGE value="edita entrenador funcional y cambios en foto de la barra navegacion" />
+    <MESSAGE value="carrito aariba a la derecha como españa y cuadros en equipo" />
+    <MESSAGE value="intento decorator" />
+    <MESSAGE value="funcion roles prohibidos en decorator y admin y jugador limitados" />
+    <MESSAGE value="tienda arreglada" />
+    <MESSAGE value="toast en pago inscripcion" />
+    <MESSAGE value="añadido cascade a tabla de linea_pedido, aññadida lista de pedidos y borrar pedido" />
+    <MESSAGE value="añadida tabla convocatoria" />
+    <MESSAGE value="comienzo de convocatoria" />
+    <MESSAGE value="backend convocatoria y migrate" />
+    <MESSAGE value="backend terminado de convocatoria" />
+    <MESSAGE value="ya funciona la convocatoria" />
+    <MESSAGE value="regulado el admin para que sea todopoderoso otra vez" />
+    <MESSAGE value="modal en errores de registro y toast al registrarme" />
+    <option name="LAST_COMMIT_MESSAGE" value="modal en errores de registro y toast al registrarme" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ClubBarrioApp/views.py</url>
+          <line>982</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/ClubBarrio$views.coverage" NAME="views Coverage Results" MODIFIED="1712167536797" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ClubBarrioApp" />
+    <SUITE FILE_PATH="coverage/ClubBarrio$models.coverage" NAME="models Coverage Results" MODIFIED="1712167546474" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ClubBarrioApp" />
+  </component>
+</project>
