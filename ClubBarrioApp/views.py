@@ -1507,3 +1507,12 @@ def eliminar_pedido(request, id):
 def pagina_error(request):
     return render(request, 'error.html')
 
+def lista_pedidos(request):
+    pedidos = Pedido.objects.all()
+    return render(request, 'lista_pedidos.html', {'pedidos': pedidos})
+
+def borra_pedidos(request, id):
+    pedido = Pedido.objects.get(id=id)
+    pedido.delete()
+    return redirect('pedidos_listado')
+

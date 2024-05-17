@@ -1,0 +1,61 @@
+{% load static %}
+{% include 'barra_admin.html' %}
+<head>
+    <title>Lista Equipos</title>
+    <style>
+    .btn-custom {
+        color: #00653d; /* Color del texto azul */
+    }
+    .table-responsive {
+        max-height: 400px; /* Ajusta la altura máxima según sea necesario */
+        overflow-y: auto; /* Agrega un scroll vertical */
+    }
+
+    </style>
+
+
+    
+</head>
+<div class="container-fluid d-flex flex-column align-items-center">
+    <div class="container w-100 d-flex justify-content-start ">
+        <h1>Lista pedidos:</h1>
+    </div>
+    <div class="container w-100 d-flex justify-content-between align-items-center ">
+
+        <div class="input-group w-25 h-50 ">
+          <input type="text" class="form-control" id="inputBuscar" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;" >
+        </div>
+    </div>
+    <div class="container w-100 m-4 ">
+        <div class="table-responsive">
+            <table class="table" id="tabla" >
+                <thead>
+                <tr>
+                  <th scope="col">id</th>
+                   <th scope="col">Número pedido</th>
+                    <th scope="col">Usuario</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Dirección</th>
+                  <th scope="col">Total</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody >
+              {% for p in pedidos %}
+                <tr>
+                  <th scope="row">{{ p.id }}</th>
+                    <td>{{ p.numPedido }}</td>
+                 <td>{{ p.usuario.username }}</td>
+                  <td>{{ p.fecha }}</td>
+                  <td>{{ p.direccion }}</td>
+                    <td>{{ p.total }}</td>
+                    <td>
+                        <a href="{% url 'borra_pedidos' id=p.id %}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'imagenes/icons8-basura-30.png' %}"></a>                   
+                    </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>
