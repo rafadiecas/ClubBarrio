@@ -1,13 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+{% include "barra_navegacion.html" %}
 <head>
     <title>Pagina de Tarifas</title>
     <link rel="stylesheet" href="{% static 'css/tarifas.css' %}">
     <style>
-        li {
-            padding-block: 15px;
-        }
+        
         .card.selected {
             border: 2px solid #006b1b;
         }
@@ -16,7 +15,7 @@
     </style>
 </head>
 
-{% include "barra_navegacion.html" %}
+
 
 <body>
 
@@ -41,7 +40,6 @@
                         <li class="list-group-item">Acceso a resultados del equipo</li>
                         <li class="list-group-item">...</li>
                     </ul>
-                    <a href="#" class="btn btn-gradient mt-2">Choose Plan</a>
                 </div>
             </div>
         </div>
@@ -60,7 +58,6 @@
                         <li class="list-group-item">Acceso a resultados del equipo</li>
                         <li class="list-group-item">Carnet de socio</li>
                     </ul>
-                    <a href="#" class="btn btn-gradient mt-2">Choose Plan</a>
                 </div>
             </div>
         </div>
@@ -80,7 +77,6 @@
                         <li class="list-group-item">Acceso a resultados del equipo</li>
                         <li class="list-group-item">3 Carnets de socio</li>
                     </ul>
-                    <a href="#" class="btn btn-gradient mt-2">Choose Plan</a>
                 </div>
             </div>
         </div>
