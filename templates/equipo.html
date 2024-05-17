@@ -32,15 +32,6 @@
         .card {
             cursor: default !important;
         }
-        
-        @media (max-width: 768px) {
-        #containerConvo {
-            height: auto !important;
-            max-height: 300px !important;
-        }
-        
-        
-        }
 
 
     </style>
@@ -136,7 +127,7 @@
                         </div>
 
                         <div class="tab-pane fade" id="convocatoria" role="tabpanel" aria-labelledby="convocatoria-tab">
-                            <div class="flex-container" style="height: 25vh;max-height:150px" id="containerConvo">
+                            <div class="flex-container" style="height: 25vh">
                             <form action="" method="post" class="w-100 h-100">
                                 {% csrf_token %}
                             <div class="container-fluid d-flex justify-content-center">
@@ -149,7 +140,7 @@
                                     {% endfor %}
                                 </select>
                             <div class="container-fluid d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary mt-3 mb-3 mb-md-0 ">Guardar</button>
+                                <button type="submit" class="btn btn-primary mt-3">Guardar</button>
                                 </div>
                             </form>
                             </div>
