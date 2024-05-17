@@ -49,15 +49,16 @@ def pagina_inicio(request):
     return render(request, 'inicio.html', {'noticias': list_noticias})
 @rol_prohibido('Administrador', 'Jugador')
 def pagina_tienda(request):
-    list_productos = Producto.objects.all()
+
+    ids_productos_con_stock = ProductoTalla.objects.filter(stock__gt=5).values_list('producto_id', flat=True).distinct()
+
+
+    list_productos = Producto.objects.filter(id__in=ids_productos_con_stock)
     page = request.GET.get('page', 1)
     tipo_producto = Tipo.objects.all()
 
-    try:
-        paginator = Paginator(list_productos, 9) # Muestra la cantidad de productor por pagina
-        list_productos = paginator.page(page)
-    except:
-        raise Http404
+    paginator = Paginator(list_productos, 9)
+    list_productos = paginator.get_page(page)
 
     data = {
         'entity': list_productos,
