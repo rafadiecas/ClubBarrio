@@ -372,7 +372,7 @@ def registro(request):
 
 
         if len(errores) != 0:
-            return render(request, 'registro.html', {"errores": errores, "nombre_usuraio": nombre_usuario, "email": email, "fecha_nacimiento": fecha_nacimiento})
+            return JsonResponse({"errores": errores}, status=400)
         else:
             usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email,
                                           fecha_nacimiento=fecha_nacimiento, rol=rol)
@@ -386,9 +386,7 @@ def registro(request):
                                                            weekly_newsletter=False, new_training=False)
             notificaciones.save()
 
-
             return JsonResponse({'success': 'Usuario registrado con éxito'})
-            # return redirect('login')
 
 def generate_verification_token():
     return secrets.token_urlsafe(20)
