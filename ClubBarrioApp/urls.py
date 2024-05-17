@@ -77,15 +77,15 @@ urlpatterns = [
     path('administrador/tienda/newTalla', crear_producto_talla, name='crear_tallaje'),
     path('entrenador/estadisticas/<int:id>/', estadisticas_equipo, name='equipo_estadisticas'),
     path('entrenador/entrenamientos/', entrenamientos_listado_entrenador, name='entrenamientos_listado_entrenador'),
-    # path('carrito/add/<int:id>', add_carrito, name='add_carrito'),
     path('tienda/carrito/', carrito, name='carrito'),
     path('tienda/carrito/eliminar/<int:id>/', eliminar_carrito, name='eliminar_carrito'),
     path('tienda/carrito/anyadir/<int:id>/', anyadir_carrito, name='anyadir_carrito'),
     path('tienda/carrito/restar/<int:id>/', restar_carrito, name='restar_carrito'),
     path('tienda/carrito/pago/', formulario_pago_pedido, name='pago_pedido'),
     path('tienda/carrito/nuevo_pedido/', crear_pedido, name='crear_pedido'),
-
     path('usuario/inscripcion/pagar', pago_inscripcion, name='pago_inscripciones'),
     path('verify_email/<str:username>/<str:token>/', verify_email, name='verify_email'),
     path('error/', pagina_error, name='error'),
+    path('administrador/pedidos/', lista_pedidos, name='pedidos_listado'),
+    path('administrador/pedidos/eliminar/<int:id>/', borra_pedidos, name='borra_pedidos'),
 ]

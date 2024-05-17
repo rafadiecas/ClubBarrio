@@ -140,7 +140,7 @@ class ProductoTalla(models.Model):
         return self.producto.nombre + " " + self.talla.nombre + " " + str(self.stock)
 class LineaPedido(models.Model):
     prductoTalla = models.ForeignKey(ProductoTalla, on_delete=models.DO_NOTHING)
-    pedido = models.ForeignKey(Pedido, on_delete=models.DO_NOTHING)
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     cantidad = models.IntegerField(default=0)
     def __str__(self):
         return self.prductoTalla + self.pedido + self.cantidad
