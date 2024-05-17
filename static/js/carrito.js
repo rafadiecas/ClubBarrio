@@ -117,16 +117,22 @@ $(document).ready(function () {
         });
     });
     $('.input-limit').each(function () {
-        var productId = $(this).data('product-id');
-        var currentQuantity = parseInt($(this).val());
-        console.log("Initial check - Product ID:", productId, "Quantity:", currentQuantity);
+    var productId = $(this).data('product-id');
+    var currentQuantity = parseInt($(this).val());
+    console.log("Initial check - Product ID:", productId, "Quantity:", currentQuantity);
 
-        if (currentQuantity >= 5) {
-            var button = $('.btn-add[data-product-id="' + productId + '"]');
-            console.log("Button to disable:", button);
-            button.prop('disabled', true);
-        }
-    });
+    if (currentQuantity > 5) {
+        currentQuantity = 5;
+        $(this).val(currentQuantity);
+        console.log("Quantity set to 5 for Product ID:", productId);
+    }
+
+    if (currentQuantity >= 5) {
+        var button = $('.btn-add[data-product-id="' + productId + '"]');
+        console.log("Button to disable:", button);
+        button.prop('disabled', true);
+    }
+});
 });
 
 function getCookie(name) {

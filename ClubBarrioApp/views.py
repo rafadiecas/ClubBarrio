@@ -1372,15 +1372,23 @@ def producto(request, id):
 
         carro = {}
 
-        # Comprobar si hay ya un carrito en sesión
+
         if "carro" in request.session:
             carro = request.session.get("carro", {})
 
         # Comprobar que el producto está o no está en el carrito
         if str(producto_talla.id) in carro.keys():
-            carro[str(producto_talla.id)] = int(carro[str(producto_talla.id)]) + int(request.POST.get('cantidad'))
+            # Si la cantidad actual en el carrito más la cantidad que se está agregando es mayor que 5
+            if carro[str(producto_talla.id)] + int(request.POST.get('cantidad')) > 5:
+                # Establecer la cantidad del producto en el carrito a 5
+                carro[str(producto_talla.id)] = 5
+            else:
+                # Si no, simplemente agregar la cantidad que se está agregando
+                carro[str(producto_talla.id)] += int(request.POST.get('cantidad'))
         else:
-            carro[str(producto_talla.id)] = int(request.POST.get('cantidad'))
+            # Si el producto no está en el carrito, agregarlo
+            carro[str(producto_talla.id)] = min(int(request.POST.get('cantidad')), 5)  # No permitir más de 5 en la primera adición
+
         request.session["carro"] = carro
 
         return redirect('tienda')
