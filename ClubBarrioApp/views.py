@@ -858,7 +858,11 @@ def editar_partido(request, id):
 
 def lista_tienda(request):
     lista_productos = ProductoTalla.objects.all()
-    return render(request, 'lista_productos.html', {"lista_productos":lista_productos})
+
+
+    productos_bajo_stock = ProductoTalla.objects.filter(stock__lte=5)
+
+    return render(request, 'lista_productos.html', {"lista_productos":lista_productos, "productos_bajo_stock": productos_bajo_stock})
 
 def crear_producto(request):
     if request.method == 'GET':
