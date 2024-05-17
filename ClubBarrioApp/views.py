@@ -1494,6 +1494,9 @@ def crear_pedido(request):
     nuevo_pedido.total = total_descuento
     nuevo_pedido.save()
 
+
+
+
     for k in carro_cliente.keys():
         productoTalla = ProductoTalla.objects.get(id=int(k))
         nueva_linea_pedido = LineaPedido()
@@ -1504,6 +1507,32 @@ def crear_pedido(request):
         productoTalla.save()
         nueva_linea_pedido.save()
 
+    productos_bajo_stock = []
+    for k in carro_cliente.keys():
+        producto_talla = ProductoTalla.objects.get(id=k)
+        if producto_talla.stock <= 5:
+            productos_bajo_stock.append(producto_talla)
+    if productos_bajo_stock:
+        enviar_correo_productos_bajo_stock(productos_bajo_stock)
+
+
+
+def enviar_correo_productos_bajo_stock(productos_bajo_stock):
+
+    asunto = "Aviso de stock bajo"
+    mensaje = ("Los siguientes productos tienen un stock de 5 o menos:<br><br>")
+    for producto in productos_bajo_stock:
+        mensaje += f"Producto: {producto.producto.nombre}, Talla: {producto.talla.nombre}, Stock: {producto.stock}<br>"
+    mensaje += "<br>Visita Administrador - Tienda para agregar nuevo stock.<br>"
+
+
+    correo = EmailMessage(
+        asunto,
+        mensaje,
+        to=[settings.EMAIL_HOST_USER]
+    )
+    correo.content_subtype = "html"
+    correo.send()
 def eliminar_pedido(request, id):
     pedido = Pedido.objects.get(id=id)
     pedido.delete()
