@@ -1201,8 +1201,22 @@ def inicio_jugador(request, id=None):
     if entrenamientos.exists():
         primer_entrenamiento = entrenamientos.first()
 
+    convo = ""
+    convocatoria= ()
+
+    try:
+        convocatoria = Convocatoria.objects.get(partido_id=partidos_futuros[0].id)
+        try:
+            jugador_convocado = Convocatoria.objects.get(jugador_id=jugador.id, partido_id=partidos_futuros[0].id)
+            convo = "Convocado"
+        except:
+            convo = "No Convocado"
+    except :
+        convo = "No hay convocatoria para el siguiente partido"
+
+
     list_partidos = Partido.objects.filter(Q(equipo1_id= equipo3.id)| Q(equipo2_id= equipo3.id))
-    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon, 'entrenamiento': primer_entrenamiento,'mapa_fallo': False})
+    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon, 'entrenamiento': primer_entrenamiento,'mapa_fallo': False,'convocatoria': convo})
 
 
 def saca_clasificacion(equipos):
