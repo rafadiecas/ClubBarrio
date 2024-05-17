@@ -977,7 +977,7 @@ def pagina_usuario(request):
         return render(request, 'inicio_usuario_tutor.html', {'noticias': list_noticias, 'partidos': list_partidos, 'equipos_por_categoria': equipos_por_categoria})
 @rol_prohibido('Administrador')
 def tarifas(request):
-    return render(request, 'tarifas.html')
+    return render(request, 'tarifas_new.html')
 
 def inscripciones(request):
     if request.method == 'GET':

@@ -54,6 +54,7 @@ urlpatterns = [
     path('administrador/tienda/editar/<int:id>/', edita_producto, name='edita_producto'),
     path('usuario/', pagina_usuario, name='usuario'),
     path('tarifas/', tarifas, name='tarifas'),
+    #path('tarifas/', tarifas_new, name='tarifas_new'),
     path('usuario/inscripcion', inscripciones, name='inscripciones'),
     path('tienda/', pagina_tienda, name='tienda'),
     path('tienda/<int:id>/', pagina_tienda_filtro, name='tienda_filtro'),

@@ -13,6 +13,11 @@
     {% endif %}
     {% block bootstrap5_extra_head %}{% endblock %}
     <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
+
+    body{
+        font-family: 'Roboto', sans-serif;
+    }
     * {
     box-sizing: border-box;
         padding: 0;
@@ -70,10 +75,10 @@
             }
         {% endif %}
 
-        .card:hover {
-            /* Aquí puedes agregar el efecto que quieras cuando se pasa el mouse sobre el elemento, por ejemplo, cambiar el color de fondo */
-            background-color: #f5f5f5;
-        }
+        {#.card:hover {#}
+        {#    /* Aquí puedes agregar el efecto que quieras cuando se pasa el mouse sobre el elemento, por ejemplo, cambiar el color de fondo */#}
+        {#    background-color: #f5f5f5;#}
+        {#}#}
 
         .card {
             cursor: pointer;
@@ -89,7 +94,7 @@
 
         .shadow-custom {
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 20px 6px 20px 0 rgba(0, 0, 0, 0.19);
-        }
+        }}
     </style>
 
 

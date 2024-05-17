@@ -53,7 +53,7 @@
               <div class="card-header text-bg-primary">Bienvenido {{ perfil.usuario.username }}</div>
               <div class="card-body">
                 <div class="text-center mb-3">
-                    <img id="profileImage" src={{ usuario.foto.url }} class="img-fluid rounded-circle"
+                    <img id="profileImage" src={{ usuario.foto.url }} class="img-fluid rounded-circle
                     alt="INTRODUCE FOTO">
                 </div>
                   <h5 class="text-center mb-1">{{perfil.nombre}} {{ perfil.apellidos }}</h5>
@@ -89,7 +89,7 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link {% if error_en_cambio_de_contraseña %}active{% endif %}" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">Contraseña</button>
                 </li>
-                {% if perfil.usuario.rol == 'Tutor' or perfil.usuario.rol == 'Entrenador' %}
+                {% if perfil.usuario.rol == 'Tutor' or perfil.usuario.rol == 'Entrenador' or usuario.rol == 'Usuario'%}
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="pedidos-tab" data-bs-toggle="tab" data-bs-target="#pedidos-tab-pane" type="button" role="tab" aria-controls="pedidos-tab-pane" aria-selected="false">Pedidos</button>
                 </li>

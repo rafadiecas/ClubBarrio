@@ -1,31 +1,20 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+{% include "barra_navegacion.html" %}
 <head>
     <title>Pagina de Tarifas</title>
     <link rel="stylesheet" href="{% static 'css/tarifas.css' %}">
     <style>
-        li {
-            padding-block: 15px;
-        }
-        .card.selected {
-            border: 2px solid #006b1b;
-        }
-        
         
     </style>
 </head>
 
-{% include "barra_navegacion.html" %}
 
 <body>
 
-<form action="" method="post">
-
-        {% csrf_token %}
-
-<div class="container tarifa mt-5">
-    <div class="row row-tarifa flex-items-xs-middle flex-items-xs-center">
+<div class="container mt-5">
+    <div class="row flex-items-xs-middle flex-items-xs-center">
         <div class="col-xs-12 col-lg-4">
             <div class="card text-center" onclick="selectTarifa('Basic')">
                 <div class="card-header">
@@ -46,9 +35,9 @@
             </div>
         </div>
         <div class="col-xs-12 col-lg-4">
-            <div class="card text-center" onclick="selectTarifa('Plus')">
+            <div class="card text-center "onclick="selectTarifa('Plus')">
                 <div class="card-header">
-                    <h3 class="display-2"><span class="currency">€</span>25<span class="period">/mes</span></h3>
+                    <h3 class="display-2"><span class="currency">€</span>25<span class="period">/meses</span></h3>
                 </div>
                 <div class="card-block">
                     <h4 class="card-title">
@@ -64,11 +53,12 @@
                 </div>
             </div>
         </div>
-        
+
+        <!-- Table #1  -->
         <div class="col-xs-12 col-lg-4">
             <div class="card text-center" onclick="selectTarifa('Premium')">
                 <div class="card-header">
-                    <h3 class="display-2"><span class="currency">$</span>35<span class="period">/mes</span></h3>
+                    <h3 class="display-2"><span class="currency">$</span>35<span class="period">/meses</span></h3>
                 </div>
                 <div class="card-block">
                     <h4 class="card-title">
@@ -86,48 +76,6 @@
         </div>
     </div>
 </div>
-    
-<div class="row d-flex justify-content-center">
-     <div class="col-md-4" id="nombreField">
-            <label for="nombre" class="form-label">Nombre:</label>
-            <input type="text" name="nombre" maxlength="20" id="nombre" class="form-control">
-        </div>
-        <div class="col-md-4" id="apellidosField">
-            <label for="apellidos" class="form-label">Apellidos:</label>
-            <input type="text" name="apellidos" maxlength="50" id="apellidos" class="form-control">
-        </div>
-</div>
-
-    
-<input type="hidden" id="tarifa_seleccionada" name="tarifa_seleccionada">    
-
-<div class="row mb-3">
-    <div class="col-12 text-center">
-        <button type="submit" class="btn btn-primary mt-3" >Submit</button>
-    </div>
-</div>
-    
-
-    
-</form>
-
-<script>
-    // Función para seleccionar una tarifa y resaltar el card seleccionado
-    function selectTarifa(tarifa) {
-        // Remover la clase 'selected' de todos los cards
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            card.classList.remove('selected');
-        });
-        // Agregar la clase 'selected' al card seleccionado
-        const cardsArray = Array.from(cards);
-        const selectedCard = cardsArray.filter(card => card.textContent.includes(tarifa))[0];
-        selectedCard.classList.add('selected');
-        // Actualizar el valor del campo oculto con la tarifa seleccionada
-        document.getElementById('tarifa_seleccionada').value = tarifa;
-    }
-</script>
-
 </body>
-
+{% include 'footer.html' %}
 </html>
