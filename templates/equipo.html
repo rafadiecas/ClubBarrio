@@ -19,13 +19,26 @@
                 width: 100% !important; 
             }
         }
-        
+
+        .nav-item .nav-link.active {
+            background-color: #00653D !important; /* Cambia este valor al color que desees */
+            color: #fff !important; /* Cambia este valor al color que desees */
+        }
+
+        .nav-item .nav-link {
+            color: #00653D !important; /* Cambia este valor al color que desees */
+        }
+
+        .card {
+            cursor: default !important;
+        }
 
 
     </style>
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
 </head>
 <body>
@@ -61,78 +74,85 @@
 
             </div>
             </div>
-        <div class="col-sm-12 col-md-6 border mt-1">
-            <div class="row">
-                <ul class="nav nav-tabs d-flex " id="myTab" role="tablist">
-                <li class="nav-item flex-grow-1" role="presentation">
-                    <button class="nav-link active w-100 py-4" id="partido-tab" data-bs-toggle="tab"
-                            data-bs-target="#partido-tab" type="button" role="tab" aria-controls="partido-tab"
-                            aria-selected="true">Próximo partido
-                    </button>
-                </li>
-                <li class="nav-item flex-grow-1" role="presentation">
-                    <button class="nav-link w-100 py-4" id="convocatoria-tab" data-bs-toggle="tab" data-bs-target="#convocatoria-tab"
-                            type="button" role="tab" aria-controls="convocatoria-tab" aria-selected="false">Convocatoria
-                    </button>
-                </li>
-                <li class="nav-item flex-grow-1" role="presentation">
-                    <button class="nav-link w-100 py-4" id="entrenamiento-tab" data-bs-toggle="tab" data-bs-target="#entrenamiento-tab"
-                            type="button" role="tab" aria-controls="entrenamiento-tab" aria-selected="false">Próximo entrenamiento
-                    </button>
-                </li>
+            <div class="col-sm-12 col-md-6 border mt-1">
+                <div class="row">
+                    <ul class="nav nav-tabs d-flex " id="myTab" role="tablist">
+                        <li class="nav-item flex-grow-1" role="presentation">
+                            <button class="nav-link active w-100 py-4" id="proxPartido-tab" data-bs-toggle="tab"
+                                    data-bs-target="#proxPartido" type="button" role="tab" aria-controls="proxPartido"
+                                    aria-selected="true">Próximo partido
+                            </button>
+                        </li>
+                        <li class="nav-item flex-grow-1" role="presentation">
+                            <button class="nav-link w-100 py-4" id="convocatoria-tab" data-bs-toggle="tab"
+                                    data-bs-target="#convocatoria"
+                                    type="button" role="tab" aria-controls="convocatoria" aria-selected="false">Convocatoria
+                            </button>
+                        </li>
+                        <li class="nav-item flex-grow-1" role="presentation">
+                            <button class="nav-link w-100 py-4" id="proxEntrenamiento-tab" data-bs-toggle="tab"
+                                    data-bs-target="#proxEntrenamiento"
+                                    type="button" role="tab" aria-controls="proxEntrenamiento" aria-selected="false">Próximo Entrenamiento
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active " id="proxPartido" role="tabpanel"
+                             aria-labelledby="proxPartido-tab">
+                            <div class="col col-12">
+                                <h2 class="text-center">Proximo partido</h2>
+                                <div class="row align-items-center border mx-1">
+                                    <div class="col-4">
+                                        <img src="{{ siguiente_partido.equipo1.escudo }}" alt=""
+                                             class="img-fluid img-equipo">
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <p><b>Jornada {{ siguiente_partido.jornada }}</b></p>
+                                        <p>{{ siguiente_partido.fecha|date:'d-m-Y' }}</p>
+                                        <p>{{ siguiente_partido.hora }}</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <img src="{{ siguiente_partido.equipo2.escudo }}" alt=""
+                                             class="img-fluid img-equipo">
+                                    </div>
+                                </div>
+                                <h3 class="text-center">Lugar</h3>
+                                {% if mapa_fallo %}
+                                    <p class="text-center">{{ siguiente_partido.lugar }}</p>
+                                {% else %}
+                                    <div class="container w-50" id="map" style="height: 200px;"></div>
+                                {% endif %}
+                            </div>
 
-            </ul>
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="partido-tab" role="tabpanel"
-                     aria-labelledby="partido-tab">
-                    
-                    <div class="col col-12">
-                    <h2 class="text-center">Proximo partido</h2>
-                     <div class="row align-items-center border mx-1">
-                        <div class="col-4">
-                            <img src="{{ siguiente_partido.equipo1.escudo }}" alt="" class="img-fluid img-equipo">
                         </div>
-                        <div class="col-4 text-center">
-                            <p><b>Jornada {{ siguiente_partido.jornada }}</b></p>
-                            <p>{{ siguiente_partido.fecha|date:'d-m-Y' }}</p>
-                            <p>{{ siguiente_partido.hora }}</p>
+                        <div class="tab-pane fade" id="convocatoria" role="tabpanel" aria-labelledby="convocatoria-tab">
+                            <div class="row row-cols-1 row-cols-lg-2 pt-5">
+                                <label for="entrenadores" class="form-label">Entrenadores:</label>
+                                <select name="jugadores" id="jugadores" class="form-select" multiple>
+                                    {% for j in jugadores %}
+                                        <option value="{{ j.id }}"{% if j.id in convocatoria %}
+                                                selected {% endif %}>{{ j }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-4">
-                            <img src="{{ siguiente_partido.equipo2.escudo }}" alt="" class="img-fluid img-equipo">
+                        <div class="tab-pane fade" id="proxEntrenamiento" role="tabpanel" aria-labelledby="proxEntrenamiento-tab">
+                            <div class="row row-cols-1 row-cols-lg-2 pt-5">
+                            <div class="container text-center mt-3">
+                                <h3>Próximo Entrenamiento</h3>
+                                {% if entrenamiento %}
+                                    <p>{{ entrenamiento.fecha|date:'d-m-Y' }}</p>
+                                    <p>{{ entrenamiento.hora }}</p>
+                                    <p><b>{{ entrenamiento.lugarEntrenamiento.nombre }}</b></p>
+                                {% else %}
+                                    <p>No hay entrenamientos próximos</p>
+                                {% endif %}
+                            </div>
+                            </div>
                         </div>
-                     </div>
-                    <h3 class="text-center">Lugar</h3>
-                    {% if mapa_fallo %}
-                        <p class="text-center">{{ siguiente_partido.lugar }}</p>
-                    {% else %}
-                        <div class="container w-50" id="map" style="height: 200px;"></div>
-                    {% endif %}
-                </div>
-                
-                </div>
-            
-                <div class="tab-pane fade" id="entrenamiento-tab" role="tabpanel" aria-labelledby="entrenamiento-tab">
-                   <div class="container text-center mt-3">
-                    <h3>Próximo Entrenamiento</h3>
-                    {% if entrenamiento %}
-                        <p>{{ entrenamiento.fecha|date:'d-m-Y' }}</p>
-                        <p>{{ entrenamiento.hora }}</p>
-                        <p><b>{{ entrenamiento.lugarEntrenamiento.nombre }}</b></p>
-                    {% else %}
-                        <p>No hay entrenamientos próximos</p>
-                    {% endif %}
-                </div>
-                </div>
-                <div class="tab-pane fade" id="convocatoria-tab" role="tabpanel" aria-labelledby="convocatoria-tab">
-                    
+                    </div>
                 </div>
             </div>
-                
-            </div>
-        </div>
-        
-            
-        </div>
         <div class="container d-flex justify-content-center w-100 mt-3">
         <div class="row row-cols-1 row-cols-md-2 w-75 jornadas border mb-3">
             <div class="col">
@@ -188,6 +208,7 @@
         </div>
         </div>
         </div>
+</div>
 
 <script>
     // Función para agregar números de línea a cada fila
