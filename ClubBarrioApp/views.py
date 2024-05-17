@@ -1311,11 +1311,17 @@ def pagina_equipo(request, id):
         jugadores = Jugador.objects.filter(equipo_id=id)
         equipos_cat= Equipo.objects.filter(categoria=equipo.categoria)
         entrenador= Entrenador.objects.get(usuario_id=request.user.id)
+        convocatoria = ()
+        convocatoria_completa = Convocatoria.objects.filter(partido_id=partidos_futuros[0].id)
+        if len(convocatoria_completa) > 0:
+            for convocado in convocatoria_completa:
+                convocatoria += (convocado.jugador.id)
+
         entrenamientos= Entrenamiento.objects.filter(entrenador_id=entrenador.id, fecha__gte=fecha_actual).order_by('fecha')
         clasificacion= saca_clasificacion(equipos_cat)
         response = requests.get(f"https://nominatim.openstreetmap.org/search?q={partidos_futuros[0].lugar}&format=json")
         if response.status_code != 200:
-            return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0],'equipos_entrenador': equipos, 'entrenamiento': entrenamientos.first(), 'mapa_fallo': True, 'modo_equipo':True})
+            return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0],'equipos_entrenador': equipos, 'entrenamiento': entrenamientos.first(), 'mapa_fallo': True, 'modo_equipo':True, 'convocatoria': convocatoria})
         data = response.json()
         print(response.content)
         lat = data[0]['lat']
@@ -1325,7 +1331,7 @@ def pagina_equipo(request, id):
         if entrenamientos.exists():
             primer_entrenamiento = entrenamientos.first()
 
-        return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon,'equipos_entrenador': equipos, 'entrenamiento': primer_entrenamiento,'modo_equipo':True})
+        return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon,'equipos_entrenador': equipos, 'entrenamiento': primer_entrenamiento,'modo_equipo':True, 'convocatoria': convocatoria})
     else:
         lista_convocados=()
         lista_convocados = Convocatoria.objects.filter(partido_id=partidos_futuros[0].id)
