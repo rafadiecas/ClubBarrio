@@ -47,7 +47,7 @@ def pagina_inicio(request):
     #mail = EmailMessage('Asunto', 'Cuerpo del mensaje', to=['safaclubbasket@gmail.com'])
     #mail.send()
     return render(request, 'inicio.html', {'noticias': list_noticias})
-@rol_prohibido('Administrador', 'Jugador')
+@rol_prohibido('Jugador')
 def pagina_tienda(request):
 
     ids_productos_con_stock = ProductoTalla.objects.filter(stock__gt=5).values_list('producto_id', flat=True).distinct()
@@ -67,7 +67,7 @@ def pagina_tienda(request):
     }
 
     return render(request, 'tienda.html', data)
-@rol_prohibido('Administrador', 'Jugador')
+@rol_prohibido('Jugador')
 def pagina_tienda_filtro(request,id):
     list_productos = Producto.objects.filter(tipo_id=id)
     page = request.GET.get('page', 1)
@@ -87,7 +87,7 @@ def pagina_tienda_filtro(request,id):
 
     return render(request, 'tienda.html', data)
 
-@rol_prohibido('Administrador')
+
 def pagina_noticias(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     page = request.GET.get('page', 1)
@@ -125,7 +125,7 @@ def envio_datos_barra(data, request, usuario):
 
 
 
-@rol_prohibido('Administrador')
+@rol_prohibido('Jugador')
 def pagina_contacto(request):
     usuario = request.user
     if request.method == 'POST':
@@ -975,7 +975,7 @@ def pagina_usuario(request):
 
 
         return render(request, 'inicio_usuario_tutor.html', {'noticias': list_noticias, 'partidos': list_partidos, 'equipos_por_categoria': equipos_por_categoria})
-@rol_prohibido('Administrador')
+
 def tarifas(request):
     return render(request, 'tarifas.html')
 
@@ -1011,7 +1011,7 @@ def pago_inscripcion(request):
         correo.send()
         return redirect('usuario')
 
-@rol_prohibido('Administrador')
+
 def terminos_y_servicios(request):
     return render(request, 'terminos_y_servicios.html')
 
@@ -1362,7 +1362,7 @@ def obtener_jugadores_por_partido(request):
         return JsonResponse({'jugadores': jugadores_data})
     else:
         return JsonResponse({'error': 'Se requiere el ID del partido'})
-@rol_prohibido('Administrador','Jugador')
+@rol_prohibido('Jugador')
 def producto(request, id):
     producto = Producto.objects.get(id=id)
     tallas = ProductoTalla.objects.filter(producto_id=id, stock__gt=5).order_by('talla')
@@ -1458,7 +1458,7 @@ def eliminar_carrito(request, id):
 
     # Devolver una respuesta JSON
     return JsonResponse({'totalItems': totalItems, 'totalPrice': totalPrice, 'productQuantities': productQuantities})
-@rol_prohibido('Administrador','Jugador')
+@rol_prohibido('Jugador')
 def carrito(request):
     cantProductos, carro, total = info_carrito(request)
 
@@ -1485,7 +1485,7 @@ def info_carrito(request):
         cantProductos += cantidad  # Suma la cantidad de cada producto
     return cantProductos, carro, total
 
-@rol_prohibido('Administrador','Jugador')
+@rol_prohibido('Jugador')
 def formulario_pago_pedido(request):
     cantProductos, carro, total = info_carrito(request)
     metodo= metodoEnvio.choices
