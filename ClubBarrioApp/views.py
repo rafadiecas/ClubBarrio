@@ -1331,7 +1331,7 @@ def pagina_equipo(request, id):
 
         return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon,'equipos_entrenador': equipos, 'entrenamiento': primer_entrenamiento,'modo_equipo':True, 'convocatoria': convocatoria})
     else:
-        lista_convocados=()
+        lista_convocados= []
         lista_convocados = Convocatoria.objects.filter(partido_id=partidos_futuros[0].id)
         if len(lista_convocados) > 0:
             for convocado in lista_convocados:
@@ -1342,6 +1342,7 @@ def pagina_equipo(request, id):
             convocado = Convocatoria()
             convocado.jugador = Jugador.objects.get(id=jugador)
             convocado.partido = partidos_futuros[0]
+            enviar_correo_convocatoria(convocado)
             convocado.save()
         return redirect('entrenador')
 
@@ -1575,6 +1576,24 @@ def enviar_correo_productos_bajo_stock(productos_bajo_stock):
     )
     correo.content_subtype = "html"
     correo.send()
+
+def enviar_correo_convocatoria(convocatoria):
+    asunto = "Convocatoria"
+    mensaje = "Has sido convocado para el siguiente partido:<br><br>"
+    mensaje += f"Partido: {convocatoria.partido.equipo1.nombre} vs {convocatoria.partido.equipo2.nombre}<br>"
+    mensaje += f"Fecha: {convocatoria.partido.fecha}<br>"
+    mensaje += f"Hora: {convocatoria.partido.hora}<br>"
+    mensaje += f"Lugar: {convocatoria.partido.lugar}<br><br>"
+
+
+    correo = EmailMessage(
+        asunto,
+        mensaje,
+        to=[convocatoria.jugador.usuario.email]
+    )
+    correo.content_subtype = "html"
+    correo.send()
+
 def eliminar_pedido(request, id):
     pedido = Pedido.objects.get(id=id)
     pedido.delete()
