@@ -125,8 +125,10 @@
                             </div>
 
                         </div>
+
                         <div class="tab-pane fade" id="convocatoria" role="tabpanel" aria-labelledby="convocatoria-tab">
                             <div class="row row-cols-1 row-cols-lg-2 pt-5">
+                            <form action="" method="post">
                                 <label for="entrenadores" class="form-label">Entrenadores:</label>
                                 <select name="jugadores" id="jugadores" class="form-select" multiple>
                                     {% for j in jugadores %}
@@ -134,6 +136,8 @@
                                                 selected {% endif %}>{{ j }}</option>
                                     {% endfor %}
                                 </select>
+                                <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+                            </form>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="proxEntrenamiento" role="tabpanel" aria-labelledby="proxEntrenamiento-tab">
