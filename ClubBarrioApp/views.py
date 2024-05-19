@@ -47,7 +47,7 @@ def pagina_inicio(request):
     #mail = EmailMessage('Asunto', 'Cuerpo del mensaje', to=['safaclubbasket@gmail.com'])
     #mail.send()
     return render(request, 'inicio.html', {'noticias': list_noticias})
-@rol_prohibido('Administrador', 'Jugador')
+@rol_prohibido('Jugador')
 def pagina_tienda(request):
 
     ids_productos_con_stock = ProductoTalla.objects.filter(stock__gt=5).values_list('producto_id', flat=True).distinct()
@@ -67,7 +67,7 @@ def pagina_tienda(request):
     }
 
     return render(request, 'tienda.html', data)
-@rol_prohibido('Administrador', 'Jugador')
+@rol_prohibido('Jugador')
 def pagina_tienda_filtro(request,id):
     list_productos = Producto.objects.filter(tipo_id=id)
     page = request.GET.get('page', 1)
@@ -87,7 +87,7 @@ def pagina_tienda_filtro(request,id):
 
     return render(request, 'tienda.html', data)
 
-@rol_prohibido('Administrador')
+
 def pagina_noticias(request):
     list_noticias = Noticias.objects.all().order_by('-id')
     page = request.GET.get('page', 1)
@@ -125,7 +125,7 @@ def envio_datos_barra(data, request, usuario):
 
 
 
-@rol_prohibido('Administrador')
+@rol_prohibido('Jugador')
 def pagina_contacto(request):
     usuario = request.user
     if request.method == 'POST':
@@ -372,7 +372,7 @@ def registro(request):
 
 
         if len(errores) != 0:
-            return render(request, 'registro.html', {"errores": errores, "nombre_usuraio": nombre_usuario, "email": email, "fecha_nacimiento": fecha_nacimiento})
+            return JsonResponse({"errores": errores}, status=400)
         else:
             usuario = User.objects.create(username=nombre_usuario, password=make_password(contrasenya), email=email,
                                           fecha_nacimiento=fecha_nacimiento, rol=rol)
@@ -386,9 +386,7 @@ def registro(request):
                                                            weekly_newsletter=False, new_training=False)
             notificaciones.save()
 
-
             return JsonResponse({'success': 'Usuario registrado con éxito'})
-            # return redirect('login')
 
 def generate_verification_token():
     return secrets.token_urlsafe(20)
@@ -975,7 +973,7 @@ def pagina_usuario(request):
 
 
         return render(request, 'inicio_usuario_tutor.html', {'noticias': list_noticias, 'partidos': list_partidos, 'equipos_por_categoria': equipos_por_categoria})
-@rol_prohibido('Administrador')
+
 def tarifas(request):
     return render(request, 'tarifas_new.html')
 
@@ -1011,7 +1009,7 @@ def pago_inscripcion(request):
         correo.send()
         return redirect('usuario')
 
-@rol_prohibido('Administrador')
+
 def terminos_y_servicios(request):
     return render(request, 'terminos_y_servicios.html')
 
@@ -1189,10 +1187,21 @@ def inicio_jugador(request, id=None):
 
     entrenamientos = Entrenamiento.objects.filter(equipo=equipo3, fecha__gte=fecha_actual).order_by('fecha')
 
+    convo = ""
+    convocatoria = []
+
+    if len(Convocatoria.objects.filter(partido_id=partidos_futuros[0].id)) != 0:
+        if len(Convocatoria.objects.filter(jugador_id=jugador.id, partido_id=partidos_futuros[0].id)) > 0:
+            convo = "Convocado"
+        else:
+            convo = "No Convocado"
+    else:
+        convo = "No hay convocatoria para el siguiente partido"
+
     response = requests.get(f"https://nominatim.openstreetmap.org/search?q={partidos_futuros[0].lugar}&format=json")
     if response.status_code != 200:
         list_partidos = Partido.objects.filter(Q(equipo1_id=equipo3.id) | Q(equipo2_id=equipo3.id))
-        return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos,'mapa_fallo': True,'siguiente_partido': partidos_futuros[0], 'entrenamiento': entrenamientos.first()})
+        return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos,'mapa_fallo': True,'siguiente_partido': partidos_futuros[0], 'entrenamiento': entrenamientos.first(),'convocatoria': convo})
     data = response.json()
     lat = data[0]['lat']
     lon = data[0]['lon']
@@ -1201,8 +1210,9 @@ def inicio_jugador(request, id=None):
     if entrenamientos.exists():
         primer_entrenamiento = entrenamientos.first()
 
+
     list_partidos = Partido.objects.filter(Q(equipo1_id= equipo3.id)| Q(equipo2_id= equipo3.id))
-    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon, 'entrenamiento': primer_entrenamiento,'mapa_fallo': False})
+    return render(request, 'inicio_jugador.html', {'noticias': list_noticias, 'jugador': jugador, 'equipos': equipos, 'clasificacion': clasificacion, 'hijos': hijos, 'partidos':list_partidos,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon, 'entrenamiento': primer_entrenamiento,'mapa_fallo': False,'convocatoria': convo})
 
 
 def saca_clasificacion(equipos):
@@ -1285,31 +1295,54 @@ def entrenador(request, id = None):
             entrenamiento_nuevo.save()
         return redirect('entrenador')
 def pagina_equipo(request, id):
-    equipos = equipos_entrenador(request)
     equipo = Equipo.objects.get(id=id)
     fecha_actual = date.today()
-    partidos_anteriores = Partido.objects.filter(
-        Q(equipo1_id=id) | Q(equipo2_id=id), fecha__lt=fecha_actual).order_by('-fecha')
     partidos_futuros = Partido.objects.filter(
         Q(equipo1_id=id) | Q(equipo2_id=id), fecha__gte=fecha_actual).order_by('fecha')
-    jugadores = Jugador.objects.filter(equipo_id=id)
-    equipos_cat= Equipo.objects.filter(categoria=equipo.categoria)
-    entrenador= Entrenador.objects.get(usuario_id=request.user.id)
-    entrenamientos= Entrenamiento.objects.filter(entrenador_id=entrenador.id, fecha__gte=fecha_actual).order_by('fecha')
-    clasificacion= saca_clasificacion(equipos_cat)
-    response = requests.get(f"https://nominatim.openstreetmap.org/search?q={partidos_futuros[0].lugar}&format=json")
-    if response.status_code != 200:
-        return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0],'equipos_entrenador': equipos, 'entrenamiento': entrenamientos.first(), 'mapa_fallo': True, 'modo_equipo':True})
-    data = response.json()
-    print(response.content)
-    lat = data[0]['lat']
-    lon = data[0]['lon']
 
-    primer_entrenamiento = None
-    if entrenamientos.exists():
-        primer_entrenamiento = entrenamientos.first()
+    if request.method == 'GET':
+        equipos = equipos_entrenador(request)
+        partidos_anteriores = Partido.objects.filter(
+            Q(equipo1_id=id) | Q(equipo2_id=id), fecha__lt=fecha_actual).order_by('-fecha')
+        jugadores = Jugador.objects.filter(equipo_id=id)
+        equipos_cat= Equipo.objects.filter(categoria=equipo.categoria)
+        entrenador= Entrenador.objects.get(usuario_id=request.user.id)
+        convocatoria = []
+        convocatoria_completa = Convocatoria.objects.filter(partido_id=partidos_futuros[0].id)
+        if len(convocatoria_completa) > 0:
+            for convocado in convocatoria_completa:
+                convocatoria.append(convocado.jugador.id)
 
-    return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon,'equipos_entrenador': equipos, 'entrenamiento': primer_entrenamiento,'modo_equipo':True})
+        entrenamientos= Entrenamiento.objects.filter(entrenador_id=entrenador.id, fecha__gte=fecha_actual).order_by('fecha')
+        clasificacion= saca_clasificacion(equipos_cat)
+        response = requests.get(f"https://nominatim.openstreetmap.org/search?q={partidos_futuros[0].lugar}&format=json")
+        if response.status_code != 200:
+            return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0],'equipos_entrenador': equipos, 'entrenamiento': entrenamientos.first(), 'mapa_fallo': True, 'modo_equipo':True, 'convocatoria': convocatoria})
+        data = response.json()
+        print(response.content)
+        lat = data[0]['lat']
+        lon = data[0]['lon']
+
+        primer_entrenamiento = None
+        if entrenamientos.exists():
+            primer_entrenamiento = entrenamientos.first()
+
+        return render(request, 'equipo.html', {'equipo': equipo, 'partidos_anteriores':partidos_anteriores[:3], 'jugadores': jugadores, 'partidos_futuros': partidos_futuros[1:4],'clasificacion': clasificacion,'siguiente_partido': partidos_futuros[0], 'lat': lat, 'lon': lon,'equipos_entrenador': equipos, 'entrenamiento': primer_entrenamiento,'modo_equipo':True, 'convocatoria': convocatoria})
+    else:
+        lista_convocados= []
+        lista_convocados = Convocatoria.objects.filter(partido_id=partidos_futuros[0].id)
+        if len(lista_convocados) > 0:
+            for convocado in lista_convocados:
+                convocado.delete()
+        jugadores = request.POST.getlist('jugadores')
+
+        for jugador in jugadores:
+            convocado = Convocatoria()
+            convocado.jugador = Jugador.objects.get(id=jugador)
+            convocado.partido = partidos_futuros[0]
+            enviar_correo_convocatoria(convocado)
+            convocado.save()
+        return redirect('entrenador')
 
 
 def equipos_entrenador(request):
@@ -1328,7 +1361,7 @@ def obtener_jugadores_por_partido(request):
         return JsonResponse({'jugadores': jugadores_data})
     else:
         return JsonResponse({'error': 'Se requiere el ID del partido'})
-@rol_prohibido('Administrador','Jugador')
+@rol_prohibido('Jugador')
 def producto(request, id):
     producto = Producto.objects.get(id=id)
     tallas = ProductoTalla.objects.filter(producto_id=id, stock__gt=5).order_by('talla')
@@ -1338,15 +1371,23 @@ def producto(request, id):
 
         carro = {}
 
-        # Comprobar si hay ya un carrito en sesión
+
         if "carro" in request.session:
             carro = request.session.get("carro", {})
 
         # Comprobar que el producto está o no está en el carrito
         if str(producto_talla.id) in carro.keys():
-            carro[str(producto_talla.id)] = int(carro[str(producto_talla.id)]) + int(request.POST.get('cantidad'))
+            # Si la cantidad actual en el carrito más la cantidad que se está agregando es mayor que 5
+            if carro[str(producto_talla.id)] + int(request.POST.get('cantidad')) > 5:
+                # Establecer la cantidad del producto en el carrito a 5
+                carro[str(producto_talla.id)] = 5
+            else:
+                # Si no, simplemente agregar la cantidad que se está agregando
+                carro[str(producto_talla.id)] += int(request.POST.get('cantidad'))
         else:
-            carro[str(producto_talla.id)] = int(request.POST.get('cantidad'))
+            # Si el producto no está en el carrito, agregarlo
+            carro[str(producto_talla.id)] = min(int(request.POST.get('cantidad')), 5)  # No permitir más de 5 en la primera adición
+
         request.session["carro"] = carro
 
         return redirect('tienda')
@@ -1424,7 +1465,7 @@ def eliminar_carrito(request, id):
 
     # Devolver una respuesta JSON
     return JsonResponse({'totalItems': totalItems, 'totalPrice': totalPrice, 'productQuantities': productQuantities})
-@rol_prohibido('Administrador','Jugador')
+@rol_prohibido('Jugador')
 def carrito(request):
     cantProductos, carro, total = info_carrito(request)
 
@@ -1451,7 +1492,7 @@ def info_carrito(request):
         cantProductos += cantidad  # Suma la cantidad de cada producto
     return cantProductos, carro, total
 
-@rol_prohibido('Administrador','Jugador')
+@rol_prohibido('Jugador')
 def formulario_pago_pedido(request):
     cantProductos, carro, total = info_carrito(request)
     metodo= metodoEnvio.choices
@@ -1533,6 +1574,24 @@ def enviar_correo_productos_bajo_stock(productos_bajo_stock):
     )
     correo.content_subtype = "html"
     correo.send()
+
+def enviar_correo_convocatoria(convocatoria):
+    asunto = "Convocatoria"
+    mensaje = "Has sido convocado para el siguiente partido:<br><br>"
+    mensaje += f"Partido: {convocatoria.partido.equipo1.nombre} vs {convocatoria.partido.equipo2.nombre}<br>"
+    mensaje += f"Fecha: {convocatoria.partido.fecha}<br>"
+    mensaje += f"Hora: {convocatoria.partido.hora}<br>"
+    mensaje += f"Lugar: {convocatoria.partido.lugar}<br><br>"
+
+
+    correo = EmailMessage(
+        asunto,
+        mensaje,
+        to=[convocatoria.jugador.usuario.email]
+    )
+    correo.content_subtype = "html"
+    correo.send()
+
 def eliminar_pedido(request, id):
     pedido = Pedido.objects.get(id=id)
     pedido.delete()
