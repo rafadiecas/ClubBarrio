@@ -161,6 +161,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'inscripciones' %}">Inscripción</a>
                     </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'tarifas' %}">Tarifas</a>
+                    </li>
                 {% endif %}
 
                 {% if user.is_authenticated and user.rol == "Entrenador" and modo_equipo %}
