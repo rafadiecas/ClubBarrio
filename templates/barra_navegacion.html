@@ -157,9 +157,9 @@
                             {% endfor %}
                         </ul>
                     </div>
-                {% else %}
+                {% elif user.is_authenticated and user.rol == "Usuario" %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'tarifas' %}">Tarifas</a>
+                        <a class="nav-link" href="{% url 'inscripciones' %}">Inscripción</a>
                     </li>
                 {% endif %}
 
