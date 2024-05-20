@@ -1188,10 +1188,10 @@ def inicio_jugador(request, id=None):
     entrenamientos = Entrenamiento.objects.filter(equipo=equipo3, fecha__gte=fecha_actual).order_by('fecha')
 
     convo = ""
-    convocatoria = []
+    convocatoria = Convocatoria.objects.filter(partido_id=partidos_futuros[0].id)
 
-    if len(Convocatoria.objects.filter(partido_id=partidos_futuros[0].id)) != 0:
-        if len(Convocatoria.objects.filter(jugador_id=jugador.id, partido_id=partidos_futuros[0].id)) > 0:
+    if len(convocatoria) != 0:
+        if len(convocatoria) > 0:
             convo = "Convocado"
         else:
             convo = "No Convocado"
