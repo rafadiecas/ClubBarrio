@@ -171,6 +171,7 @@ def validar_contraseña(usuario, contraseña_actual, nueva_contraseña, confirma
             break
     return errores
 
+@user_required
 def perfil(request):
     usuario = User.objects.get(id=request.user.id)
     notificaciones = Notificaciones.objects.get(usuario=usuario)
@@ -212,7 +213,7 @@ def perfil(request):
         return render(request, 'profile.html', {'perfil': perfil, 'notificaciones': notificaciones,"data":data, 'usuario': usuario, 'pedidos':pedidos})
 
     return render(request, 'profile.html', {'notificaciones': notificaciones,"data":data, 'usuario': usuario, 'pedidos':pedidos})
-
+@user_required
 def perfil_pass(request):
     usuario = request.user
     if request.method == 'POST':
@@ -242,7 +243,7 @@ def perfil_pass(request):
     # Si el método no es POST, redirige al usuario a la página de perfil (o donde quieras)
     return redirect('perfil')
 
-# @login_required
+@user_required
 def notificaciones(request):
     if request.method == 'POST':
 
