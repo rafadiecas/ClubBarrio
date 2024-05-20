@@ -160,7 +160,8 @@
                     var errores = jqXHR.responseJSON.errores;
                     var div_errores = document.getElementById('errores');
                     div_errores.style.display = 'block';
-                    // Muestra los errores en la página
+                    $('#contrasenya').val('');
+                    $('#repetirContrasenya').val('');
 
                     errores.forEach(function (error) {
                         $('#errores').append('<p>' + error + '</p>');
