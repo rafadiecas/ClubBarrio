@@ -1191,8 +1191,8 @@ def inicio_jugador(request, id=None):
     convo = ""
     convocatoria = Convocatoria.objects.filter(partido_id=partidos_futuros[0].id)
 
-    if len(convocatoria) != 0:
-        if len(convocatoria) > 0:
+    if len(convocatoria) > 0:
+        if convocatoria.contains(jugador):
             convo = "Convocado"
         else:
             convo = "No Convocado"
