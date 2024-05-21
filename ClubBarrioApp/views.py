@@ -66,6 +66,9 @@ def pagina_tienda(request):
         'paginator': paginator
     }
 
+    usuario= request.user
+    envio_datos_barra(data, request, usuario)
+
     return render(request, 'tienda.html', data)
 @rol_prohibido('Jugador')
 def pagina_tienda_filtro(request,id):
