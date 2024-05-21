@@ -6,6 +6,7 @@
     <title>Noticias</title>
 
     <style>
+        
         #card-text{
             display: flex;
             justify-content: center;
@@ -17,6 +18,7 @@
             object-fit: contain;
             aspect-ratio: auto;
         }
+  
 
         .text-comment {
           overflow-wrap: break-word;
@@ -36,7 +38,7 @@
 
         .more {
           cursor: pointer;
-          color: black;
+          color: #00653d;
           text-decoration: underline;
         }
 
@@ -52,9 +54,9 @@
                 </div>
                 <div class="card-body" id="carta">
                     <div class="row row-cols-md-2 row-cols-sm-1" id="card-text">
-                        <div class="text-comment">
-                            <p class="text-truncate">{{ n.articulo }}</p>
-                            <span class="more">Leer más...</span>
+                        <div class="textoCompleto">
+                            <p class="">{{ n.articulo }}</p>
+                            <span class="more">Leer menos...</span>
                         </div>
                         <img src="{{ n.url_imagen }}" class="img-fluid" alt="imagen" id="foto_noticia">
                     </div>
@@ -74,7 +76,7 @@
             var buttonText = event.target.innerHTML;
             var cardText = event.target.parentElement;
 
-            cardText.classList.toggle('textoCompleto');
+            cardText.classList.toggle('text-comment');
             cardText.querySelector('p').classList.toggle('text-truncate');
 
             buttonText === 'Leer más...' ? buttonText = 'Leer menos...' : buttonText = 'Leer más...';
