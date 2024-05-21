@@ -13,7 +13,8 @@
         .carousel-item {
             width: 100%;
             height: 100%;
-            background-color: #f0f0f0;
+            {#background-color: #f0f0f0;#}
+            background: linear-gradient(to bottom, #00a256, white);
         }
         .carousel-item img {
             width: 100%;
@@ -50,7 +51,7 @@
 
         #widget_tiempo {
             position: fixed;
-            top: 200px;
+            top: 450px;
             right: 0; 
             max-width: 200px; 
             min-width: 50px;
@@ -87,17 +88,75 @@
 
 
 <body>
-    <div id="widget_tiempo" class="py-2 rounded-start d-none d-sm-block">
+    <div id="widget_tiempo" class="py-2 rounded-start d-none d-md-block">
         <div class="container-fluid position-sticky top-0 start-0">
            <div id="ww_8676dbf7a199e" v='1.3' loc='id' a='{"t":"horizontal","lang":"es","sl_lpl":1,"ids":["wl4484"],"font":"Arial","sl_ics":"one_a","sl_sot":"celsius","cl_bkg":"#455A64","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722","el_whr":3}'>Más previsiones: <a href="https://oneweather.org/es/madrid/25_days/" id="ww_8676dbf7a199e_u" target="_blank">Tiempo 25 días</a></div><script async src="https://app2.weatherwidget.org/js/?id=ww_8676dbf7a199e"></script>
         </div>
         <img src="{% static 'imagenes/6207a0fe26ab99000460a356.png' %}" alt="weather" style="display: none;max-width: 90px; padding-inline: 10px"/>
     </div>
     <div class="container-fluid px-0 mt-0" id="contenedor">
-    <div class="flex-container d-flex ms-0 mx-0" id="color_convocatoria">
-        <h3 class="ps-2">Convocatoria: </h3>
-        <p class="mb-0 ms-2 align-self-center">{{ convocatoria }}</p>
+        <div id="carrusel" class="carousel slide">
+        <div class="carousel-inner">
+            <div class="carousel-item active py-4 mb-4">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-4 pb-1">
+                        <h2 class="text-center">Proximo partido</h2>
+                        <div class="row align-items-center mt-3">
+                            <div class="col-4">
+                                <img src="{{ siguiente_partido.equipo1.escudo }}" alt="" class="img-fluid img-equipo">
+                            </div>
+                            <div class="col-4 text-center">
+                                <p><b>Jornada {{ siguiente_partido.jornada }}</b></p>
+                                <p>{{ siguiente_partido.fecha|date:'d-m-Y' }}</p>
+                                <p>{{ siguiente_partido.hora }}</p>
+                            </div>
+                            <div class="col-4">
+                                <img src="{{ siguiente_partido.equipo2.escudo }}" alt="" class="img-fluid img-equipo">
+                            </div>
+                        </div>
+                        <div class="flex-container d-flex ms-0 mx-0 justify-content-center mt-1" id="color_convocatoria">
+                        <h4 class="ps-2 mb-0">Convocatoria: </h4>
+                        <p class="mb-0 ms-2 align-self-center">{{ convocatoria }}</p>
+                    </div>
+                    </div>
+                    <div class="col-md-4">
+                        {% if mapa_fallo %}
+                        <h3 class="text-center">Lugar</h3>
+                        <p class="text-center">{{ siguiente_partido.lugar }}</p>
+                        {% else %}
+                        <h3 class="text-center">Lugar</h3>
+                        <div class="container" id="map" style="height: 200px; max-width: 250px;padding: 10px"></div>
+                        {% endif %}
+                    </div>
+
+                    
+                    
+                </div>
+                 
+            </div>
+            <div class="carousel-item py-4 mb-4">
+                <div class="container text-center mt-3">
+                    <h3>Próximo Entrenamiento</h3>
+                    {% if entrenamiento %}
+                        <p>{{ entrenamiento.fecha|date:'d-m-Y' }}</p>
+                        <p>{{ entrenamiento.hora }}</p>
+                        <p><b>{{ entrenamiento.lugarEntrenamiento.nombre }}</b></p>
+                    {% else %}
+                        <p>No hay entrenamientos próximos</p>
+                    {% endif %}
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carrusel" data-bs-slide="prev" style="z-index: 999">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carrusel" data-bs-slide="next" style="z-index: 999">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
     </div>
+   
         <div class="row row-cols-md-2 row-cols-lg-2 row-cols-sm-1 row-cols-1 mb-3 d-flex align-items-start">
             <div class="col d-flex flex-column text-center px-5">
             <h1 class="mb-5 mt-md-0 mt-sm-4" >Clasificación</h1>
@@ -130,65 +189,12 @@
             </div>
             </div>
             <div class="col d-flex flex-column text-center px-7 mt-5 mt-sm-0" id="derecha">
-                <h1 class="mb-5 mt-md-0 mt-sm-4">Próximos partidos</h1>
+                <h1 class="mb-5 mt-md-0 mt-sm-4">Calendario partidos</h1>
                   <div id='calendar' class="w-75"></div>
             </div>
         </div>
     </div>
-    <div id="carrusel" class="carousel slide">
-        <div class="carousel-inner">
-            <div class="carousel-item active py-4 my-4">
-                <div class="row d-flex justify-content-center">
-                    <div class="col-md-4">
-                        {% if mapa_fallo %}
-                        <h3 class="text-center">Lugar</h3>
-                        <p class="text-center">{{ siguiente_partido.lugar }}</p>
-                        {% else %}
-                        <h3 class="text-center">Lugar</h3>
-                        <div class="container" id="map" style="height: 200px; max-width: 250px;padding: 10px"></div>
-                        {% endif %}
-                    </div>
-
-                    <div class="col-md-4">
-                        <h2 class="text-center">Proximo partido</h2>
-                        <div class="row align-items-center mt-3">
-                            <div class="col-4">
-                                <img src="{{ siguiente_partido.equipo1.escudo }}" alt="" class="img-fluid img-equipo">
-                            </div>
-                            <div class="col-4 text-center">
-                                <p><b>Jornada {{ siguiente_partido.jornada }}</b></p>
-                                <p>{{ siguiente_partido.fecha|date:'d-m-Y' }}</p>
-                                <p>{{ siguiente_partido.hora }}</p>
-                            </div>
-                            <div class="col-4">
-                                <img src="{{ siguiente_partido.equipo2.escudo }}" alt="" class="img-fluid img-equipo">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item py-4 my-4">
-                <div class="container text-center mt-3">
-                    <h3>Próximo Entrenamiento</h3>
-                    {% if entrenamiento %}
-                        <p>{{ entrenamiento.fecha|date:'d-m-Y' }}</p>
-                        <p>{{ entrenamiento.hora }}</p>
-                        <p><b>{{ entrenamiento.lugarEntrenamiento.nombre }}</b></p>
-                    {% else %}
-                        <p>No hay entrenamientos próximos</p>
-                    {% endif %}
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carrusel" data-bs-slide="prev" style="z-index: 999">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carrusel" data-bs-slide="next" style="z-index: 999">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-    </div>
+    
 
     <script>
         $(document).ready(function () {
