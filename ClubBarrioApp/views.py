@@ -1141,7 +1141,7 @@ def edita_hijo(request, id):
             return render(request, 'crear_hijo.html',
                           {'equipos': lista_equipos, 'edicion_equipo': True,'jugador': jugador})
 
-        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('tarifa_seleccionada')))
+        jugador.equipo = Equipo.objects.get(id=int(request.POST.get('equipo_seleccionado')))
         jugador.save()
         return redirect('gestion_familia')
 
