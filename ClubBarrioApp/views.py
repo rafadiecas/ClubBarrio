@@ -360,7 +360,7 @@ def elimina_usuario(request, id):
     usuario = User.objects.get(id=id)
     usuario.delete()
     return redirect('usuarios')
-
+contrasena1= ""
 def registro(request):
     if request.method == 'GET':
         return render(request, 'registro.html')
@@ -368,6 +368,7 @@ def registro(request):
         nombre_usuario = request.POST.get('nombre_usuario')
         email = request.POST.get('email')
         contrasenya = request.POST.get('contrasenya')
+        contrasena1 = contrasenya
         repetirContrasenya = request.POST.get('repetirContrasenya')
         fecha_nacimiento = request.POST.get('fecha_nacimiento')
         rol = "Usuario"
@@ -436,8 +437,8 @@ def verify_email(request, username, token):
     user.email_verification_token_expiration = None
     user.save()
     mensaje = ("Bienvenido a SafaClubBasket, " + user.username + ". Tu registro se ha completado con éxito."
-               + "<br><br>" + "Tus credenciales de acceso son: " + "<br>"
-               + "Usuario: " + user.username + "<br>" + "Contraseña: " + user.password + "<br><br>" + "Un saludo, SafaClubBasket.")
+               + "<br><br>" + "Tus credenciales son: " + "<br>"
+               + "Usuario: " + user.username+ "<br>" +"Contraseña: " + contrasena1 +"<br><br>" + "Un saludo, SafaClubBasket.")
     correo = EmailMessage('Registro en SafaClubBasket', mensaje, to=[user.email])
     correo.content_subtype = "html"
     correo.send()
