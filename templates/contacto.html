@@ -95,6 +95,32 @@
             });
         });
     });
+    $(document).ready(function() {
+    $('#myForm').on('submit', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(data) {
+                console.log('Success:', data);
+                $('#success-messages').html('<p>Formulario enviado con éxito</p>');
+                alert('Formulario enviado con éxito');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error:', textStatus, errorThrown);
+                $('#error-messages').html('<p>Error al enviar el formulario</p>');
+            }
+        });
+    });
+});
+
+    //En este ejemplo, cuando se envía el formulario con el ID myForm,
+    // se envía una solicitud AJAX a la URL especificada en el atributo action
+    // del formulario. Si la solicitud tiene éxito,
+    // se muestra un mensaje de éxito. Si la solicitud falla,
+    // se muestra un mensaje de error.
 </script>
 
 

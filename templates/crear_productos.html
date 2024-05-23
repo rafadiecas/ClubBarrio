@@ -97,8 +97,8 @@
 
     var inputPrecio = document.getElementById('precio');
     inputPrecio.addEventListener('input', function(){
-        if (this.value < 0 || this.value.length > 3) {
-            this.value = this.value.slice(0, 3);
+        if (this.value < 0 || this.value.length > 6) {
+            this.value = this.value.slice(0, 6);
             if (this.value < 0) {
                 this.value = 0;
             }
