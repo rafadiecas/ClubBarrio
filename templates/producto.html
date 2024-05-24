@@ -66,7 +66,41 @@
                 });
             }
         });
+
+        function alerta() {
+    var cantidadElement = document.getElementById('cantidad');
+    var cantidad = cantidadElement.value;
+    if (cantidad > 2) {
+        alert('No puedes comprar más de 2 productos');
+        cantidadElement.value = 2;
+    }
+}
+    function alerta() {
+    var cantidadElement = document.getElementById('cantidad');
+    var cantidad = cantidadElement.value;
+    if (cantidad > 2) {
+        alert('No puedes comprar más de 2 productos');
+        cantidadElement.value = 2;
+    }
+}
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var inputElement = document.getElementById('nombre_usuario');
+    if (inputElement) {
+        inputElement.addEventListener('focus', function() {
+            this.style.setProperty('color', 'red', 'important');
+        });
+
+        inputElement.addEventListener('blur', function() {
+            this.style.removeProperty('color');
+        });
+    } else {
+        console.error('Element with id "nombre_usuario" not found');
+    }
+});
+</script>
+
 
 {% include 'footer.html' %}
 </body>
