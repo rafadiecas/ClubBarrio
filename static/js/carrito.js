@@ -120,3 +120,29 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+//<script type="text/javascript">
+//     let numero = prompt("Introduce tu numero de dni sin letra");
+//
+//     if(numero.length != 8 || isNaN(numero) || numero < 0 || numero > 99999999){
+//         alert("El numero no es correcto");
+//     }else{
+//
+//         lista_letras = ['T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E'];
+//
+//         let letra_dni = lista_letras[numero % 23];
+//
+//         alert("Tu letra de DNI es: " + letra_dni);
+//
+//
+//     }
+// </script>
+//<script>
+//     let confrimacion = confirm("¿Quieres introducir una cadena de texto?");
+//     if (confrimacion == true) {
+//         let cadena = prompt("Introduce una cadena de texto");
+//         alert('hola');
+//     }
+//     else {
+//         alert("No has introducido una cadena de texto");
+//     }
+// </script>
