@@ -53,14 +53,22 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Obtiene el elemento del DOM con el ID 'cantidad'
             var inputElement = document.getElementById('cantidad');
+            // Verifica si el elemento existe
             if (inputElement) {
+                // Si el elemento existe, añade un evento que se dispara cuando el valor del elemento cambia
                 inputElement.addEventListener('input', function () {
+                    // Obtiene el valor máximo permitido para el elemento
                     var max = parseInt(this.getAttribute('max'));
+                    // Si el valor actual del elemento es mayor que el máximo permitido
                     if (this.value > max) {
+                        // Establece el valor del elemento al máximo permitido
                         this.value = max;
                     }
+                    // Si el valor actual del elemento es menor que el mínimo permitido
                     if (this.value < this.getAttribute('min')) {
+                        // Establece el valor del elemento al mínimo permitido
                         this.value = this.getAttribute('min');
                     }
                 });

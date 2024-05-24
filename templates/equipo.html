@@ -227,33 +227,46 @@
 </div>
 
 <script>
-    // Función para agregar números de línea a cada fila
     function agregarNumerosLinea() {
+        // Obtiene la tabla por su ID
         var tabla = document.getElementById("tabla");
+        // Obtiene todas las filas de la tabla
         var filas = tabla.getElementsByTagName("tr");
 
+        // Itera sobre cada fila, comenzando desde la segunda (índice 1)
         for (var i = 1; i < filas.length; i++) {
+            // Crea una nueva celda
             var celdaNumeroLinea = document.createElement("td");
-            celdaNumeroLinea.textContent = i; // El número de línea comienza desde 0
-            filas[i].insertBefore(celdaNumeroLinea, filas[i].firstChild);// Insertar celda al inicio de la fila
+            // Asigna el número de línea a la celda (comienza desde 1)
+            celdaNumeroLinea.textContent = i;
+            // Inserta la celda al inicio de la fila
+            filas[i].insertBefore(celdaNumeroLinea, filas[i].firstChild);
         }
     }
 
-    // Llamar a la función al cargar la página
+    // Llama a la función agregarNumerosLinea cuando se carga la página
     window.onload = agregarNumerosLinea;
 </script>
 <script>
-        var lat = {{ lat }};
-        var lon = {{ lon }};
+    // Obtiene las coordenadas de latitud y longitud desde el contexto de Django
+    var lat = {{ lat }};
+    var lon = {{ lon }};
 
-        var map = L.map('map').setView([lat, lon], 15);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-        L.marker([lat, lon]).addTo(map)
-            .bindPopup('<b>{{ siguiente_partido.lugar }}</b>')
-            .openPopup();
-    </script>
+    // Inicializa el mapa de Leaflet y lo centra en las coordenadas obtenidas
+    var map = L.map('map').setView([lat, lon], 15);
+
+    // Agrega una capa de imágenes de OpenStreetMap al mapa
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Agrega un marcador al mapa en las coordenadas obtenidas
+    L.marker([lat, lon]).addTo(map)
+        // Asigna un popup al marcador con la información del lugar del próximo partido
+        .bindPopup('<b>{{ siguiente_partido.lugar }}</b>')
+        // Abre el popup
+        .openPopup();
+</script>
 </body>
 {% include 'footer.html' %}
 </html>

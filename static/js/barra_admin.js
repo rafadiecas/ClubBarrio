@@ -1,24 +1,28 @@
+// Define a function to confirm user deletion
 function confirmarEliminarUsuario(event) {
+    // Show a confirmation dialog to the user
     var confirmacion = confirm('¿Seguro que desea eliminar?');
+    // If the user does not confirm, prevent the default action (which is the deletion)
     if (!confirmacion) {
         event.preventDefault();
     }
 }
 
-
+// When the document is ready
 $(document).ready(function () {
-    // Define el idioma de Moment.js a español
+    // Set the language of Moment.js to Spanish
     moment.locale('es');
 
-    // Obtiene los títulos de las columnas
+    // Get the titles of the columns
     var columnTitles = $("#tabla thead th").toArray().map(function (header) {
         return $(header).text().trim();
     });
 
-    // Verifica si las columnas 'Fecha' y 'Hora' existen
+    // Check if the 'Fecha' and 'Hora' columns exist
     var fechaIndex = columnTitles.indexOf('Fecha') !== -1 ? columnTitles.indexOf('Fecha') : columnTitles.indexOf('Fecha de nacimiento')
     var horaIndex = columnTitles.indexOf('Hora');
 
+    // Initialize the DataTable with the specified options
     let tabla = $("#tabla").DataTable({
         "dom": 'lrtip',
         "lengthMenu": [[10, 25, -1], [10, 25, "All"]],
@@ -39,7 +43,9 @@ $(document).ready(function () {
         "columnDefs": []
     });
 
+    // When the user types in the search input
     $("#inputBuscar").on("keyup", function () {
+        // Search the table for the input value and redraw the table
         tabla.search($(this).val()).draw();
     });
 });

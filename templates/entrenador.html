@@ -170,39 +170,48 @@
     </div>
 <script>
     $(document).ready(function () {
-        $('#calendar').fullCalendar({
-            header: {
-                left: 'prev,next hoy',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay'
-            },
-            locale: 'es',
-            defaultDate: new Date(),
-            navLinks: true,
-            editable: false,
-            eventLimit: true,
-            events: [
-                {% for p in partidos %}
-                    {
-                        title: '{{ p.equipo1 }} vs {{ p.equipo2 }} horario: {{ p.hora }}',
-                        start: '{{ p.fecha|date:"Y-m-d" }}',
-                        allDay: true
-                    },
-                {% endfor %}
-            ]
-        });
+    // Inicializa el calendario FullCalendar
+    $('#calendar').fullCalendar({
+        // Configura los botones y el título en la cabecera del calendario
+        header: {
+            left: 'prev,next hoy', // Botones para navegar y el botón "hoy"
+            center: 'title', // Título (mes/año)
+            right: 'month,agendaWeek,agendaDay' // Botones para cambiar de vista
+        },
+        locale: 'es', // Establece el idioma a español
+        defaultDate: new Date(), // Establece la fecha por defecto a la fecha actual
+        navLinks: true, // Habilita los enlaces de navegación en las fechas
+        editable: false, // Deshabilita la edición de eventos
+        eventLimit: true, // Limita el número de eventos por día
+        // Define los eventos del calendario
+        events: [
+            // Itera sobre los partidos (variable del contexto de Django)
+            {% for p in partidos %}
+                {
+                    // Establece el título del evento a la información del partido
+                    title: '{{ p.equipo1 }} vs {{ p.equipo2 }} horario: {{ p.hora }}',
+                    // Establece la fecha de inicio del evento a la fecha del partido
+                    start: '{{ p.fecha|date:"Y-m-d" }}',
+                    allDay: true // Establece el evento como un evento de todo el día
+                },
+            {% endfor %}
+        ]
     });
+});
 </script>
 
 <script>
-    var widgetTiempo = document.getElementById('widget_tiempo');
+   var widgetTiempo = document.getElementById('widget_tiempo');
 
-    widgetTiempo.addEventListener('click', ocultarWidget);
+// Agrega un evento de clic al widget del tiempo
+widgetTiempo.addEventListener('click', ocultarWidget);
 
-    function ocultarWidget(event) {
-        widgetTiempo.children[0].style.display = widgetTiempo.children[0].style.display === 'none' ? 'block' : 'none';
-        widgetTiempo.children[1].style.display = widgetTiempo.children[1].style.display === 'none' ? 'block' : 'none';
-    }
+function ocultarWidget(event) {
+    // Si el primer hijo del widget del tiempo está oculto, lo muestra, y viceversa
+    widgetTiempo.children[0].style.display = widgetTiempo.children[0].style.display === 'none' ? 'block' : 'none';
+    // Si el segundo hijo del widget del tiempo está oculto, lo muestra, y viceversa
+    widgetTiempo.children[1].style.display = widgetTiempo.children[1].style.display === 'none' ? 'block' : 'none';
+}
 </script>
 {#<script>#}
 {#    function cambiarTabActivo() {#}

@@ -77,12 +77,16 @@
     </div>
 </div>
 <script>
+    // Añade un evento que se dispara cuando el contenido del documento ha sido completamente cargado y parseado
     document.addEventListener('DOMContentLoaded', (event) => {
-        // Verificar si hay productos con bajo stock
+        // Verifica si hay productos con bajo stock
+        // que verifica si la variable 'productos_bajo_stock' es verdadera
         {% if productos_bajo_stock %}
-            // Mostrar el toast
+            // Si hay productos con bajo stock, obtiene el elemento del DOM con el ID 'toastNotification'
             var toastEl = document.getElementById('toastNotification');
+            // Crea un nuevo objeto Toast de Bootstrap con el elemento obtenido
             var toast = new bootstrap.Toast(toastEl);
+            // Muestra el toast
             toast.show();
         {% endif %}
     });

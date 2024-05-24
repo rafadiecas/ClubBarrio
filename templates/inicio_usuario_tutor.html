@@ -266,18 +266,23 @@
         </div>
 </div>
 <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            // Verificar si el indicador está presente en sessionStorage
-            if (sessionStorage.getItem('showToastInscripcion') === 'true') {
-                // Mostrar el toast
-                var toastEl = document.getElementById('toastNotification');
-                var toast = new bootstrap.Toast(toastEl);
-                toast.show();
+    // Añade un evento que se dispara cuando el contenido del documento ha sido completamente cargado y parseado
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Verifica si el indicador 'showToastInscripcion' está presente en sessionStorage
+        // sessionStorage es un objeto de almacenamiento web que permite guardar datos en el navegador del usuario
+        if (sessionStorage.getItem('showToastInscripcion') === 'true') {
+            // Si el indicador está presente, obtiene el elemento del DOM con el ID 'toastNotification'
+            var toastEl = document.getElementById('toastNotification');
+            // Crea un nuevo objeto Toast de Bootstrap con el elemento obtenido
+            var toast = new bootstrap.Toast(toastEl);
+            // Muestra el toast
+            toast.show();
 
-                // Remover el indicador para que no se muestre de nuevo en futuras visitas
-                sessionStorage.removeItem('showToastInscripcion');
-            }
-        });
+            // Una vez mostrado el toast, remueve el indicador 'showToastInscripcion' de sessionStorage
+            // para que no se muestre de nuevo en futuras visitas
+            sessionStorage.removeItem('showToastInscripcion');
+        }
+    });
 </script>
 <script src="https://kit.fontawesome.com/3b1eee63d8.js" crossorigin="anonymous"></script>
 <script>

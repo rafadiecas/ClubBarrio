@@ -65,12 +65,15 @@
             </form>
         </div>
 <script>
-        document.getElementById('showToastButtonInscripcion').addEventListener('click', function() {
-            // Guardar indicador en sessionStorage
-            sessionStorage.setItem('showToastInscripcion', 'true');
-            // Redirigir a la Página 2
-            window.location.href = 'inicio_usuario_tutor.html';
-        });
+    // Obtiene el elemento del DOM con el ID 'showToastButtonInscripcion'
+    document.getElementById('showToastButtonInscripcion').addEventListener('click', function() {
+        // Al hacer clic en el botón, guarda un indicador 'showToastInscripcion' en sessionStorage
+        // sessionStorage es un objeto de almacenamiento web que permite guardar datos en el navegador del usuario
+        sessionStorage.setItem('showToastInscripcion', 'true');
+    
+        // Después de guardar el indicador, redirige al usuario a la página 'inicio_usuario_tutor.html'
+        window.location.href = 'inicio_usuario_tutor.html';
+    });
     </script>
 </body>
 

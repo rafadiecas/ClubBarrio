@@ -98,14 +98,20 @@
 </div>
 
 <script>
+    // Obtiene el elemento de entrada para 'puntos_equipo1'
     var input1=  document.getElementById('puntos_equipo1');
+    // Agrega un evento de entrada al elemento
     input1.addEventListener('input',function(){
+      // Si la longitud del valor es mayor a 3, corta el valor a los primeros 3 caracteres
       if (this.value.length > 3) 
          this.value = this.value.slice(0,3);
+      // Si el valor es menor a 0, establece el valor a 0
       if (this.value < 0) {
                 this.value = 0;
             }
     })
+
+    // Repite el proceso para 'puntos_equipo2'
     var input2=  document.getElementById('puntos_equipo2');
     input2.addEventListener('input',function(){
       if (this.value.length > 3) 

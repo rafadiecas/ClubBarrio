@@ -1,140 +1,111 @@
-
-
-
-
+// Espera a que el documento esté listo
 $(document).ready(function () {
 
-
+    // Añade un evento de clic al botón de añadir
     $(document).on('click', '.btn-add', function (e) {
-        e.preventDefault();
-        console.log("Botón añadir clicado");
-        var productId = $(this).data('product-id');
-        console.log("Product ID: " + productId);
+        e.preventDefault(); // Previene la acción por defecto del botón
+        var productId = $(this).data('product-id'); // Obtiene el ID del producto del atributo data del botón
+
+        // Realiza una petición AJAX para añadir el producto al carrito
         $.ajax({
             url: '/ClubBarrioApp/tienda/carrito/anyadir/' + productId + '/',
             type: 'POST',
             beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken')); // Añade el token CSRF a la petición
             },
             success: function (response) {
-                console.log("Response: ", response);
-                // Asigna IDs a los elementos
-                $('.mb-0.text-muted').attr('id', 'totalItemsText');
-                $('.text-uppercase').attr('id', 'totalItemsUpper');
-                $('h5:contains("€")').attr('id', 'totalPrice');
-
-                // Actualiza la interfaz del carrito aquí
+                // Actualiza la interfaz del carrito con la respuesta obtenida
                 $('#totalItemsText').text(response.totalItems + " productos");
                 $('#totalItemsUpper').text(response.totalItems + " Productos");
                 $('#totalPrice').text("€ " + response.totalPrice);
-                // Actualiza el valor del campo de entrada
                 $('#form' + productId).val(response.productQuantities[productId]);
 
-                // Verifica si la cantidad del producto es 5 o más
+                // Si la cantidad del producto es 5 o más, deshabilita el botón de añadir
                 if (response.productQuantities[productId] >= 5) {
                     $('.btn-add[data-product-id="' + productId + '"]').prop('disabled', true);
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
+                // Muestra un mensaje de error en la consola si la petición falla
                 console.log('Error:', errorThrown);
             }
         });
     });
 
-    // Para restar del carrito
+    // Añade un evento de clic al botón de restar
     $(document).on('click', '.btn-subtract', function (e) {
-        e.preventDefault();
-        var productId = $(this).data('product-id');
+        e.preventDefault(); // Previene la acción por defecto del botón
+        var productId = $(this).data('product-id'); // Obtiene el ID del producto del atributo data del botón
+
+        // Realiza una petición AJAX para restar el producto del carrito
         $.ajax({
             url: '/ClubBarrioApp/tienda/carrito/restar/' + productId + '/',
             type: 'POST',
             beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken')); // Añade el token CSRF a la petición
             },
             success: function (response) {
-                // Si la cantidad del producto es 0, elimina el elemento HTML correspondiente al producto
-                var formElement = $('#form' + productId);
-                formElement.val(response.productQuantities[productId]);
-
-                // Si el valor del input es "", elimina el elemento HTML correspondiente al producto
-                if (formElement.val() === "") {
-                    $('#product' + productId).remove();
-                    $('#hr' + productId).remove();
-                }
-
-                // Asigna IDs a los elementos
-                $('.mb-0.text-muted').attr('id', 'totalItemsText');
-                $('.text-uppercase').attr('id', 'totalItemsUpper');
-                $('h5:contains("€")').attr('id', 'totalPrice');
-
-                // Actualiza la interfaz del carrito aquí
+                // Actualiza la interfaz del carrito con la respuesta obtenida
                 $('#totalItemsText').text(response.totalItems + " productos");
                 $('#totalItemsUpper').text(response.totalItems + " Productos");
                 $('#totalPrice').text("€ " + response.totalPrice);
+                $('#form' + productId).val(response.productQuantities[productId]);
 
-                // Actualiza el valor del campo de entrada
-                formElement.val(response.productQuantities[productId]); // Reutiliza la variable en lugar del selector
-
-                // Verifica si la cantidad del producto es menos que 5
+                // Si la cantidad del producto es menos que 5, habilita el botón de añadir
                 if (response.productQuantities[productId] < 5) {
                     $('.btn-add[data-product-id="' + productId + '"]').prop('disabled', false);
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
+                // Muestra un mensaje de error en la consola si la petición falla
                 console.log('Error:', errorThrown);
             }
         });
     });
 
-    // Para eliminar del carrito
+    // Añade un evento de clic al botón de eliminar
     $(document).on('click', '.btn-delete', function (e) {
-        e.preventDefault();
-        var productId = $(this).data('product-id');
+        e.preventDefault(); // Previene la acción por defecto del botón
+        var productId = $(this).data('product-id'); // Obtiene el ID del producto del atributo data del botón
+
+        // Realiza una petición AJAX para eliminar el producto del carrito
         $.ajax({
             url: '/ClubBarrioApp/tienda/carrito/eliminar/' + productId + '/',
             type: 'POST',
             beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken')); // Añade el token CSRF a la petición
             },
             success: function (response) {
-                // Elimina el elemento HTML correspondiente al producto
-                $('#product' + productId).remove();
-                $('#hr' + productId).remove();
-
-                // Asigna IDs a los elementos
-                $('.mb-0.text-muted').attr('id', 'totalItemsText');
-                $('.text-uppercase').attr('id', 'totalItemsUpper');
-                $('h5:contains("€")').attr('id', 'totalPrice');
-
-                // Actualiza la interfaz del carrito aquí
+                // Actualiza la interfaz del carrito con la respuesta obtenida
                 $('#totalItemsText').text(response.totalItems + " productos");
                 $('#totalItemsUpper').text(response.totalItems + " Productos");
                 $('#totalPrice').text("€ " + response.totalPrice);
             },
             error: function (xhr, textStatus, errorThrown) {
+                // Muestra un mensaje de error en la consola si la petición falla
                 console.log('Error:', errorThrown);
             }
         });
     });
+
+    // Limita la cantidad de un producto a 5
     $('.input-limit').each(function () {
-    var productId = $(this).data('product-id');
-    var currentQuantity = parseInt($(this).val());
-    console.log("Initial check - Product ID:", productId, "Quantity:", currentQuantity);
+        var productId = $(this).data('product-id'); // Obtiene el ID del producto del atributo data del botón
+        var currentQuantity = parseInt($(this).val()); // Obtiene la cantidad actual del producto
 
-    if (currentQuantity > 5) {
-        currentQuantity = 5;
-        $(this).val(currentQuantity);
-        console.log("Quantity set to 5 for Product ID:", productId);
-    }
+        // Si la cantidad actual es mayor que 5, la establece a 5
+        if (currentQuantity > 5) {
+            $(this).val(5);
+        }
 
-    if (currentQuantity >= 5) {
-        var button = $('.btn-add[data-product-id="' + productId + '"]');
-        console.log("Button to disable:", button);
-        button.prop('disabled', true);
-    }
-});
+        // Si la cantidad actual es 5 o más, deshabilita el botón de añadir
+        if (currentQuantity >= 5) {
+            $('.btn-add[data-product-id="' + productId + '"]').prop('disabled', true);
+        }
+    });
 });
 
+// Función para obtener el valor de una cookie
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -149,4 +120,3 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-//LIMITADOR DE INPUTS

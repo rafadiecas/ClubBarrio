@@ -147,42 +147,47 @@
 {% include 'footer.html' %}
 </html>
 <script>
+    // Definición de la función updateCartCount
     function updateCartCount() {
         // Hacer una solicitud AJAX a la vista del carrito
         fetch('{% url "carrito" %}', {
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest' // Indica que la solicitud es AJAX
             }
         })
-            .then(response => response.json())
-            .then(data => {
-                // Actualizar el contador del carrito con la cantidad de productos
-                var cartCountElement = document.getElementById('cart-count');
-                if (cartCountElement) {
-                    cartCountElement.textContent = data.cantProductos;
-                } else {
-                    console.error('Element with id "cart-count" not found');
-                }
-            })
-            .catch(error => console.error('Error:', error));
+        .then(response => response.json()) // Transforma la respuesta en JSON
+        .then(data => {
+            // Actualizar el contador del carrito con la cantidad de productos
+            var cartCountElement = document.getElementById('cart-count'); // Obtiene el elemento con id 'cart-count'
+            if (cartCountElement) {
+                cartCountElement.textContent = data.cantProductos; // Actualiza el contenido del elemento con la cantidad de productos
+            } else {
+                console.error('Element with id "cart-count" not found'); // Muestra un error en consola si no se encuentra el elemento
+            }
+        })
+        .catch(error => console.error('Error:', error)); // Muestra un error en consola si ocurre un error en la solicitud
     }
-
+    
     // Llamar a la función updateCartCount cada vez que la página se carga
     window.onload = updateCartCount;
-
 </script>
 <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            // Verificar si el indicador está presente en sessionStorage
-            if (sessionStorage.getItem('showToast') === 'true') {
-                // Mostrar el toast
-                var toastEl = document.getElementById('toastNotification');
-                var toast = new bootstrap.Toast(toastEl);
-                toast.show();
-
-                // Remover el indicador para que no se muestre de nuevo en futuras visitas
-                sessionStorage.removeItem('showToast');
-            }
-        });
+    // Añade un evento que se dispara cuando el contenido del documento ha sido completamente cargado y parseado
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Verificar si el indicador 'showToast' está presente en sessionStorage
+        // sessionStorage es un objeto de almacenamiento web que permite guardar datos en el navegador del usuario
+        if (sessionStorage.getItem('showToast') === 'true') {
+            // Si el indicador está presente, obtiene el elemento del DOM con el ID 'toastNotification'
+            var toastEl = document.getElementById('toastNotification');
+            // Crea un nuevo objeto Toast de Bootstrap con el elemento obtenido
+            var toast = new bootstrap.Toast(toastEl);
+            // Muestra el toast
+            toast.show();
+    
+            // Una vez mostrado el toast, remueve el indicador 'showToast' de sessionStorage
+            // para que no se muestre de nuevo en futuras visitas
+            sessionStorage.removeItem('showToast');
+        }
+    });
 </script>
 <script src="https://kit.fontawesome.com/3b1eee63d8.js" crossorigin="anonymous"></script>

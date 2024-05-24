@@ -29,22 +29,27 @@
 
 {% include 'footer.html' %}
 <script>
+// Obtiene el elemento canvas con el ID 'game' y su contexto para dibujar en él
 let canvas = document.getElementById('game');
 let context = canvas.getContext('2d');
+
+// Obtiene los botones de inicio y reinicio
 let startButton = document.getElementById('start-button');
 let restartButton = document.getElementById('restart-button');
 
+// Define el tamaño de la cuadrícula y el tamaño de cada celda
 let gridSize = 30;
 let tileSize = canvas.width / gridSize;
 
+// Inicializa la serpiente en el centro de la cuadrícula
 let snake = [{x: gridSize / 2, y: gridSize / 2}];
-let direction = 'right';
-let apple = null;
-let gameInterval = null;
-let nextDirection = null;
+let direction = 'right'; // La serpiente comienza moviéndose hacia la derecha
+let apple = null; // La manzana comienza sin estar en el tablero
+let gameInterval = null; // Intervalo para el bucle del juego
+let nextDirection = null; // La próxima dirección a tomar
 let puntuacion = 0; // Puntuación actual
-let scoreElement = document.getElementById('score');
-let highScoreElement = document.getElementById('highscore');
+let scoreElement = document.getElementById('score'); // Elemento para mostrar la puntuación
+let highScoreElement = document.getElementById('highscore'); // Elemento para mostrar la puntuación más alta
 
 // Recuperar el récord del almacenamiento local
 let record = localStorage.getItem('record');
@@ -55,8 +60,12 @@ if (record === null) {
 }
 highScoreElement.textContent = 'Récord: ' + record;
 
+// Función para el bucle del juego
 function gameLoop() {
+  // Crea una copia de la cabeza de la serpiente
   let head = Object.assign({}, snake[0]);
+
+  // Mueve la cabeza en la dirección actual
   switch(direction) {
     case 'left':
       head.x -= 1;
@@ -72,6 +81,7 @@ function gameLoop() {
       break;
   }
 
+  // Verifica si la serpiente se ha chocado consigo misma
   for (let i = 0; i < snake.length; i++) {
     if (snake[i].x === head.x && snake[i].y === head.y) {
       endGame();
@@ -79,10 +89,12 @@ function gameLoop() {
     }
   }
 
+  // Añade la nueva cabeza a la serpiente
   snake.unshift(head);
 
+  // Si la serpiente ha comido una manzana
   if (apple && apple.x === head.x && apple.y === head.y) {
-    apple = null;
+    apple = null; // Elimina la manzana
     puntuacion += 1; // Incrementa la puntuación
     if (puntuacion > record) {
       record = puntuacion; // Actualiza el récord
@@ -92,9 +104,11 @@ function gameLoop() {
     clearInterval(gameInterval);
     gameInterval = setInterval(gameLoop, 1000 / (5 + puntuacion * 0.1)); // La velocidad aumenta con la puntuación
   } else {
+    // Si no ha comido una manzana, elimina la cola de la serpiente
     snake.pop();
   }
 
+  // Si no hay manzana en el tablero, genera una nueva en una posición aleatoria
   if (apple === null) {
     let newApplePosition;
     do {
@@ -103,6 +117,7 @@ function gameLoop() {
     apple = newApplePosition;
   }
 
+  // Limpia el tablero y dibuja la serpiente y la manzana
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.fillStyle = 'green';
   snake.forEach(function(cell) {
@@ -111,10 +126,12 @@ function gameLoop() {
   context.fillStyle = 'red';
   context.fillRect(apple.x*tileSize, apple.y*tileSize, tileSize, tileSize);
 
+  // Si la serpiente ha salido del tablero, termina el juego
   if (head.x < 0 || head.y < 0 || head.x >= gridSize || head.y >= gridSize) {
     endGame();
   }
 
+  // Si se ha presionado una tecla de dirección, cambia la dirección de la serpiente
   if (nextDirection) {
     direction = nextDirection;
     nextDirection = null;
@@ -125,6 +142,7 @@ function gameLoop() {
   highScoreElement.textContent = 'Récord: ' + record;
 }
 
+// Función para iniciar el juego
 function startGame() {
   // Recuperar el récord del almacenamiento local
   let record = localStorage.getItem('record');
@@ -134,18 +152,29 @@ function startGame() {
     record = parseInt(record);
   }
 
+  // Oculta los botones de inicio y reinicio
   startButton.style.display = 'none';
   restartButton.style.display = 'none';
+
+  // Reinicia la serpiente, la dirección, la manzana y la puntuación
   snake = [{x: gridSize / 2, y: gridSize / 2}];
   direction = 'right';
   apple = null;
   puntuacion = 0; // Restablece la puntuación a 0
+
+  // Inicia el bucle del juego
   gameInterval = setInterval(gameLoop, 1000 / (5 + puntuacion * 0.1)); // La velocidad inicial depende de la puntuación
 }
 
+// Función para terminar el juego
 function endGame() {
+  // Detiene el bucle del juego
   clearInterval(gameInterval);
+
+  // Muestra el botón de reinicio
   restartButton.style.display = 'block';
+
+  // Muestra un mensaje de que el jugador ha perdido
   context.fillStyle = 'black';
   context.font = '20px Arial';
   let text = 'Has perdido';
@@ -155,6 +184,7 @@ function endGame() {
   context.fillText(text, x, y);
 }
 
+// Añade un evento de tecla presionada para cambiar la dirección de la serpiente
 window.addEventListener('keydown', function(e) {
   let newDirection;
   switch(e.key) {
@@ -172,6 +202,7 @@ window.addEventListener('keydown', function(e) {
       break;
   }
 
+  // Verifica si la nueva dirección es opuesta a la actual
   let isOpposite;
   switch(direction) {
     case 'left':
@@ -188,18 +219,22 @@ window.addEventListener('keydown', function(e) {
       break;
   }
 
+  // Si la nueva dirección no es opuesta a la actual, la establece como la próxima dirección
   if (!isOpposite) {
     nextDirection = newDirection;
   }
 
+  // Previene el comportamiento por defecto de las teclas de dirección
   if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
     e.preventDefault();
   }
 });
 
+// Añade eventos de clic a los botones de inicio y reinicio para iniciar el juego
 startButton.addEventListener('click', startGame);
 restartButton.addEventListener('click', startGame);
 
+// Muestra el botón de inicio al cargar la página
 startButton.style.display = 'block';
 </script>
 </body>

@@ -1,25 +1,29 @@
-// Funcion para confirmar la eliminacion de un registro
+// Function to confirm the deletion of a record
 function confirmarEliminarUsuario(event) {
+    // Show a confirmation dialog to the user
     var confirmacion = confirm('¿Seguro que desea eliminar?');
-     if (!confirmacion) {
-    event.preventDefault();
+    // If the user does not confirm, prevent the default action (which is the deletion)
+    if (!confirmacion) {
+        event.preventDefault();
     }
 }
 
-// Usada datatable en la gestion de Tutor , para crear y editar sus hijos.
+// When the document is ready
 $(document).ready(function(){
 
+    // Set the language of Moment.js to Spanish
     moment.locale('es');
 
-    // Obtiene los títulos de las columnas
+    // Get the titles of the columns
     var columnTitles = $("#tabla thead th").toArray().map(function (header) {
         return $(header).text().trim();
     });
 
-    // Verifica si las columnas 'Fecha' y 'Hora' existen
+    // Check if the 'Fecha' and 'Hora' columns exist
     var fechaIndex = columnTitles.indexOf('Fecha') !== -1 ? columnTitles.indexOf('Fecha') : columnTitles.indexOf('Fecha de nacimiento')
     var horaIndex = columnTitles.indexOf('Hora');
 
+    // Initialize the DataTable with the specified options
     let tabla = $("#tabla").DataTable({
         "dom": 'lrtip',
         "lengthMenu": [[10, 25, -1], [10, 25, "All"]],
@@ -38,26 +42,26 @@ $(document).ready(function(){
             }
         },
         "columnDefs": [
-
             {
-                "targets": horaIndex, // Aplica el formato a la columna 'Hora'
+                "targets": horaIndex, // Apply the format to the 'Hora' column
                 "render": function (data, type, row) {
                     if (type === 'display' && horaIndex !== -1) {
                         data = data.replace('noon', '12:00 PM');
-                        return moment(data, 'h:mm a').format('HH:mm'); // Formato de 24 horas
+                        return moment(data, 'h:mm a').format('HH:mm'); // 24-hour format
                     }
                     return data;
                 }
             }
         ]
     });
-    // Agrega un input para buscar en la tabla
+
+    // Add an input to search in the table
     $("#inputBuscar").on("keyup", function() {
         tabla.search($(this).val()).draw();
     });
 });
 
-// Limita la cantidad de caracteres en los inputs
+// Limit the number of characters in the inputs
 $(document).ready(function() {
     $('input').attr('maxlength', '40');
 });

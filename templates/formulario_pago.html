@@ -183,12 +183,13 @@
     </div>
 </div>
 <script>
-        document.getElementById('showToastButton').addEventListener('click', function() {
-            // Guardar indicador en sessionStorage
-            sessionStorage.setItem('showToast', 'true');
-            // Redirigir a la Página 2
-            window.location.href = 'tienda.html';
-        });
+// Selecciona el elemento con el ID 'showToastButton'
+document.getElementById('showToastButton').addEventListener('click', function() {
+    // Al hacer clic en el botón, se guarda un indicador en sessionStorage
+    // Este indicador se llama 'showToast' y su valor es 'true'
+    sessionStorage.setItem('showToast', 'true');
+    // Después de guardar el indicador, se redirige al usuario a la página 'tienda.html'
+    window.location.href = 'tienda.html';
     </script>
 </body>
 

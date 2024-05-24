@@ -80,14 +80,20 @@
     </div>
 </div>
 <script>
+    // Obtiene el elemento de entrada para 'minutos'
     var input1=  document.getElementById('minutos');
+    // Agrega un evento de entrada al elemento
     input1.addEventListener('input',function(){
+      // Si la longitud del valor es mayor a 3, corta el valor a los primeros 3 caracteres
       if (this.value.length > 3) 
          this.value = this.value.slice(0,3);
+      // Si el valor es menor a 0, establece el valor a 0
       if (this.value < 0) {
                 this.value = 0;
             }
     })
+
+    // Repite el proceso para 'puntos', 'faltas', 'asistencias' y 'rebotes'
     var input2=  document.getElementById('puntos');
     input2.addEventListener('input',function(){
       if (this.value.length > 3) 
@@ -96,7 +102,8 @@
                 this.value = 0;
             }
     })
-        var input3=  document.getElementById('faltas');
+
+    var input3=  document.getElementById('faltas');
     input1.addEventListener('input',function(){
       if (this.value.length > 3) 
          this.value = this.value.slice(0,3);
@@ -104,6 +111,7 @@
                 this.value = 0;
             }
     })
+
     var input4=  document.getElementById('asistencias');
     input2.addEventListener('input',function(){
       if (this.value.length > 3) 
@@ -112,7 +120,8 @@
                 this.value = 0;
             }
     })
-        var input5=  document.getElementById('rebotes');
+
+    var input5=  document.getElementById('rebotes');
     input2.addEventListener('input',function(){
       if (this.value.length > 3) 
          this.value = this.value.slice(0,3);
@@ -121,29 +130,48 @@
             }
     })
 </script>
+
 <script>
+    // Obtiene el elemento de selección 'partido'
     document.getElementById('partido').addEventListener('change', function() {
+        // Guarda el valor seleccionado en 'partidoId'
         var partidoId = this.value;
+        // Crea una nueva solicitud XMLHttpRequest
         var xhr = new XMLHttpRequest();
+        // Define una función para manejar los cambios de estado de la solicitud
         xhr.onreadystatechange = function() {
+            // Si la solicitud ha terminado
             if (xhr.readyState === XMLHttpRequest.DONE) {
+                // Si el estado de la respuesta es 200 (éxito)
                 if (xhr.status === 200) {
+                    // Parsea la respuesta como JSON
                     var response = JSON.parse(xhr.responseText);
+                    // Obtiene el elemento de selección 'jugadores'
                     var jugadoresSelect = document.getElementById('jugadores');
+                    // Limpia el contenido del elemento de selección 'jugadores'
                     jugadoresSelect.innerHTML = '';
+                    // Recorre la lista de jugadores en la respuesta
                     response.jugadores.forEach(function(jugador) {
+                        // Crea un nuevo elemento de opción
                         var option = document.createElement('option');
+                        // Establece el valor de la opción al id del jugador
                         option.value = jugador.id;
+                        // Establece el texto de la opción al nombre del jugador
                         option.textContent = jugador.nombre;
+                        // Añade el atributo 'name' a la opción con el valor del id del jugador
                         option.setAttribute('name', jugador.id)
+                        // Añade la opción al elemento de selección 'jugadores'
                         jugadoresSelect.appendChild(option);
                     });
                 } else {
+                    // Si el estado de la respuesta no es 200, imprime un error en la consola
                     console.error('Error al obtener los jugadores');
                 }
             }
         };
+        // Abre la solicitud con el método 'GET' y la URL para obtener jugadores por partido
         xhr.open('GET', '{% url 'obtener_jugadores_por_partido' %}?partido_id=' + partidoId, true);
+        // Envía la solicitud
         xhr.send();
     });
 

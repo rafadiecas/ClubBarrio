@@ -64,30 +64,47 @@
 
 
 <script>
+    // Cuando el documento esté listo, ejecuta la función
     $(document).ready(function() {
+        // Escucha el evento de envío del formulario con el ID "form-id"
         $('#form-id').on('submit', function(e) {
+            // Previene la acción predeterminada del evento de envío del formulario
             e.preventDefault();
+            // Imprime "Form submitted" en la consola del navegador
             console.log('Form submitted');
 
+            // Realiza una solicitud AJAX
             $.ajax({
+                // La URL es el valor del atributo 'action' del formulario
                 url: $(this).attr('action'),
+                // El tipo de la solicitud es 'POST'
                 type: 'POST',
+                // Los datos enviados son los datos del formulario serializados
                 data: $(this).serialize(),
+                // Si la solicitud tiene éxito, ejecuta esta función
                 success: function(data) {
+                    // Imprime "Success:" y los datos devueltos por la solicitud en la consola del navegador
                     console.log('Success:', data);
+                    // Redirige al usuario a la URL correspondiente a la vista 'inicio' en el backend de Django
                     window.location.href = "{% url 'inicio' %}";
-                    // Muestra el mensaje de éxito en la página
+                    // Inserta un párrafo con el mensaje de éxito devuelto por la solicitud en el elemento con el ID 'success-messages'
                     $('#success-messages').html('<p>' + data.success + '</p>');
                     // Muestra un pop-up con el mensaje de éxito
                     alert(data.success);
                 },
+                // Si la solicitud falla, ejecuta esta función
                 error: function(jqXHR, textStatus, errorThrown) {
+                    // Imprime "Error:", el texto del error y el error lanzado en la consola del navegador
                     console.log('Error:', textStatus, errorThrown);
+                    // Si el estado de la respuesta es 400
                     if (jqXHR.status === 400) {
+                        // Guarda los errores devueltos por la solicitud en la variable 'errores'
                         var errores = jqXHR.responseJSON.errores;
-                        // Muestra los errores en la página
+                        // Vacía el elemento con el ID 'error-messages'
                         $('#error-messages').html('');
+                        // Recorre los errores
                         errores.forEach(function(error) {
+                            // Inserta cada error como un párrafo en el elemento con el ID 'error-messages'
                             $('#error-messages').append('<p>' + error + '</p>');
                         });
                     }

@@ -12,11 +12,15 @@
     }
     </style>
     <script>
+        // Define una función llamada 'confirmarEliminarUsuario'
         function confirmarEliminarUsuario(event) {
-        var confirmacion = confirm('¿Seguro que desea eliminar noticia?');
-         if (!confirmacion) {
-        event.preventDefault();
-        }
+            // Crea una ventana de confirmación con el mensaje '¿Seguro que desea eliminar noticia?'
+            var confirmacion = confirm('¿Seguro que desea eliminar noticia?');
+            // Si el usuario no confirma (hace clic en 'Cancelar')
+            if (!confirmacion) {
+                // Previene la acción predeterminada del evento (en este caso, la eliminación de la noticia)
+                event.preventDefault();
+            }
         }
     </script>
 </head>

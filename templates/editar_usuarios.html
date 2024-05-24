@@ -152,36 +152,56 @@
     </div>
 </div>
 
-    <script>
+<script>
+// Espera a que el documento esté listo
 $(document).ready(function() {
+    // Define un objeto con acciones para cada rol
     var roleActions = {
+        // Para el rol 'Usuario'
         'Usuario': function() {
+            // Oculta ciertos campos
             $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField, #checkbox-activo,#tarifaSelect').hide();
+            // Elimina el atributo 'required' de los campos 'nombre' y 'apellidos'
             $('#nombre, #apellidos').removeAttr('required');
         },
+        // Para el rol 'Entrenador'
         'Entrenador': function() {
+            // Oculta ciertos campos
             $('#entrenadorSelect, #tutorSelect, #checkbox-activo,#tarifaSelect,#equipoSelect').hide();
+            // Muestra ciertos campos y los hace obligatorios
             $('#equiposSelect, #nombreField, #apellidosField').show();
             $('#nombre, #apellidos').attr('required', true);
         },
+        // Para el rol 'Jugador'
         'Jugador': function() {
+            // Oculta ciertos campos
             $('#entrenadorSelect,#tarifaSelect').hide();
+            // Muestra ciertos campos y los hace obligatorios
             $('#equipoSelect, #tutorSelect, #nombreField, #apellidosField, #checkbox-activo').show();
             $('#nombre, #apellidos').attr('required', true);
         },
+        // Para el rol 'Tutor'
         'Tutor': function() {
+            // Oculta ciertos campos
             $('#equipoSelect, #tutorSelect, #entrenadorSelect').hide();
+            // Muestra ciertos campos y los hace obligatorios
             $('#nombreField, #apellidosField, #checkbox-activo,#tarifaSelect').show();
             $('#nombre, #apellidos').attr('required', true);
         },
+        // Para el rol 'Administrador'
         'Administrador': function() {
+            // Oculta ciertos campos
             $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField, #checkbox-activo,#tarifaSelect').hide();
+            // Elimina el atributo 'required' de los campos 'nombre' y 'apellidos'
             $('#nombre, #apellidos').removeAttr('required');
         }
     };
 
+    // Cuando el valor del campo 'rol' cambia
     $('#rol').on('input', function() {
+        // Obtiene el rol seleccionado
         var selectedRol = $(this).val();
+        // Si hay una acción definida para el rol seleccionado, la ejecuta
         if (roleActions[selectedRol]) {
             roleActions[selectedRol]();
         }

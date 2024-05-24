@@ -97,21 +97,32 @@
     </div>
 
     <script>
-        $(document).ready(function() {
-            $('#rol').change(function() {
-                var selectedRol = $(this).val();
-                if (selectedRol === 'usuario' || selectedRol === 'padre') {
-                    $('#equipoSelect').hide();
-                    $('#tutorSelect').hide();
-                } else if (selectedRol === 'entrenador') {
-                    $('#equipoSelect').show();
-                    $('#tutorSelect').hide();
-                } else if (selectedRol === 'jugador') {
-                    $('#equipoSelect').show();
-                    $('#tutorSelect').show();
-                }
-            });
-        });
+// Espera a que el documento esté listo
+$(document).ready(function() {
+    // Cuando el valor del campo 'rol' cambia
+    $('#rol').change(function() {
+        // Obtiene el rol seleccionado
+        var selectedRol = $(this).val();
+        // Si el rol seleccionado es 'usuario' o 'padre'
+        if (selectedRol === 'usuario' || selectedRol === 'padre') {
+            // Oculta los campos 'equipoSelect' y 'tutorSelect'
+            $('#equipoSelect').hide();
+            $('#tutorSelect').hide();
+        } 
+        // Si el rol seleccionado es 'entrenador'
+        else if (selectedRol === 'entrenador') {
+            // Muestra el campo 'equipoSelect' y oculta el campo 'tutorSelect'
+            $('#equipoSelect').show();
+            $('#tutorSelect').hide();
+        } 
+        // Si el rol seleccionado es 'jugador'
+        else if (selectedRol === 'jugador') {
+            // Muestra los campos 'equipoSelect' y 'tutorSelect'
+            $('#equipoSelect').show();
+            $('#tutorSelect').show();
+        }
+    });
+});
     </script>
 </div>
 

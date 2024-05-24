@@ -64,20 +64,31 @@
     </div>
 
    <script>
+        // Select all elements with the class 'more'
         var buttons = document.querySelectorAll('.more');
-
+        
+        // For each button, add an event listener for the 'click' event
         buttons.forEach(button => {
             button.addEventListener('click', toggleText);
         });
-
+        
+        // Define the function 'toggleText' that will be called when a button is clicked
         function toggleText(event) {
+            // Get the inner HTML of the clicked button (which is the event target)
             var buttonText = event.target.innerHTML;
+            // Get the parent element of the clicked button
             var cardText = event.target.parentElement;
-
+        
+            // Toggle the 'textoCompleto' class for the parent element
+            // If the class is present, it will be removed; if it's not present, it will be added
             cardText.classList.toggle('textoCompleto');
+            // Toggle the 'text-truncate' class for the 'p' element inside the parent element
             cardText.querySelector('p').classList.toggle('text-truncate');
-
+        
+            // If the button text is 'Leer más...', change it to 'Leer menos...'
+            // Otherwise, change it to 'Leer más...'
             buttonText === 'Leer más...' ? buttonText = 'Leer menos...' : buttonText = 'Leer más...';
+            // Update the inner HTML of the clicked button with the new text
             event.target.innerHTML = buttonText;
         }
     </script>

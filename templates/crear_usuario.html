@@ -131,31 +131,48 @@
 </div>
 
     <script>
-    $(document).ready(function() {
+// Espera a que el documento esté listo
+$(document).ready(function() {
+    // Define un objeto con acciones para cada rol
     var roleActions = {
+        // Para el rol 'Usuario'
         'Usuario': function() {
+            // Oculta ciertos campos
             $('#equipoSelect, #tutorSelect, #entrenadorSelect, #nombreField, #apellidosField, #equiposSelect').hide();
+            // Elimina el atributo 'required' de los campos 'nombre' y 'apellidos'
             $('#nombre, #apellidos').removeAttr('required');
         },
+        // Para el rol 'Entrenador'
         'Entrenador': function() {
+            // Oculta ciertos campos
             $('#entrenadorSelect, #tutorSelect, #equipoSelect').hide();
+            // Muestra ciertos campos y los hace obligatorios
             $('#nombreField, #apellidosField, #equiposSelect').show();
             $('#nombre, #apellidos').attr('required', true);
         },
+        // Para el rol 'Jugador'
         'Jugador': function() {
+            // Oculta ciertos campos
             $('#entrenadorSelect, #equiposSelect').hide();
+            // Muestra ciertos campos y los hace obligatorios
             $('#equipoSelect, #tutorSelect, #nombreField, #apellidosField').show();
             $('#nombre, #apellidos').attr('required', true);
         },
+        // Para el rol 'Tutor'
         'Tutor': function() {
+            // Oculta ciertos campos
             $('#equipoSelect, #tutorSelect, #entrenadorSelect, #equiposSelect').hide();
+            // Muestra ciertos campos y los hace obligatorios
             $('#nombreField, #apellidosField').show();
             $('#nombre, #apellidos').attr('required', true);
         }
     };
 
+    // Cuando el valor del campo 'rol' cambia
     $('#rol').change(function() {
+        // Obtiene el rol seleccionado
         var selectedRol = $(this).val();
+        // Si hay una acción definida para el rol seleccionado, la ejecuta
         if (roleActions[selectedRol]) {
             roleActions[selectedRol]();
         }
