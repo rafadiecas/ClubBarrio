@@ -87,6 +87,14 @@ class Presidente(models.Model):
     apellidos = models.CharField(max_length=250, default='sin apellidos')
     equipo = models.ForeignKey('Equipo', on_delete=models.DO_NOTHING)
 
+class Arbitro(models.Model):
+    nombre = models.CharField(max_length=250, default='sin nombre')
+    apellidos = models.CharField(max_length=250, default='sin apellidos')
+
+
+    def __str__(self):
+        return self.nombre + " " + self.apellidos
+
 
 
 class Categoria(models.Model):
@@ -244,6 +252,7 @@ class Partido(models.Model):
     equipo2 = models.ForeignKey(Equipo, on_delete=models.DO_NOTHING, related_name='equipo_visitante')
     temporada = models.ForeignKey(Temporada, on_delete=models.DO_NOTHING)
     jornada = models.IntegerField(default=0)
+    arbitro = models.ForeignKey(Arbitro, on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):
         return str(self.fecha) + " " + str(

@@ -42,6 +42,7 @@
                  <th scope="col">Equipo Visitante</th>
                  <th scope="col">Jornada</th>
                  <th scope="col">Temporada</th>
+                    <th scope="col">Arbitro</th>
                   <th></th>
                 </tr>
               </thead>
@@ -58,6 +59,7 @@
                   <td>{{ p.equipo2.nombre }}</td>
                     <td>{{ p.jornada }}</td>
                   <td>{{ p.temporada.anyo }}</td>
+                    <td>{{ p.arbitro.nombre }}</td>
                     <td>
                         <a href="{% url 'editar_partido' id=p.id %}"> <img src="{% static 'imagenes/icons8-edit-30.png' %}"></a>
                         <a href="{% url 'elimina_partido' id=p.id %}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'imagenes/icons8-basura-30.png' %}"></a>                    </td>

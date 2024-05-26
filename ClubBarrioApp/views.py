@@ -811,7 +811,8 @@ def crear_partido(request):
     if request.method == 'GET':
         lista_equipos = Equipo.objects.all()
         temporadas = Temporada.objects.all()
-        return render(request, 'crear_partidos.html', {'lista_equipos': lista_equipos, 'temporadas': temporadas})
+        arbitros = Arbitro.objects.all()
+        return render(request, 'crear_partidos.html', {'lista_equipos': lista_equipos, 'temporadas': temporadas , 'arbitros': arbitros})
     else:
         partido_nuevo = Partido()
         partido_nuevo.fecha = request.POST.get('fecha')
@@ -823,6 +824,7 @@ def crear_partido(request):
         partido_nuevo.equipo2 = Equipo.objects.get(id=int(request.POST.get('equipo_visitante')))
         partido_nuevo.temporada = Temporada.objects.get(id=int(request.POST.get('temporada')))
         partido_nuevo.jornada = request.POST.get('jornada')
+        partido_nuevo.arbitro = request.POST.get('arbitro')
         if request.POST.get('equipo_local') == request.POST.get('equipo_visitante'):
             errores = ["Los equipos no pueden ser iguales"]
             return render(request, 'crear_partidos.html', {'errores': errores, 'lista_equipos': Equipo.objects.all(), 'temporadas': Temporada.objects.all()})
@@ -840,7 +842,8 @@ def editar_partido(request, id):
     if request.method == 'GET':
         lista_equipos = Equipo.objects.all()
         temporadas = Temporada.objects.all()
-        return render(request, 'crear_partidos.html', {'partido': partido, 'lista_equipos': lista_equipos, 'temporadas': temporadas, 'modo_edicion': True})
+        arbitros = Arbitro.objects.all()
+        return render(request, 'crear_partidos.html', {'partido': partido, 'lista_equipos': lista_equipos, 'temporadas': temporadas, 'modo_edicion': True, 'arbitros': arbitros })
     else:
         partido.fecha = request.POST.get('fecha')
         partido.hora = request.POST.get('hora')
@@ -851,6 +854,7 @@ def editar_partido(request, id):
         partido.equipo2 = Equipo.objects.get(id=int(request.POST.get('equipo_visitante')))
         partido.temporada = Temporada.objects.get(id=int(request.POST.get('temporada')))
         partido.jornada = request.POST.get('jornada')
+        partido.arbitro = Arbitro.objects.get(id=int(request.POST.get('arbitro')))
         if request.POST.get('equipo_local') == request.POST.get('equipo_visitante'):
             errores = ["Los equipos no pueden ser iguales"]
             return render(request, 'crear_partidos.html', {'errores': errores, 'lista_equipos': Equipo.objects.all(), 'temporadas': Temporada.objects.all()})
@@ -1619,7 +1623,7 @@ def borra_pedidos(request, id):
 def crear_presidente(request):
     equipos_safa = Equipo.objects.filter(es_safa=True)
     if request.method == 'GET':
-        return render(request, 'crear_presidente.html', {'equipos_safa': equipos_safa})  # Pasa los equipos al template
+        return render(request, 'crear_presidente.html', {'equipos_safa': equipos_safa})
     else:
         equipo_id = int(request.POST.get('equipo'))
         # Verificar si ya existe un presidente para este equipo
@@ -1647,8 +1651,17 @@ def edita_presidente(request, id):
     if request.method == 'GET':
         return render(request, 'crear_presidente.html', {'presidente': presidente, 'modo_edicion': True , 'equipos_safa': equipos_safa})
     else:
+        equipo_id = int(request.POST.get('equipo'))
+        # NOTAS
+        # En la consulta Presidente.objects.filter(equipo_id=equipo_id).exclude(id=presidente.id).exists(),
+        # se agrega .exclude(id=presidente.id) para excluir al presidente actual de la verificación.
+        # Esto es necesario porque si no lo hacemos, siempre encontrará al presidente actual y considerará que ya existe un
+        # presidente para el equipo seleccionado.
+
+        if Presidente.objects.filter(equipo_id=equipo_id).exclude(id=presidente.id).exists():
+            return render(request, 'crear_presidente.html', {'error': 'Ya existe un presidente para este equipo.', 'presidente': presidente, 'modo_edicion': True , 'equipos_safa': equipos_safa})
         presidente.nombre = request.POST.get('nombre')
         presidente.apellidos = request.POST.get('apellidos')
-        presidente.equipo = Equipo.objects.get(id=int(request.POST.get('equipo')))
+        presidente.equipo = Equipo.objects.get(id=equipo_id)
         presidente.save()
         return redirect('presidentes_listado')

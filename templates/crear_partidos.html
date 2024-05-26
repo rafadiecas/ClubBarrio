@@ -81,7 +81,15 @@
                     <option value="{{ temporada.id }}"{% if partido.temporada.id == temporada.id %} selected {% endif %}>{{ temporada.anyo }}</option>
                 {% endfor %}
             </select>
-        </div>     
+        </div>
+        <div class="col-md-4">
+            <label for="arbitro" class="form-label">Arbitro:</label>
+            <select name="arbitro" id="arbitro" class="form-select">
+                {% for arbitro in arbitros %}
+                        <option value="{{ arbitro.id }}">{{ arbitro.nombre }} {{ arbitro.apellidos }}</option>
+                    {% endfor %}
+            </select>
+        </div>
     </div>
        <div class="row">
             <div class="col-12 text-center">
