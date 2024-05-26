@@ -89,4 +89,9 @@ urlpatterns = [
     path('error/', pagina_error, name='error'),
     path('administrador/pedidos/', lista_pedidos, name='pedidos_listado'),
     path('administrador/pedidos/eliminar/<int:id>/', borra_pedidos, name='borra_pedidos'),
+    path('administrador/presidentes/', lista_presidentes, name='presidentes_listado'),
+    path('administrador/presidentes/new', crear_presidente, name='crear_presidente'),
+    path('administrador/presidentes/editar/<int:id>/', edita_presidente, name='editar_presidente'),
+    path('administrador/presidentes/eliminar/<int:id>/', borra_presidente, name='elimina_presidente'),
+
 ]

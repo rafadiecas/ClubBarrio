@@ -887,6 +887,8 @@ def crear_producto(request):
         producto_talla_nuevo.save()
         return redirect('lista_tienda')
 
+
+
 def crear_producto_talla(request):
     if request.method == 'GET':
         tallas = Talla.objects.all()
@@ -1614,3 +1616,35 @@ def borra_pedidos(request, id):
     pedido.delete()
     return redirect('pedidos_listado')
 
+def crear_presidente(request):
+    if request.method == 'GET':
+        equipos_safa = Equipo.objects.filter(es_safa=True)
+        return render(request, 'crear_presidente.html', {'equipos_safa': equipos_safa})  # Pasa los equipos al template
+    else:
+        presidente = Presidente()
+        presidente.nombre = request.POST.get('nombre')
+        presidente.apellidos = request.POST.get('apellidos')
+        presidente.equipo = Equipo.objects.get(id=int(request.POST.get('equipo')))
+        presidente.save()
+        return redirect('presidentes_listado')
+
+def lista_presidentes(request):
+    presidentes = Presidente.objects.all()
+    return render(request, 'lista_presidentes.html', {'presidentes': presidentes})
+
+def borra_presidente(request, id):
+    presidente = Presidente.objects.get(id=id)
+    presidente.delete()
+    return redirect('presidentes_listado')
+
+def edita_presidente(request, id):
+    presidente = Presidente.objects.get(id=id)
+    equipos_safa = Equipo.objects.filter(es_safa=True)
+    if request.method == 'GET':
+        return render(request, 'crear_presidente.html', {'presidente': presidente, 'modo_edicion': True , 'equipos_safa': equipos_safa})
+    else:
+        presidente.nombre = request.POST.get('nombre')
+        presidente.apellidos = request.POST.get('apellidos')
+        presidente.equipo = Equipo.objects.get(id=int(request.POST.get('equipo')))
+        presidente.save()
+        return redirect('presidentes_listado')

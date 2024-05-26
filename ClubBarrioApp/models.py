@@ -82,6 +82,11 @@ class Notificaciones(models.Model):
     def __str__(self):
         return f'Notificaciones para {self.usuario.username}'
 
+class Presidente(models.Model):
+    nombre = models.CharField(max_length=250, default='sin nombre')
+    apellidos = models.CharField(max_length=250, default='sin apellidos')
+    equipo = models.ForeignKey('Equipo', on_delete=models.DO_NOTHING)
+
 
 
 class Categoria(models.Model):
