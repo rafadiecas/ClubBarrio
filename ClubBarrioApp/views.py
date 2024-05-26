@@ -1617,14 +1617,18 @@ def borra_pedidos(request, id):
     return redirect('pedidos_listado')
 
 def crear_presidente(request):
+    equipos_safa = Equipo.objects.filter(es_safa=True)
     if request.method == 'GET':
-        equipos_safa = Equipo.objects.filter(es_safa=True)
         return render(request, 'crear_presidente.html', {'equipos_safa': equipos_safa})  # Pasa los equipos al template
     else:
+        equipo_id = int(request.POST.get('equipo'))
+        # Verificar si ya existe un presidente para este equipo
+        if Presidente.objects.filter(equipo_id=equipo_id).exists():
+            return render(request, 'crear_presidente.html', {'error': 'Ya existe un presidente para este equipo.', 'equipos_safa': equipos_safa})
         presidente = Presidente()
         presidente.nombre = request.POST.get('nombre')
         presidente.apellidos = request.POST.get('apellidos')
-        presidente.equipo = Equipo.objects.get(id=int(request.POST.get('equipo')))
+        presidente.equipo = Equipo.objects.get(id=equipo_id)
         presidente.save()
         return redirect('presidentes_listado')
 
