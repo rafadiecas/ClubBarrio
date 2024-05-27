@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.sites import requests
 from django.core.files.storage import FileSystemStorage
 from django.core.mail import EmailMessage
-from django.db.models import Count, Q, When, Value
+from django.db.models import Count, Q, When, Value, Avg
 from django.db.models.functions import Coalesce
 from django.forms import IntegerField
 from django.core.exceptions import ObjectDoesNotExist
@@ -1376,33 +1376,29 @@ def obtener_jugadores_por_partido(request):
 def producto(request, id):
     producto = Producto.objects.get(id=id)
     tallas = ProductoTalla.objects.filter(producto_id=id, stock__gt=5).order_by('talla')
+    valoracion = None
+    modo_edicion = False
+    puntuacion_media = Valoraciones.objects.filter(producto_id=id).aggregate(puntuacion_media=Avg('puntuacion'))['puntuacion_media']
+    valoraciones = Valoraciones.objects.filter(producto_id=id)
+    if request.user.is_authenticated:
+        valoracion = Valoraciones.objects.filter(producto_id=id, usuario=request.user).first()
+        if valoracion:
+            modo_edicion = True
     if request.method == 'POST':
-
         producto_talla = ProductoTalla.objects.get(producto_id=id, talla=request.POST.get('tallas'))
-
         carro = {}
-
-
         if "carro" in request.session:
             carro = request.session.get("carro", {})
-
-        # Comprobar que el producto está o no está en el carrito
         if str(producto_talla.id) in carro.keys():
-            # Si la cantidad actual en el carrito más la cantidad que se está agregando es mayor que 5
             if carro[str(producto_talla.id)] + int(request.POST.get('cantidad')) > 5:
-                # Establecer la cantidad del producto en el carrito a 5
                 carro[str(producto_talla.id)] = 5
             else:
-                # Si no, simplemente agregar la cantidad que se está agregando
                 carro[str(producto_talla.id)] += int(request.POST.get('cantidad'))
         else:
-            # Si el producto no está en el carrito, agregarlo
-            carro[str(producto_talla.id)] = min(int(request.POST.get('cantidad')), 5)  # No permitir más de 5 en la primera adición
-
+            carro[str(producto_talla.id)] = min(int(request.POST.get('cantidad')), 5)
         request.session["carro"] = carro
-
         return redirect('tienda')
-    return render(request, 'producto.html', {'producto': producto, 'tallas': tallas})
+    return render(request, 'producto.html', {'producto': producto, 'tallas': tallas, 'valoracion': valoracion, 'modo_edicion': modo_edicion, 'puntuacion_media': puntuacion_media, 'valoraciones': valoraciones})
 
 def estadisticas_equipo(request, id):
     equipo = Equipo.objects.get(id=id)
@@ -1711,3 +1707,35 @@ def eliminar_evento(request, id):
     evento = Evento.objects.get(id=id)
     evento.delete()
     return redirect('lista_eventos')
+
+
+@login_required
+def crear_valoracion(request, producto_id):
+    if request.method == 'POST':
+        puntuacion = request.POST.get('puntuacion')
+        comentario = request.POST.get('comentario')
+        usuario = request.user
+        producto = Producto.objects.get(id=producto_id)
+        valoracion = Valoraciones(puntuacion=puntuacion, comentario=comentario, usuario=usuario, producto=producto)
+        valoracion.save()
+        return redirect('tienda')
+    else:
+        return redirect('tienda')
+
+@login_required
+def editar_valoracion(request, valoracion_id):
+    valoracion = Valoraciones.objects.get(id=valoracion_id)
+    if request.user != valoracion.usuario:
+        messages.error(request, 'No tienes permiso para editar esta valoración.')
+        return redirect('tienda')
+    if request.method == 'POST':
+        valoracion.puntuacion = request.POST.get('puntuacion')
+        valoracion.comentario = request.POST.get('comentario')
+        valoracion.save()
+    return redirect('tienda')
+
+@login_required
+def lista_valoraciones_producto(request, producto_id):
+    producto = Producto.objects.get(id=producto_id)
+    valoraciones = Valoraciones.objects.filter(producto=producto)
+    return render(request, 'lista_valoraciones_producto.html', {'producto': producto, 'valoraciones': valoraciones})

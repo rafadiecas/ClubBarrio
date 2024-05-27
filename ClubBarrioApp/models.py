@@ -290,3 +290,13 @@ class Evento(models.Model):
 
     def __str__(self):
         return self.nombre + " " + str(self.fecha)
+
+class Valoraciones(models.Model):
+    producto= models.ForeignKey(Producto, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    puntuacion = models.IntegerField()
+    comentario = models.TextField(default='sin comentario')
+
+    def __str__(self):
+        return self.producto.nombre + " " + self.usuario.username + " " + str(self.puntuacion) + " " + self.comentario
+

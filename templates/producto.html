@@ -5,100 +5,162 @@
     <meta charset="UTF-8">
     <title>Producto</title>
 </head>
+<style>
+    .valoracion {
+    margin-bottom: 1em;
+    padding: 1em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+</style>
 <body>
 <div class="container d-flex justify-content-center pt-5 pb-5">
-    <div class="row row-cols-1 row-cols-md-2 w-75 rounded-5 shadow-lg mt-3 mb-5 justify-content-center pt-5 pb-5" id="cuadro">
+    <div class="row row-cols-1 row-cols-md-2 w-75 rounded-5 shadow-lg mt-3 mb-5 justify-content-center pt-5 pb-5"
+         id="cuadro">
         <img src="{{ producto.url_imagen }}" class="img-fluid" alt="foto_producto">
         <div class="col col-6 d-flex flex-column">
-        <form action="" method="post">
+            <form action="" method="post">
 
-        {% csrf_token %}
-        
-            <h3>{{ producto.nombre }}</h3>
-            <p>{{ producto.descripcion }}</p>
-            <div class="row m-0 p-0 d-flex justify-content-start">
-                {% if producto.tipo.id != 5 %}
-                    <div class="col-sm-6 ps-0">
-                        <label for="tallas" class="form-label">Tallas:</label>
-                        <select name="tallas" id="tallas" class="form-select">
-                            {% for talla in tallas %}
-                                <option value="{{ talla.talla.id }}"
-                                        data-stock="{{ talla.stock }}">{{ talla.talla.nombre }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                {% else %}
-                    <input type="hidden" name="tallas" value="7">
-                {% endif %}
+                {% csrf_token %}
+
+                <h3>{{ producto.nombre }}</h3>
+                <p>{{ producto.descripcion }}</p>
+                <p>Puntuacion media: {{ puntuacion_media }}</p>
+                <div class="row m-0 p-0 d-flex justify-content-start">
+                    {% if producto.tipo.id != 5 %}
                         <div class="col-sm-6 ps-0">
-                        <label for="cantidad" class="form-label">Cantidad:</label>
-                        
-                            <input type="number" max="5" min="1" value="1" id="cantidad" class="form-control" name="cantidad">
+                            <label for="tallas" class="form-label">Tallas:</label>
+                            <select name="tallas" id="tallas" class="form-select">
+                                {% for talla in tallas %}
+                                    <option value="{{ talla.talla.id }}"
+                                            data-stock="{{ talla.stock }}">{{ talla.talla.nombre }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
-            
+                    {% else %}
+                        <input type="hidden" name="tallas" value="7">
+                    {% endif %}
+                    <div class="col-sm-6 ps-0">
+                        <label for="cantidad" class="form-label">Cantidad:</label>
+
+                        <input type="number" max="5" min="1" value="1" id="cantidad" class="form-control"
+                               name="cantidad">
                     </div>
-            <p>Precio: <b>{{ producto.precio }}€</b></p>
-           <input type="hidden" name="productoTallaId" value="{{ producto.id }}">
-        <div class="row">
+
+                </div>
+                <p>Precio: <b>{{ producto.precio }}€</b></p>
+                <input type="hidden" name="productoTallaId" value="{{ producto.id }}">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-primary mt-3" on onclick="alerta()">Añadir</button>
+                    </div>
+                </div>
+            </form>
+            {% if user.is_authenticated %}
+                {% if modo_edicion %}
+                    <form action="{% url 'editar_valoracion' valoracion.id %}" method="post">
+                    <button type="submit" class="btn btn-primary mt-3">Editar comentario</button>
+                {% else %}
+                    <form action="{% url 'crear_valoracion' producto.id %}" method="post">
+                    <button type="submit" class="btn btn-primary mt-3">Nuevo comentario</button>
+                {% endif %}
             <div class="col-12 text-center">
-                <button type="submit" class="btn btn-primary mt-3" on onclick="alerta()">Añadir</button>
+                <button type="button" class="btn btn-secondary mt-3" data-bs-toggle="modal"
+                        data-bs-target="#valoracionesModal">
+                    Valoraciones de otros usuarios
+                </button>
             </div>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="puntuacion">Puntuación:</label>
+                <input type="number" id="puntuacion" name="puntuacion" class="form-control" min="1" max="5"
+                       value="{{ valoracion.puntuacion }}" required>
             </div>
-               </form>     
-            
-        
+            <div class="form-group">
+                <label for="comentario">Comentario:</label>
+                <textarea id="comentario" name="comentario" class="form-control"
+                          rows="3">{{ valoracion.comentario }}</textarea>
+            </div>
+            </form>
+            {% endif %}
+
+<div class="modal fade" id="valoracionesModal" tabindex="-1" aria-labelledby="valoracionesModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="valoracionesModalLabel">Valoraciones de otros usuarios</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% for valoracion in valoraciones %}
+                    <div class="valoracion">
+                        <p><strong>{{ valoracion.usuario.username }}</strong> - Puntuación: {{ valoracion.puntuacion }}</p>
+                        <p>{{ valoracion.comentario }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
         </div>
     </div>
 </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var inputElement = document.getElementById('cantidad');
-            if (inputElement) {
-                inputElement.addEventListener('input', function () {
-                    var max = parseInt(this.getAttribute('max'));
-                    if (this.value > max) {
-                        this.value = max;
-                    }
-                    if (this.value < this.getAttribute('min')) {
-                        this.value = this.getAttribute('min');
-                    }
-                });
-            }
-        });
 
-        function alerta() {
-    var cantidadElement = document.getElementById('cantidad');
-    var cantidad = cantidadElement.value;
-    if (cantidad > 2) {
-        alert('No puedes comprar más de 2 productos');
-        cantidadElement.value = 2;
-    }
-}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var inputElement = document.getElementById('cantidad');
+        if (inputElement) {
+            inputElement.addEventListener('input', function () {
+                var max = parseInt(this.getAttribute('max'));
+                if (this.value > max) {
+                    this.value = max;
+                }
+                if (this.value < this.getAttribute('min')) {
+                    this.value = this.getAttribute('min');
+                }
+            });
+        }
+    });
+
     function alerta() {
-    var cantidadElement = document.getElementById('cantidad');
-    var cantidad = cantidadElement.value;
-    if (cantidad > 2) {
-        alert('No puedes comprar más de 2 productos');
-        cantidadElement.value = 2;
+        var cantidadElement = document.getElementById('cantidad');
+        var cantidad = cantidadElement.value;
+        if (cantidad > 2) {
+            alert('No puedes comprar más de 2 productos');
+            cantidadElement.value = 2;
+        }
     }
-}
-    </script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    var inputElement = document.getElementById('nombre_usuario');
-    if (inputElement) {
-        inputElement.addEventListener('focus', function() {
-            this.style.setProperty('color', 'red', 'important');
-        });
 
-        inputElement.addEventListener('blur', function() {
-            this.style.removeProperty('color');
-        });
-    } else {
-        console.error('Element with id "nombre_usuario" not found');
+    function alerta() {
+        var cantidadElement = document.getElementById('cantidad');
+        var cantidad = cantidadElement.value;
+        if (cantidad > 2) {
+            alert('No puedes comprar más de 2 productos');
+            cantidadElement.value = 2;
+        }
     }
-});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var inputElement = document.getElementById('nombre_usuario');
+        if (inputElement) {
+            inputElement.addEventListener('focus', function () {
+                this.style.setProperty('color', 'red', 'important');
+            });
+
+            inputElement.addEventListener('blur', function () {
+                this.style.removeProperty('color');
+            });
+        } else {
+            console.error('Element with id "nombre_usuario" not found');
+        }
+    });
 </script>
 
 

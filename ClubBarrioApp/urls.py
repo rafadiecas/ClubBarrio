@@ -97,5 +97,8 @@ urlpatterns = [
     path('administrador/eventos/new', crear_evento, name='crear_evento'),
     path('administrador/eventos/editar/<int:id>/', editar_evento, name='editar_evento'),
     path('administrador/eventos/eliminar/<int:id>/', eliminar_evento, name='eliminar_evento'),
+    path('crear_valoracion/<int:producto_id>/', crear_valoracion, name='crear_valoracion'),
+    path('editar_valoracion/<int:valoracion_id>/', editar_valoracion, name='editar_valoracion'),
+
 
 ]
