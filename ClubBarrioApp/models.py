@@ -91,9 +91,11 @@ class Arbitro(models.Model):
     nombre = models.CharField(max_length=250, default='sin nombre')
     apellidos = models.CharField(max_length=250, default='sin apellidos')
 
-
     def __str__(self):
         return self.nombre + " " + self.apellidos
+
+
+
 
 
 
@@ -278,3 +280,13 @@ class Convocatoria(models.Model):
 
     def __str__(self):
         return self.jugador.nombre + " " + self.jugador.apellidos + " " + self.partido.equipo1.nombre + " vs " + self.partido.equipo2.nombre
+
+
+class Evento(models.Model):
+    nombre = models.CharField(max_length=250)
+    descripcion = models.TextField(default='sin descripción')
+    fecha = models.DateField(default='1900-01-01')
+    usuarios = models.ManyToManyField(User)
+
+    def __str__(self):
+        return self.nombre + " " + str(self.fecha)

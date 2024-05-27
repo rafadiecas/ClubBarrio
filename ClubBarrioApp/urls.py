@@ -93,5 +93,9 @@ urlpatterns = [
     path('administrador/presidentes/new', crear_presidente, name='crear_presidente'),
     path('administrador/presidentes/editar/<int:id>/', edita_presidente, name='editar_presidente'),
     path('administrador/presidentes/eliminar/<int:id>/', borra_presidente, name='elimina_presidente'),
+    path('administrador/eventos/', lista_eventos, name='lista_eventos'),
+    path('administrador/eventos/new', crear_evento, name='crear_evento'),
+    path('administrador/eventos/editar/<int:id>/', editar_evento, name='editar_evento'),
+    path('administrador/eventos/eliminar/<int:id>/', eliminar_evento, name='eliminar_evento'),
 
 ]

@@ -1665,3 +1665,49 @@ def edita_presidente(request, id):
         presidente.equipo = Equipo.objects.get(id=equipo_id)
         presidente.save()
         return redirect('presidentes_listado')
+
+
+def lista_eventos(request):
+    eventos = Evento.objects.all()
+    return render(request, 'lista_eventos.html', {'eventos': eventos})
+
+def crear_evento(request):
+    if request.method == 'GET':
+        usuarios = User.objects.all()
+        return render(request, 'crear_evento.html', {'usuarios': usuarios})
+    else:
+        evento = Evento()
+        evento.nombre = request.POST.get('nombre')
+        evento.descripcion = request.POST.get('descripcion')
+        evento.fecha = request.POST.get('fecha')
+        lista_usuarios = request.POST.getlist('usuarios')
+        evento.save()
+        for usuario_id in lista_usuarios:
+            usuario = User.objects.get(id=usuario_id)
+            evento.usuarios.add(usuario)
+        return redirect('lista_eventos')
+
+
+def editar_evento(request, id):
+    evento = Evento.objects.get(id=id)
+    if request.method == 'GET':
+        usuarios = User.objects.all()
+        id_usuarios = evento.usuarios.values_list('id', flat=True)  # Obtén los IDs de los usuarios seleccionados
+        fecha_formateada = evento.fecha.isoformat()  # Formatea la fecha para el formulario
+        return render(request, 'crear_evento.html', {'evento': evento, 'usuarios': usuarios, 'id_usuarios': id_usuarios, 'modo_edicion': True, 'fecha': fecha_formateada})
+    else:
+        evento.nombre = request.POST.get('nombre')
+        evento.descripcion = request.POST.get('descripcion')
+        evento.fecha = request.POST.get('fecha')
+        lista_usuarios = request.POST.getlist('usuarios')
+        evento.save()
+        evento.usuarios.clear()  # Borra todos los usuarios del evento
+        for usuario_id in lista_usuarios:
+            usuario = User.objects.get(id=usuario_id)
+            evento.usuarios.add(usuario)  # Agrega los usuarios seleccionados
+        return redirect('lista_eventos')
+
+def eliminar_evento(request, id):
+    evento = Evento.objects.get(id=id)
+    evento.delete()
+    return redirect('lista_eventos')

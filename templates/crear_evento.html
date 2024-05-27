@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+{% include "barra_admin.html" %}
+
+<body>
+<head>
+    <title>Crear Evento</title>
+</head>
+
+<div class="container">
+
+
+    <h1 class="my-4">{% if modo_edicion %}Editar{% else %}Crear{% endif %} Evento</h1>
+
+        {% if errores %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for error in errores %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+    <form action="" method="post">
+
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="nombre" class="form-label">Nombre:</label>
+                <input type="text" name="nombre" id="nombre" class="form-control" maxlength="50" value="{{ evento.nombre }}" required>
+            </div>
+            <div class="col-md-4" id="nombreField">
+                <label for="descripcion" class="form-label">Descripcion:</label>
+                <input type="text" name="descripcion" id="descripcion" class="form-control" value="{{ evento.descripcion }}">
+            </div>
+            <div class="col-md-4" id="nombreField">
+                <label for="fecha" class="form-label">Fecha:</label>
+                <input type="date" name="fecha" id="fecha" class="form-control" value="{{ fecha }}">
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="col-md-4">
+                <label for="usuarios" class="form-label">Participantes:</label>
+                <select name="usuarios" id="usuarios" class="form-select" multiple>
+                    {% for u in usuarios %}
+                        <option value="{{ u.id }}"{% if u.id in id_usuarios %} selected {% endif %}>{{ u }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <a href="{% url 'administrador' %}" role="button" class="btn btn-secondary mt-3">Volver</a>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
