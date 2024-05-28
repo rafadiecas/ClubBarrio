@@ -1822,3 +1822,51 @@ def eliminar_oferta(request, id):
     oferta = Oferta.objects.get(id=id)
     oferta.delete()
     return redirect('lista_ofertas')
+
+def crear_personal(request):
+    equipos_safa = Equipo.objects.filter(es_safa=True)
+    if request.method == 'GET':
+        return render(request, 'crear_personal.html', {'equipos_safa': equipos_safa})
+    else:
+        equipo_id = int(request.POST.get('equipo'))
+        # Verificar si ya existe un presidente para este equipo
+        # if Personal.objects.filter(equipo_id=equipo_id).exists():
+        #     return render(request, 'crear_personal.html', {'error': 'Ya existe un personal para este equipo.', 'equipos_safa': equipos_safa})
+        personal = Personal()
+        personal.nombre = request.POST.get('nombre')
+        personal.apellidos = request.POST.get('apellidos')
+        personal.equipo = Equipo.objects.get(id=equipo_id)
+        personal.puesto = request.POST.get('puesto')
+        personal.save()
+        return redirect('lista_personal')
+
+def lista_personal(request):
+    personal = Personal.objects.all()
+    return render(request, 'lista_personal.html', {'personal': personal})
+
+def eliminar_personal(request, id):
+    personal = Personal.objects.get(id=id)
+    personal.delete()
+    return redirect('lista_personal')
+
+def editar_personal(request, id):
+    personal = Personal.objects.get(id=id)
+    equipos_safa = Equipo.objects.filter(es_safa=True)
+    if request.method == 'GET':
+        return render(request, 'crear_personal.html', {'personal': personal, 'modo_edicion': True , 'equipos_safa': equipos_safa})
+    else:
+        equipo_id = int(request.POST.get('equipo'))
+        # NOTAS
+        # En la consulta Presidente.objects.filter(equipo_id=equipo_id).exclude(id=presidente.id).exists(),
+        # se agrega .exclude(id=presidente.id) para excluir al presidente actual de la verificación.
+        # Esto es necesario porque si no lo hacemos, siempre encontrará al presidente actual y considerará que ya existe un
+        # presidente para el equipo seleccionado.
+
+        # if Personal.objects.filter(equipo_id=equipo_id).exclude(id=personal.id).exists():
+        #     return render(request, 'crear_personal.html', {'error': 'Ya existe un personal para este equipo.', 'personal': personal, 'modo_edicion': True , 'equipos_safa': equipos_safa})
+        # personal.nombre = request.POST.get('nombre')
+        personal.apellidos = request.POST.get('apellidos')
+        personal.equipo = Equipo.objects.get(id=equipo_id)
+        personal.puesto = request.POST.get('puesto')
+        personal.save()
+        return redirect('lista_personal')

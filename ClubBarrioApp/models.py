@@ -317,3 +317,10 @@ class Oferta(models.Model):
 
     def __str__(self):
         return self.producto.nombre + " " + str(self.precio_oferta) + " " + str(self.fecha_fin)
+
+
+class Personal(models.Model):
+    nombre = models.CharField(max_length=250, default='sin nombre')
+    apellidos = models.CharField(max_length=250, default='sin apellidos')
+    equipo = models.ForeignKey('Equipo', on_delete=models.DO_NOTHING)
+    puesto = models.CharField(max_length=250, default='sin puesto')

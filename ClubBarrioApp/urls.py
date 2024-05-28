@@ -106,6 +106,10 @@ urlpatterns = [
     path('administrador/ofertas/new', crear_oferta, name='crear_oferta'),
     path('administrador/ofertas/editar/<int:id>/', editar_oferta, name='editar_oferta'),
     path('administrador/ofertas/eliminar/<int:id>/', eliminar_oferta, name='eliminar_oferta'),
+    path('administrador/personal/', lista_personal, name='lista_personal'),
+    path('administrador/personal/new', crear_personal, name='crear_personal'),
+    path('administrador/personal/editar/<int:id>/', editar_personal, name='editar_personal'),
+    path('administrador/personal/eliminar/<int:id>/', eliminar_personal, name='eliminar_personal'),
 
 
 ]
