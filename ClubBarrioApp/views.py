@@ -28,7 +28,7 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.db.models import Count, F, ExpressionWrapper, FloatField, Sum, QuerySet
 from itertools import chain
-
+from django.db.models import Avg
 from .models import Partido
 from django.conf import settings
 
@@ -57,6 +57,8 @@ def pagina_tienda(request):
     page = request.GET.get('page', 1)
     tipo_producto = Tipo.objects.all()
 
+    media_dict= Producto.objects.filter(id__in=ids_productos_con_stock).aggregate(media=Avg('precio'))
+    precio_medio = media_dict['media']
     paginator = Paginator(list_productos, 9)
     list_productos = paginator.get_page(page)
 
