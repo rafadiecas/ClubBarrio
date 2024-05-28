@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+{% include "barra_admin.html" %}
+
+<body>
+<head>
+    <title>Crear Oferta</title>
+</head>
+
+
+
+<div class="container">
+
+
+    <h1 class="my-4">{% if modo_edicion %}Editar{% else %}Crear{% endif %} Oferta</h1>
+
+        {% if errores %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for error in errores %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+    <form action="" method="post">
+
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="talla" class="form-label">Producto</label>
+                <select name="producto" id="producto" class="form-select" >
+                    {% for p in productos %}
+                        <option value="{{ p.id }}"{% if p.id == producto.id %} selected {% endif %}>{{ p.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2" >
+                <label for="precio" class="form-label">Precio:</label>
+                <input type="number" step="0.25" name="precio_oferta" id="precio_oferta" class="form-control" value="{% if oferta.precio_oferta %}{{ oferta.precio_oferta|stringformat:"s" }}{% endif %}">
+            </div>
+            <div class="col-md-4" id="fecha">
+                <label for="fecha" class="form-label">Fecha:</label>
+                <input type="date" name="fecha" id="fecha" class="form-control" value="{{ fecha }}">
+            </div>
+
+
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <a href="{% url 'administrador' %}" role="button" class="btn btn-secondary mt-3">Volver</a>
+        </div>
+    </div>
+</div>
+
+{#<script>#}
+{#    var inputStock = document.getElementById('stock');#}
+{#    inputStock.addEventListener('input', function(){#}
+{#        if (this.value < 0 || this.value.length > 3) {#}
+{#            this.value = this.value.slice(0, 3);#}
+{#            if (this.value < 0) {#}
+{#                this.value = 0;#}
+{#            }#}
+{#        }#}
+{#    });#}
+{##}
+{#    var inputPrecio = document.getElementById('precio');#}
+{#    inputPrecio.addEventListener('input', function(){#}
+{#        if (this.value < 0 || this.value.length > 6) {#}
+{#            this.value = this.value.slice(0, 6);#}
+{#            if (this.value < 0) {#}
+{#                this.value = 0;#}
+{#            }#}
+{#        }#}
+{#    });#}
+{#</script>#}
+
+
+</body>
+
+</html>

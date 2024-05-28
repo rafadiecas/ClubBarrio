@@ -1776,3 +1776,38 @@ def eliminar_reclamaciones(request, id):
     reclamacion = Reclamaciones.objects.get(id=id)
     reclamacion.delete()
     return redirect('lista_reclamaciones')
+
+def lista_ofertas(request):
+    ofertas = Oferta.objects.all()
+    return render(request, 'lista_ofertas.html', {'ofertas': ofertas})
+
+
+
+def crear_oferta(request):
+    if request.method == 'GET':
+        productos = Producto.objects.all()
+        return render(request, 'crear_oferta.html', {'productos': productos})
+    else:
+        producto_id = request.POST.get('producto')
+        precio_oferta = request.POST.get('precio_oferta')
+        fecha_fin = request.POST.get('fecha')
+        oferta = Oferta(producto_id=producto_id, precio_oferta=precio_oferta, fecha_fin=fecha_fin)
+        oferta.save()
+        return redirect('lista_ofertas')
+def editar_oferta(request, id):
+    oferta = Oferta.objects.get(id=id)
+    fecha_formateada = oferta.fecha_fin.isoformat()  # Formatea la fecha para el formulario
+    if request.method == 'GET':
+        productos = Producto.objects.all()
+        return render(request, 'crear_oferta.html', {'oferta': oferta, 'productos': productos, 'modo_edicion': True, 'fecha': fecha_formateada})
+    else:
+        oferta.producto_id = request.POST.get('producto')
+        oferta.precio_oferta = float(request.POST.get('precio_oferta'))
+        oferta.fecha_fin = request.POST.get('fecha')
+        oferta.save()
+        return redirect('lista_ofertas')
+
+def eliminar_oferta(request, id):
+    oferta = Oferta.objects.get(id=id)
+    oferta.delete()
+    return redirect('lista_ofertas')

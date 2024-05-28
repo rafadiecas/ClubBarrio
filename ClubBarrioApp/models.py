@@ -309,3 +309,10 @@ class Reclamaciones(models.Model):
     def __str__(self):
         return self.usuario.username + " " + self.producto.nombre + " " + self.motivo + " " + str(self.fecha)
 
+class Oferta(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    precio_oferta = models.FloatField()
+    fecha_fin = models.DateField(default='1900-01-01')
+
+    def __str__(self):
+        return self.producto.nombre + " " + str(self.precio_oferta) + " " + str(self.fecha_fin)
