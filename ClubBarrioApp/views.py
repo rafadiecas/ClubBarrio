@@ -63,6 +63,9 @@ def pagina_tienda(request):
     page = request.GET.get('page', 1)
     tipo_producto = Tipo.objects.all()
 
+    for producto in list_productos:
+        producto.puntuacion_media = Valoraciones.objects.filter(producto_id=producto.id).aggregate(puntuacion_media=Avg('puntuacion'))['puntuacion_media']
+
     paginator = Paginator(list_productos, 9)
     list_productos = paginator.get_page(page)
 
