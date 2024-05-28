@@ -300,3 +300,12 @@ class Valoraciones(models.Model):
     def __str__(self):
         return self.producto.nombre + " " + self.usuario.username + " " + str(self.puntuacion) + " " + self.comentario
 
+class Reclamaciones(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    motivo = models.TextField(default='sin motivo')
+    fecha = models.DateField(default='1900-01-01')
+
+    def __str__(self):
+        return self.usuario.username + " " + self.producto.nombre + " " + self.motivo + " " + str(self.fecha)
+

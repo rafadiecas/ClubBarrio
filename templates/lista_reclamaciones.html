@@ -1,0 +1,68 @@
+{% load static %}
+{% include 'barra_admin.html' %}
+<head>
+    <title>Lista Entrenamientos</title>
+    <style>
+    .btn-custom {
+        color: #00653d; /* Color del texto azul */
+    }
+    .table-responsive {
+        max-height: 400px; /* Ajusta la altura máxima según sea necesario */
+        overflow-y: auto; /* Agrega un scroll vertical */
+    }
+    </style>
+    <script>
+        function confirmarEliminarUsuario(event) {
+        var confirmacion = confirm('¿Seguro que desea eliminar noticia?');
+         if (!confirmacion) {
+        event.preventDefault();
+        }
+        }
+    </script>
+</head>
+<div class="container-fluid d-flex flex-column align-items-center">
+    <div class="container w-75 d-flex justify-content-start ">
+        <h1>Lista reclamaciones</h1>
+    </div>
+    <div class="container w-75 d-flex justify-content-between align-items-center ">
+{#        <a class="btn btn-outline-success btn-custom" role="button" href="{% url 'crear_noticia' %}" >Nueva noticia</a>#}
+
+        <div class="input-group w-25 h-50 ">
+          <input type="text" class="form-control" placeholder="Buscar" aria-label="Buscar" aria-describedby="button-addon2" style="background-color: #00653d; color: white;" id="inputBuscar">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="background-color: #00653d; color: white; ">
+              <img src="{% static 'imagenes/icons8-búsqueda-30.png' %}">
+          </button>
+        </div>
+    </div>
+    <div class="container w-75 m-4 ">
+        <div class="table-responsive">
+            <table class="table" id="tabla">
+                <thead>
+                <tr>
+                  <th scope="col">id</th>
+                   <th scope="col">Motivo</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Producto</th>
+                    <th scope="col">Usuario</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody >
+              {% for r in reclamaciones %}
+                <tr>
+                  <th scope="row">{{ r.id }}</th>
+                    <td>{{ r.motivo }}</td>
+                  <td>{{ r.fecha }}</td>
+                    <td>{{ r.producto }}</td>
+                    <td>{{ r.usuario }}</td>
+                    <td>
+{#                        <a href="{% url 'editar_reclamacion' id=r.id %}"> <img src="{% static 'imagenes/icons8-edit-30.png' %}"></a>#}
+                        <a href="{% url 'elimina_reclamaciones' id=r.id %}" onclick="confirmarEliminarUsuario(event)"><img src="{% static 'imagenes/icons8-basura-30.png' %}"></a>                    </td>
+
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>

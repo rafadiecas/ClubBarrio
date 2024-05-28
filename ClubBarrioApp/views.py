@@ -19,6 +19,9 @@ from django.utils.datetime_safe import datetime, date
 import re
 import requests
 from collections import defaultdict
+
+from django.utils.timezone import now
+
 from .models import *
 from django.core.paginator import Paginator
 from django.http import Http404, HttpResponse
@@ -184,6 +187,7 @@ def perfil(request):
         'Entrenador': Entrenador
     }
     pedidos = Pedido.objects.prefetch_related('lineapedido_set').filter(usuario_id=usuario.id).order_by('-fecha')
+    reclamaciones = Reclamaciones.objects.filter(usuario=usuario).order_by('-fecha')
     data={}
     envio_datos_barra(data,request,usuario)
 
@@ -211,11 +215,11 @@ def perfil(request):
         if usuario.rol == 'Jugador':
             equipo = perfil.equipo  # Obtén el equipo asociado al perfil si el usuario es un jugador
             jugador = Jugador.objects.get(usuario_id=usuario.id)
-            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo, 'jugador':jugador, 'notificaciones': notificaciones,"data":data, 'usuario': usuario})
+            return render(request, 'profile.html', {'perfil': perfil, 'equipo': equipo, 'jugador':jugador, 'notificaciones': notificaciones,"data":data, 'usuario': usuario, 'pedidos':pedidos, 'reclamaciones':reclamaciones})
 
-        return render(request, 'profile.html', {'perfil': perfil, 'notificaciones': notificaciones,"data":data, 'usuario': usuario, 'pedidos':pedidos})
+        return render(request, 'profile.html', {'perfil': perfil, 'notificaciones': notificaciones,"data":data, 'usuario': usuario, 'pedidos':pedidos, 'reclamaciones':reclamaciones})
 
-    return render(request, 'profile.html', {'notificaciones': notificaciones,"data":data, 'usuario': usuario, 'pedidos':pedidos})
+    return render(request, 'profile.html', {'notificaciones': notificaciones,"data":data, 'usuario': usuario, 'pedidos':pedidos, 'reclamaciones':reclamaciones})
 @user_required
 def perfil_pass(request):
     usuario = request.user
@@ -1739,3 +1743,36 @@ def lista_valoraciones_producto(request, producto_id):
     producto = Producto.objects.get(id=producto_id)
     valoraciones = Valoraciones.objects.filter(producto=producto)
     return render(request, 'lista_valoraciones_producto.html', {'producto': producto, 'valoraciones': valoraciones})
+
+
+
+def crear_reclamaciones(request, pedido_id):
+    if request.method == 'POST':
+        usuario = request.user
+        productos_ids = request.POST.getlist('productos')
+        motivo = request.POST.get('motivo', 'Motivo no especificado')
+        fecha = now().date()
+
+        for producto_id in productos_ids:
+            producto = Producto.objects.get(id=producto_id)
+            reclamacion = Reclamaciones(usuario=usuario, producto=producto, motivo=motivo, fecha=fecha)
+            reclamacion.save()
+
+        return redirect('perfil')
+
+    try:
+        pedido = Pedido.objects.get(id=pedido_id)
+    except Pedido.DoesNotExist:
+        return redirect('perfil')
+
+    productos = [lineapedido.prductoTalla.producto for lineapedido in pedido.lineapedido_set.all()]
+    return render(request, 'reclamaciones.html', {'pedido': pedido, 'productos': productos})
+
+def lista_reclamaciones(request):
+    reclamaciones = Reclamaciones.objects.all()
+    return render(request, 'lista_reclamaciones.html', {'reclamaciones': reclamaciones})
+
+def eliminar_reclamaciones(request, id):
+    reclamacion = Reclamaciones.objects.get(id=id)
+    reclamacion.delete()
+    return redirect('lista_reclamaciones')

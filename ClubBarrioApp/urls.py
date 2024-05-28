@@ -99,6 +99,8 @@ urlpatterns = [
     path('administrador/eventos/eliminar/<int:id>/', eliminar_evento, name='eliminar_evento'),
     path('crear_valoracion/<int:producto_id>/', crear_valoracion, name='crear_valoracion'),
     path('editar_valoracion/<int:valoracion_id>/', editar_valoracion, name='editar_valoracion'),
-
+    path('crear_reclamaciones/<int:pedido_id>/', crear_reclamaciones, name='crear_reclamaciones'),
+    path('administrador/reclamaciones/', lista_reclamaciones, name='lista_reclamaciones'),
+    path('administrador/reclamaciones/eliminar/<int:id>/', eliminar_reclamaciones, name='elimina_reclamaciones'),
 
 ]
