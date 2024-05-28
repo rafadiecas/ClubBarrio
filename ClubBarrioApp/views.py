@@ -54,9 +54,12 @@ def pagina_inicio(request):
 def pagina_tienda(request):
 
     ids_productos_con_stock = ProductoTalla.objects.filter(stock__gt=5).values_list('producto_id', flat=True).distinct()
+    ids_productos_disponibles = ProductoTalla.objects.filter(disponible=True).values_list('producto_id',flat=True).distinct()
+    # Combina los IDs de los productos disponibles y los productos con stock
 
-
-    list_productos = Producto.objects.filter(id__in=ids_productos_con_stock)
+    ids_productos = list(set(ids_productos_disponibles) & set(ids_productos_con_stock))
+    # list_productos = Producto.objects.filter(id__in=ids_productos_disponibles)
+    list_productos = Producto.objects.filter(id__in=ids_productos)
     page = request.GET.get('page', 1)
     tipo_producto = Tipo.objects.all()
 
@@ -66,7 +69,7 @@ def pagina_tienda(request):
     data = {
         'entity': list_productos,
         'tipo_producto': tipo_producto,
-        'paginator': paginator
+        'paginator': paginator,
     }
 
     usuario= request.user
@@ -892,6 +895,7 @@ def crear_producto(request):
         producto_talla_nuevo.producto = producto_nuevo
         producto_talla_nuevo.talla = Talla.objects.get(id=int(request.POST.get('talla')))
         producto_talla_nuevo.stock = request.POST.get('stock')
+        producto_talla_nuevo.disponible = request.POST.get('disponible') == 'on'
         producto_talla_nuevo.save()
         return redirect('lista_tienda')
 
@@ -924,10 +928,11 @@ def elimina_producto(request, id):
 def edita_producto(request, id):
     productotalla = ProductoTalla.objects.get(id=id)
     producto = productotalla.producto
+    disponible = productotalla.disponible
     if request.method == 'GET':
         tallas = Talla.objects.all()
         tipos = Tipo.objects.all()
-        return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos, 'modo_edicion': True, 'productotalla': productotalla})
+        return render(request, 'crear_productos.html', {'producto': producto, 'tallas': tallas, 'tipos': tipos, 'modo_edicion': True, 'productotalla': productotalla, 'disponible': disponible})
     else:
         tallas = Talla.objects.all()
         tipos = Tipo.objects.all()
@@ -939,6 +944,7 @@ def edita_producto(request, id):
         new_talla = Talla.objects.get(id=int(request.POST.get('talla')))
         if productotalla.talla == new_talla:
             productotalla.stock = request.POST.get('stock')
+            productotalla.disponible = request.POST.get('disponible') == 'on'
             productotalla.save()
         else:
             try:
@@ -949,6 +955,7 @@ def edita_producto(request, id):
             except ObjectDoesNotExist:
                 productotalla.talla = new_talla
                 productotalla.stock = request.POST.get('stock')
+                productotalla.disponible = request.POST.get('disponible') == 'on'
                 productotalla.save()
 
         return redirect('lista_tienda')
@@ -1380,6 +1387,7 @@ def obtener_jugadores_por_partido(request):
 def producto(request, id):
     producto = Producto.objects.get(id=id)
     tallas = ProductoTalla.objects.filter(producto_id=id, stock__gt=5).order_by('talla')
+
     valoracion = None
     modo_edicion = False
     puntuacion_media = Valoraciones.objects.filter(producto_id=id).aggregate(puntuacion_media=Avg('puntuacion'))['puntuacion_media']

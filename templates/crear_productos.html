@@ -43,6 +43,9 @@
                 <label for="url_imagen" class="form-label">Url Imagen:</label>
                 <input type="text" name="url_imagen" id="url_imagen" class="form-control" value="{{ producto.url_imagen }}">
             </div>
+            <div class="row">
+
+        </div>
 
 
         </div>
@@ -68,6 +71,10 @@
             <div class="col-md-4">
                 <label for="descripcion" class="form-label">Descripción:</label>
                 <textarea name="descripcion" id="descripcion" class="form-control" required>{{ producto.descripcion }}</textarea>
+            </div>
+            <div class="col-12" id="checkbox-disponible">
+                <label for="disponible" class="form-label" style="margin: 0"> Es Disponible:</label>
+                <input type="checkbox" name="disponible" id="disponible" {% if disponible %} checked {% endif %}>
             </div>
         </div>
         <div class="row">

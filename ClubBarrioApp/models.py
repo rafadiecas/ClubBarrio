@@ -150,6 +150,7 @@ class ProductoTalla(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     talla = models.ForeignKey(Talla, on_delete=models.DO_NOTHING, null=True)
     stock = models.IntegerField(default=0)
+    disponible = models.BooleanField(default=True)
 
     def __str__(self):
         return self.producto.nombre + " " + self.talla.nombre + " " + str(self.stock)
